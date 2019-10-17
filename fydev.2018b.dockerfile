@@ -41,14 +41,14 @@ RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
 # WORKDIR /home/${FYDEV_USER}
 # USER ${FYDEV_USER}
 # RUN mkdir -p ebfiles
-COPY ./ebfiles ./ebfiles
+COPY ./ebfiles/*.eb ./
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${EASYBUILD_VERSION} &&\   
-    eb --software-name=Blitz++ --toolchain=GCCcore,${GCC_VERSION} ${EB_ARGS}    &&\   
-    eb --software-name=MDSplus --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} ${EB_ARGS}
+    eb Blitz++-1.0.2-GCCcore-${GCC_VERSION}.eb ${EB_ARGS}    &&\   
+    eb MDSplus-7.84.8-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb ${EB_ARGS}
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${EASYBUILD_VERSION} &&\   
-    eb --software-name=libMemcached --toolchain=GCCcore,${GCC_VERSION} ${EB_ARGS}   
+    eb libMemcached-1.0.18-GCCcore-${GCC_VERSION}.eb ${EB_ARGS}   
 
 ###############################################
 # Java 
