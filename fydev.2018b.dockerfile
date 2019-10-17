@@ -44,11 +44,11 @@ RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
 COPY ./ebfiles ./ebfiles
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${EASYBUILD_VERSION} &&\   
-    eb ./ebfiles ${EB_ARGS}  &&\  
-    rm -rf ebfiles
+    eb --software-name=Blitz++ --toolchain=GCCcore,${GCC_VERSION} ${EB_ARGS}    &&\   
+    eb --software-name=MDSplus --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} ${EB_ARGS}
 
-
-
+RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${EASYBUILD_VERSION} &&\   
+    eb --software-name=libMemcached --toolchain=GCCcore,${GCC_VERSION} ${EB_ARGS}   
 
 ###############################################
 # Java 
