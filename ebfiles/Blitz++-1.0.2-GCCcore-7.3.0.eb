@@ -1,9 +1,9 @@
-easyblock = 'ConfigureMake'
+easyblock = 'CMakeMake'
 
 name = 'Blitz++'
-version = '0.10'
+version = '1.0.2'
 
-homepage = 'http://blitz.sourceforge.net/'
+homepage = 'https://github.com/blitzpp/blitz'
 
 description = """
  Blitz++ is a (LGPLv3+) licensed meta-template library for array manipulation
@@ -14,19 +14,28 @@ description = """
 toolchain = {'version': '7.3.0', 'name': 'GCCcore'}
 toolchainopts = {'pic': True}
 
-source_urls = [('https://sourceforge.net/projects/blitz/files/blitz/%(name)s %(version)s', 'download')]
-sources = ['blitz-%(version)s.tar.gz']
+sources = [{
+    'filename': '%(name)s-%(version)s.tar.gz',
+    'git_config': {
+        'url': 'https://github.com/blitzpp',
+        'repo_name': 'blitz',
+        'tag': '%(version)s',
+    },
+}]
+
 checksums = []
 builddependencies = [
+    ('CMake', '3.12.1'),
     ('binutils', '2.30'),
 ]
 
 configopts = '--enable-shared'
 
+
 sanity_check_paths = {
-    'files': ['lib/libblitz.a'],
-    'dirs': ['include/blitz/array', 'include/blitz/gnu', 'include/blitz/meta',
-             'include/random', 'lib/pkgconfig'],
+    'files': ['lib64/libblitz.a'],
+    'dirs': ['include/blitz/array', 'include/blitz/meta',
+            'include/random', 'lib64/pkgconfig'],
 }
 
 moduleclass = 'lib'

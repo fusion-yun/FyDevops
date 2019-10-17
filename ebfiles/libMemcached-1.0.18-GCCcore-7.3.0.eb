@@ -14,6 +14,7 @@ source_urls = ['https://launchpad.net/libmemcached/%(version_major_minor)s/%(ver
 sources = [SOURCELOWER_TAR_GZ]
 checksums = []
 builddependencies = [('binutils', '2.30')]
+configure_cmd_prefix=' CXXFLAGS=-fpermissive'
 
 sanity_check_paths = {
     'files': ['lib/libmemcached.%s' % SHLIB_EXT],
