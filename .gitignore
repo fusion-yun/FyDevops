@@ -36,4 +36,4 @@ __pycache__
 cmake-build-*
 *-checkpoint.ipynb
 .pytest*
-install_source
+*_source

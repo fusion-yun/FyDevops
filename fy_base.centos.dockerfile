@@ -12,14 +12,11 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 ARG BUILDPLATFORM
 
-RUN echo "fydev_os is building for $TARGETPLATFORM on $BUILDPLATFORM "
-# User for DevOps
-ARG FYDEV_USER=fydev 
-ARG FYDEV_USER_ID=1000
 
-LABEL Name         fydev_os_${TARGETOS}_${TARGETARCH}_${TARGETVARIANT}
+
+LABEL Name         fy_base_centos_${OS_VERSION}
 LABEL Author       "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description  "Base DevOps environment for 'fuyun'"
+LABEL Description  "Bare CentOS + denpendences for EasyBuild"
 
 # #Dockerfile for systemd base image
 
@@ -45,10 +42,12 @@ RUN yum groupinstall -y "Development Tools"
 # Requirement for lmod and easybuild
 # TODO (salmon 20191015): include packages for IB,GPU...
 RUN yum install -y \
+    sudo \
     which \
     libibverbs-dev \
     libibverbs-devel \
     python3 \
+    python3-devel \
     lua \
     lua-posix \
     lua-filesystem \
@@ -57,12 +56,7 @@ RUN yum install -y \
     tcl-devel \
     python-pip \
     python-wheel \
+    openssl \
     openssl-devel 
 
-
-RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} 
-RUN usermod -a -G wheel ${FYDEV_USER} && echo '%wheel ALL=(ALL)    NOPASSWD: ALL'>>/etc/sudoers
-
-ENV FYDEV_USER=${FYDEV_USER}
-WORKDIR /home/${FYDEV_USER}
-USER ${FYDEV_USER}
+    

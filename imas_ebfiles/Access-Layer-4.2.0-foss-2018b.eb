@@ -1,0 +1,43 @@
+easyblock = 'CMakeMake'
+
+name = 'access-layer'
+version = '4.2.0'
+git_id = '94f57527582'
+
+homepage = 'https://git.iter.org/projects/IMAS/repos/access-layer/browse'
+
+description = """IMAS Access Layer,This layer is designed to provide low level
+data access and interfaces for major development languages, like C++, Python,
+Java, Fortran and Matlab. The low level is developed in C++, all interfaces are
+based on the low level.
+"""
+
+toolchain = {'version': '2018b', 'name': 'foss'}
+toolchainopts = {'pic': True}
+
+sources = ['%(namelower)s-%(version)s@%(git_id)s.zip']
+
+checksums = [('sha512', '0140124a4f7d312100978640037ca4ffcf69e9f471139c28896b599048d8efb93269bda1005fb7eaf12967ec48922ddacf1a36b27febf1454d7993098087d026')]
+
+builddependencies = [
+    ('binutils', '2.30'),
+    ('Python', '3.6.6'),
+    ('Java', '1.8'),
+    ('Saxon', '9.9.1.5', 'Java', '1.8'),
+    ('HDF5', '1.10.2'),
+    ('netCDF', '4.6.1'),
+    ('MDSplus', '7.84.8'),
+    ('Blitz++', '1.0.2'),
+    ('UDA', '2.2.6')
+]
+
+configopts = '--enable-shared'
+
+
+sanity_check_paths = {
+    'files': [
+    ],
+    'dirs': [],
+}
+
+moduleclass = 'data'
