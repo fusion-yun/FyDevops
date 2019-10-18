@@ -1,11 +1,20 @@
 
-ARG OS_LABEL=fydev_os:latest
+ARG OS_LABEL=fy_base:centos7
 
 FROM ${OS_LABEL}
 
 ENV container=docker
 
-ENV FYDEV_USER=fydev
+LABEL Name          fy_pkgenv
+LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
+LABEL Description   "Add fundamental package environment (lmod + EasyBuild); create user fydev "
+
+# Add user for DevOps
+ARG FYDEV_USER=fydev 
+ARG FYDEV_USER_ID=1000
+
+RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} 
+RUN usermod -a -G wheel ${FYDEV_USER} && echo '%wheel ALL=(ALL)    NOPASSWD: ALL'>>/etc/sudoers
 
 ENV PKG_DIR=/packages
 
@@ -16,10 +25,6 @@ ARG LMOD_VERSION=8.1.18
 ARG EASYBUILD_VERSION=4.0.0
 
 ENV EASYBUILD_PREFIX ${PKG_DIR}
-
-LABEL Name          fydev_pkgs
-LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description   "OS independent module/packages.  "
 
 
 ############################
