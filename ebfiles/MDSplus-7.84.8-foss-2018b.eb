@@ -12,8 +12,10 @@ toolchainopts = {'pic': True}
 
 source_urls = ['https://github.com/%(name)s/%(namelower)s/archive']
 sources = ['stable_release-%s.tar.gz' % version.replace('.', '-')]
-checksums = []
+checksums = [('sha512','f29680ddd34556084785e83570a1a84efffde13b05e0f2d662cd975f516612a7a7f48f6ebba0e62304178b13ec6b14b3d33f61a47d08de67cf8616b8d024a478')]
+
 dependencies = [
+    ('Java','1.8','',True),
     ('HDF5', '1.10.2'),
     ('libxml2', '2.9.8'),
     ('zlib', '1.2.11'),
@@ -21,9 +23,9 @@ dependencies = [
     ('libreadline', '7.0')
 ]
 
-configopts = '--disable-doxygen-doc --disable-java'
+configopts = '--disable-doxygen-doc '
 
-preconfigopts = 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
+configure_cmd_prefix = 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
 
 parallel = 1
 
@@ -34,6 +36,8 @@ modextravars = {
 
 modextrapaths = {
     'IDL_PATH': 'idl',
+    'PYTHONPATH': 'python'
 }
 
 moduleclass = 'data'
+                       
