@@ -53,26 +53,21 @@ RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
 
 ###############################################
 # Java 
-RUN mkdir java
-COPY ./java_ebfiles/* ./java/
-COPY ./java_source/* ./java/
 RUN cd java && source /etc/profile.d/lmod.bash  && module load EasyBuild &&\   
-    eb Java-1.8.0_231.eb ${EB_ARGS} &&\  
-    eb Java-1.8.eb ${EB_ARGS} &&\  
-    eb Saxon-HE-9.9.1.5-Java-${JAVA_VERSION}.eb &&\
+    eb ebfiles/java_toolchain/Java-1.8.0_231.eb ${EB_ARGS} &&\  
+    eb ebfiles/java_toolchain/Java-1.8.eb ${EB_ARGS} &&\  
+    eb ebfiles/java_toolchain/Saxon-HE-9.9.1.5-Java-${JAVA_VERSION}.eb &&\
     cd ..
 
 ###############################################
-# Java 
-COPY ./deps_ebfiles ./deps
-COPY ./deps_source/* ./deps
+# Extral libraries 
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${EASYBUILD_VERSION} &&\   
-    eb ./deps ${EB_ARGS}     
+    eb ebfiles/ext_libs ${EB_ARGS}     
 
-# RUN rm -rf ./*
+
 ###############################################
-# # Python
+# Python modules
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
     eb h5py-2.8.0-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}-Python-${PYTHON_VERSION}.eb ${EB_ARGS}    
 
