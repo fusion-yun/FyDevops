@@ -1,0 +1,75 @@
+easyblock = 'ConfigureMake'
+
+name = 'imas'
+
+local_dd = '3.24.0'
+local_al = '4.2.0'
+version = local_dd+'_'+local_al
+local_installer_version = '1.8.2'
+
+local_javaver = '1.8.0_231'
+local_pyver = '3.6.6'
+
+
+homepage = 'https://confluence.iter.org/display/IMP'
+
+description = "Integrated Modelling & Analysis Suite (IMAS) AL=" + \
+    local_al+"  DD=" + local_dd+" installer="+local_installer_version
+
+toolchain = {'version': '2018b', 'name': 'foss'}
+toolchainopts = {'pic': True}
+
+sources = [{
+    'filename': 'installer-'+local_installer_version+'.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/imas',
+        'repo_name': 'installer',
+        'tag': local_installer_version,
+    }
+}, {
+    'filename': 'access_layer-'+local_al+'.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/imas',
+        'repo_name': 'access-layer',
+        'tag': local_al,
+    },
+},
+    {
+    'filename': 'data-dictionary-'+local_dd+'.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/imas',
+        'repo_name': 'data-dictionary',
+        'tag': local_dd,
+    },
+}
+]
+
+checksums = []
+
+
+builddependencies = [
+    ('Blitz++', '1.0.2'),
+    ('Python', local_pyver),
+    ('Java', local_javaver, '', True),
+    ('Saxon-HE', '9.9.1.5', '-Java-'+local_javaver,  True),
+    ('libxslt', '1.1.32'),
+    ('HDF5', '1.10.2'),
+    ('netCDF', '4.6.1'),
+    ('MDSplus', '7.84.8'),
+
+    ('UDA', '2.2.6'),
+]
+
+configure_cmd = ""
+# configopts = '--enable-shared'
+
+parallel = 1
+buildopts = ' TAG_AL='+local_al+'  TAG_DD=' + local_dd+' '
+
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': [],
+}
+
+moduleclass = 'data'

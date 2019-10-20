@@ -13,7 +13,7 @@ source_urls = ['https://sourceforge.net/projects/saxon/files/Saxon-HE/%(version_
 sources = ['SaxonHE%sJ.zip' % version.replace('.', '-')]
 checksums = [('sha512','f24b1695b9b6bd0f22151c16c9e6fb87592aa796de5066b1cf5c809e6f671d6a9f81488bc7522246b43107ce7c341fe193af48259b9416e670846e7dc3f07fbf')]
 
-dependencies = [('Java', '1.8')]
+dependencies = [('Java', '1.8.0_231')]
 
 local_jarfiles = ['saxon%(version_major)she.jar', 'saxon%(version_major)s-test.jar', 'saxon%(version_major)s-xqj.jar']
 

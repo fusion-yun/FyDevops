@@ -40,6 +40,7 @@ RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
 # GCCcore
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
     eb --software-name=libxml2 --toolchain=GCCcore,${GCC_VERSION} ${EB_ARGS} &&\
+    eb --software-name=libxslt --toolchain=GCCcore,${GCC_VERSION} ${EB_ARGS} &&\
     eb --software-name=CMake --toolchain=GCCcore,${GCC_VERSION}  ${EB_ARGS}  
 
 ##############################
