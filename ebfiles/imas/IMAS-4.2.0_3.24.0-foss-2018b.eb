@@ -136,7 +136,7 @@ configopts = " "
 local_prefix = """
 ln -s %(builddir)s/data-dictionary %(builddir)s/access-layer/xml &&
 cd %(builddir)s/installer &&
-GIT_OFFLINE=y   \
+export GIT_OFFLINE=y   \
 SITECONFIG=%(builddir)s/installer/Makefile.fuyun   \
 IMAS_HOME=%(installdir)s \
 BUILD_AL=%(builddir)s/access-layer   \
@@ -148,11 +148,10 @@ INSTALL_MOD_DIR=%(installdir)s/../../../modules/all \
 local_prefix = local_prefix + " TAG_DD=" + local_dd + "  TAG_AL="+local_al
 
 
-parallel = 1
-build_cmd = local_prefix+"  make  "
-buildopts = ' dd ual  '
+build_cmd = local_prefix+" && make -j 1 dd && make "
+buildopts = ' ual  '
 
-install_cmd = local_prefix+" make "
+install_cmd = local_prefix+" && make "
 installopts = " dd_install  ual_install module_install"
 
 sanity_check_paths = {
