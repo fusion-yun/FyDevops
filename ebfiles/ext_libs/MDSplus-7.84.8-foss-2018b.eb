@@ -15,7 +15,7 @@ sources = ['stable_release-%s.tar.gz' % version.replace('.', '-')]
 checksums = [('sha512','f29680ddd34556084785e83570a1a84efffde13b05e0f2d662cd975f516612a7a7f48f6ebba0e62304178b13ec6b14b3d33f61a47d08de67cf8616b8d024a478')]
 
 dependencies = [
-    ('Java','1.8','',True),
+    ('Java','1.8.0_231','',True),
     ('HDF5', '1.10.2'),
     ('libxml2', '2.9.8'),
     ('zlib', '1.2.11'),
@@ -23,7 +23,7 @@ dependencies = [
     ('libreadline', '7.0')
 ]
 
-configopts = '--disable-doxygen-doc '
+configopts = '--disable-doxygen-doc --enable-java '
 
 configure_cmd_prefix = 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
 
