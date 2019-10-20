@@ -64,6 +64,15 @@ configure_cmd = ""
 # configopts = '--enable-shared'
 
 parallel = 1
+
+"""
+  IMAS_HOME=/packages/software/imas  
+  BUILD_AL=`pwd`
+  BUILD_DD=`pwd`/xml
+  TAG_DD=%(local_dd)s
+  TAG_AL=%(local_al)s
+  INSTALL_MOD_DIR=/packages/modules/all/
+"""
 buildopts = ' TAG_AL='+local_al+'  TAG_DD=' + local_dd+' '
 
 
