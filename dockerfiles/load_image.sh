@@ -5,5 +5,5 @@ docker run -it \
        -v ~/.ssh:/home/fydev/.ssh:ro \
        -v ${PWD}/install_sources:/home/fydev/install_sources:ro \
        -v ${PWD}/ebfiles:/home/fydev/ebfiles:ro \
-       -v ${PWD}/sources:/packages/sources:rw \
+       -v /packages/sources:/packages/sources:rw \
        fybox:2018b
