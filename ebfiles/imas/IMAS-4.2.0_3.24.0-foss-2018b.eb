@@ -44,18 +44,27 @@ sources = [{
     },
 }
 ]
+patches=['IMAS_installer_offline.patch']
+checksums = [
+    '5c98ca9f84890194e7bba841c2f7b8209b218afbaa59e307fd3285ed516e5d3c',  # installer-1.8.2.tar.gz
+    'a11cef81f6fd04367f1c95af4d273d5428effdcea91f4bf1ede9f5870befe9de',  # access_layer-4.2.0.tar.gz
+    '92dfe1c185bd2cc5a8e6040b0dbc60d486192664d49451771eb1dc0177f38f1e',  # data-dictionary-3.24.0.tar.gz
+    '6a0b612bf6ad741d3de8cf97d594e3539b032c841d73161bed921ca7a022904d',  # IMAS_installer_offline.patch
+]
 
 checksums = []
 
 
 builddependencies = [
     ('UDA', '2.2.6'),
-    ('Blitz++', '1.0.2'),
+
     ('Python', local_pyver),
-    ('Boost', '1.68.0', '-Python-3.6.6', toolchain),
     ('Java', local_javaver, '', True),
 
-    ('Saxon-HE', '9.9.1.5', '-Java-'+local_javashortver,  True),
+
+    ('Blitz++', '1.0.2'),
+    ('Boost', '1.68.0', '-Python-%(pyver)s', toolchain),
+    ('Saxon-HE', '9.9.1.5', '-Java-%(javaver)s',  True),
     ('libxslt', '1.1.32'),
     ('HDF5', '1.10.2'),
     ('netCDF', '4.6.1'),
@@ -72,26 +81,28 @@ configure_cmd = """cat > %(builddir)s/installer/Makefile.fuyun <<EOF
 
 # Toggle what language interfaces are (not) built by default
 # Use ?= notation to allow user override from command line.
-IMAS_CPP ?= yes
-IMAS_FORTRAN ?= yes
-IMAS_GFORTRAN ?= yes # FORTRAN compiler
-IMAS_IFORT ?= no # FORTRAN compiler
-IMAS_G95 ?= no # FORTRAN compiler
-IMAS_NAGFOR ?= no # FORTRAN compiler
-IMAS_PGI ?= no # FORTRAN compiler
-IMAS_JAVA ?= yes
-IMAS_MATLAB ?= no
-IMAS_PYTHON ?= yes
-IMAS_PYTHON2 ?= no
-IMAS_PYTHON3 ?= yes
+IMAS_CPP = yes
+IMAS_FORTRAN = yes
+IMAS_GFORTRAN = yes # FORTRAN compiler
+IMAS_IFORT = no # FORTRAN compiler
+IMAS_G95 = no # FORTRAN compiler
+IMAS_NAGFOR = no # FORTRAN compiler
+IMAS_PGI = no # FORTRAN compiler
+IMAS_JAVA = yes
+IMAS_MATLAB = no
+IMAS_MEX = no
+IMAS_PYTHON = yes
+IMAS_PYTHON2 = no
+IMAS_PYTHON3 = yes
 
 # Build with MDSplus backend
-IMAS_MDSPLUS ?= yes
+IMAS_MDSPLUS = yes
 # Build with HDF5 backend
-IMAS_HDF5 ?= no # Broken
+IMAS_HDF5 = no # Broken
 
 # Build with UDA backend
-IMAS_UDA ?= yes
+IMAS_UDA = yes
+
 
 # Include \\n to have pretty linebreaks in the modulefile.
 MODULEFILE_DEPENDENCIES={\\n\\
@@ -114,12 +125,12 @@ UAL_MODULES = Blitz++
 # Additionally test for these module names in case of IMAS_PGI=yes IMAS_IFORT=yes,.. see below.
 UAL_MODULES_MDSPLUS = MDSplus
 UAL_MODULES_UDA = UDA
-UAL_MODULES_G95 = 
-UAL_MODULES_NAGFOR = 
-UAL_MODULES_PGI = 
+UAL_MODULES_G95 =
+UAL_MODULES_NAGFOR =
+UAL_MODULES_PGI =
 UAL_MODULES_INTEL =
 UAL_MODULES_JAVA = Java
-UAL_MODULES_PYTHON2 = 
+UAL_MODULES_PYTHON2 =
 UAL_MODULES_PYTHON3 = Python
 
 # Additional search path to local IMAS scripts that is added to \$PATH by imas module
@@ -148,11 +159,9 @@ INSTALL_MOD_DIR=%(installdir)s/../../../modules/all \
 local_prefix = local_prefix + " TAG_DD=" + local_dd + "  TAG_AL="+local_al
 
 
-build_cmd = local_prefix+" && make -j 1 dd && make "
-buildopts = ' ual  '
+build_cmd = local_prefix+" && make  IMASPKGVERSION="+local_dd+"DD_GIT_DESCRIBE="+local_dd + " UAL_GIT_DESCRIBE=" + local_al + " "
 
 install_cmd = local_prefix+" && make "
-installopts = " dd_install  ual_install module_install"
 
 sanity_check_paths = {
     'files': ['include/IDSDef.xml',

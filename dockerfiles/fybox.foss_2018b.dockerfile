@@ -54,18 +54,23 @@ RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
 
 ###############################################
 # Java 
-RUN cd java && source /etc/profile.d/lmod.bash  && module load EasyBuild &&\   
-    eb ebfiles/java_toolchain/Java-1.8.0_231.eb ${EB_ARGS} &&\  
-    eb ebfiles/java_toolchain/Java-1.8.eb ${EB_ARGS} &&\  
-    eb ebfiles/java_toolchain/Saxon-HE-9.9.1.5-Java-${JAVA_VERSION}.eb &&\
-    cd ..
-
+RUN mkdir -p java
+COPY ebfiles/java/* ./java/
+COPY sources/java/* ./java/
+RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\   
+    eb java/Java-1.8.0_231.eb ${EB_ARGS} &&\  
+    eb java/Java-1.8.eb ${EB_ARGS} &&\  
+    eb java/Saxon-HE-9.9.1.5-Java-1.8.0_231.eb  ${EB_ARGS}
+RUN rm -rf java
 ###############################################
 # Extral libraries 
+RUN mkdir -p ext_libs
+COPY ebfiles/ext_libs/* ./ext_libs/
+COPY sources/ext_libs/* ./ext_libs/
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${EASYBUILD_VERSION} &&\   
-    eb ebfiles/ext_libs ${EB_ARGS}     
-
+    eb ext_libs ${EB_ARGS}     
+RUN rm -rf ext_libs
 
 ###############################################
 # Python modules

@@ -2,7 +2,7 @@ easyblock = 'Tarball'
 
 name = 'Saxon-HE'
 version = '9.9.1.5'
-versionsuffix = '-Java-%(javaver)s'
+versionsuffix = '-Java-1.8.0_231'
 
 homepage = 'http://saxon.sourceforge.net'
 description = """Open Source SAXON XSLT processor developed by Saxonica Limited."""

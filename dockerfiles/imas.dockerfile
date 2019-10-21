@@ -1,23 +1,32 @@
-ARG BASE=fy_pkgenv:centos7
+# syntax = docker/dockerfile:1.0-experimental
+
+
+ARG BASE=fybox:2018b
 
 FROM ${BASE}
 
-ARG IMAS_VERSION
-ARG IMAS_HOME=${PKG_DIR}/software/imas/${IMAS_VERSION}
-
 LABEL Description   "IMAS"
 
+LABEL Name          "imas_dev"
+LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
+LABEL Description   "IMAS + UDA"
+
+ARG UDA_VERSION=2.2.6
+ARG IMAS_VERSION=4.2.0_3.24.0
 ARG TOOLCHAIN_NAME=foss
 ARG TOOLCHAIN_VERSION=2018b
 
-ENV IMAS_HOME=${PKG_DIR}/software/imas/${IMAS_VERSION}
-ENV UDA_VERSION=2.2.3
-ENV TAG_DD=3.21.0
-ENV TAG_AL=3.8.5
 
-COPY imas_ebfiles ./
-COPY imas_source ./
+
+# need : export DOCKER_BUILDKIT=1
+RUN mkdir -p imas
+COPY ebfiles/imas/* ./imas
+COPY sources/imas/*  ./imas
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
-    module load ${TOOLCHAIN_NAME}/${TOOLCHAIN_VERSION} &&\
-    eb ./imas_ebfiles  ${EB_ARGS} &&\
+    eb -f imas/UDA-${UDA_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb ${EB_ARGS} 
+
+# RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
+#     eb -f imas/IMAS-${IMAS_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb  ${EB_ARGS} 
+
+# RUN rm -rf imas
