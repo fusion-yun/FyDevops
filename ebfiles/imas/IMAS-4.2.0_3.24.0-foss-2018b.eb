@@ -44,16 +44,7 @@ sources = [{
     },
 }
 ]
-patches=['IMAS_installer_offline.patch']
-checksums = [
-    '5c98ca9f84890194e7bba841c2f7b8209b218afbaa59e307fd3285ed516e5d3c',  # installer-1.8.2.tar.gz
-    'a11cef81f6fd04367f1c95af4d273d5428effdcea91f4bf1ede9f5870befe9de',  # access_layer-4.2.0.tar.gz
-    '92dfe1c185bd2cc5a8e6040b0dbc60d486192664d49451771eb1dc0177f38f1e',  # data-dictionary-3.24.0.tar.gz
-    '6a0b612bf6ad741d3de8cf97d594e3539b032c841d73161bed921ca7a022904d',  # IMAS_installer_offline.patch
-]
-
-checksums = []
-
+patches = ['IMAS_installer_offline.patch']
 
 builddependencies = [
     ('UDA', '2.2.6'),
@@ -73,8 +64,11 @@ builddependencies = [
 
 ]
 
-configure_cmd = """cat > %(builddir)s/installer/Makefile.fuyun <<EOF
-## Site configuration Makefile for ITER Organization's HPC Cluster
+configure_cmd = """
+ln -s %(builddir)s/data-dictionary %(builddir)s/access-layer/xml  
+
+cat > %(builddir)s/installer/Makefile.fuyun <<EOF
+## Site configuration Makefile for ASIPP Organization's HPC Cluster ShenMa
 
 # This file should be maintained by the administrator of the site.
 # Users should modify Makefile.config for their personal overrides.
@@ -131,7 +125,7 @@ UAL_MODULES_PGI =
 UAL_MODULES_INTEL =
 UAL_MODULES_JAVA = Java
 UAL_MODULES_PYTHON2 =
-UAL_MODULES_PYTHON3 = Python
+UAL_MODULES_PYTHON3 = 
 
 # Additional search path to local IMAS scripts that is added to \$PATH by imas module
 IMAS_EXTRA_PATH = \$(IMAS_HOME)/extra/bin
@@ -141,27 +135,28 @@ IMAS_EXTRA_PYTHONPATH = \$(IMAS_HOME)/core/pyual:\$(IMAS_HOME)/extra/bin
 EOF
 """
 
-prefix_opt = " echo  "
-configopts = " "
+prefix_opt = " echo "
 
-local_prefix = """
-ln -s %(builddir)s/data-dictionary %(builddir)s/access-layer/xml &&
-cd %(builddir)s/installer &&
-export GIT_OFFLINE=y   \
-SITECONFIG=%(builddir)s/installer/Makefile.fuyun   \
-IMAS_HOME=%(installdir)s \
-BUILD_AL=%(builddir)s/access-layer   \
-BUILD_DD=%(builddir)s/access-layer/xml  \
-INSTALL_DIR=%(installdir)s  \
-INSTALL_MOD_DIR=%(installdir)s/../../../modules/all \
-"""
+local_envs = "export TAG_DD=" + local_dd + "  TAG_AL="+local_al + " "\
+    " GIT_OFFLINE=y   "\
+    " SITECONFIG=%(builddir)s/installer/Makefile.fuyun   "\
+    " IMAS_HOME=%(installdir)s "\
+    " BUILD_AL=%(builddir)s/access-layer   "\
+    " BUILD_DD=%(builddir)s/access-layer/xml  "\
+    " INSTALL_DIR=%(installdir)s  "\
+    " INSTALL_MOD_DIR=%(installdir)s/../../../modules/all "
 
-local_prefix = local_prefix + " TAG_DD=" + local_dd + "  TAG_AL="+local_al
+build_cmd = local_envs + "&& make -j 1 dd && make   IMASPKGVERSION="+local_dd +\
+    " DD_GIT_DESCRIBE=" + local_dd +\
+    " UAL_GIT_DESCRIBE=" + local_al
 
+buildopts = " ual_sources ual models  "
 
-build_cmd = local_prefix+" && make  IMASPKGVERSION="+local_dd+"DD_GIT_DESCRIBE="+local_dd + " UAL_GIT_DESCRIBE=" + local_al + " "
+install_cmd = local_envs + "&& make IMASPKGVERSION="+local_dd + \
+    " DD_GIT_DESCRIBE=" + local_dd +\
+    " UAL_GIT_DESCRIBE=" + local_al + "  "
 
-install_cmd = local_prefix+" && make "
+installopts = "install_deps module dd_install ual_install models_install tools_install ual_sources_install "
 
 sanity_check_paths = {
     'files': ['include/IDSDef.xml',

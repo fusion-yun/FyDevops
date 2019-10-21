@@ -1,21 +1,11 @@
-diff -ru foss-2018b/installer.orig/Makefile foss-2018b/installer/Makefile
---- foss-2018b/installer.orig/Makefile  2019-10-20 07:36:47.000000000 +0000
-+++ foss-2018b/installer/Makefile       2019-10-21 02:54:24.150679036 +0000
-@@ -9,12 +9,12 @@
-        $(MAKE) ual models
+--- installer/Makefile.orig	2019-10-21 08:14:46.002026783 +0000
++++ installer/Makefile	2019-10-21 08:15:11.266036038 +0000
+@@ -9,7 +9,7 @@
+ 	$(MAKE) ual models
  all_1: all_2
-        $(MAKE) ual_sources
+ 	$(MAKE) ual_sources
 -all_2: all_3
-+all_2:
-        $(MAKE) dd
--all_3: all_4
--       $(MAKE) version
--all_4:
--       $(MAKE) checkout
-+#all_3:
-+#      $(MAKE) version
-+# all_4:
-+#      $(MAKE) checkout
- install: install_1
-        $(MAKE) module_install tools_install ual_sources_install
-        $(log-this)
++all_2:  
+ 	$(MAKE) dd
+ all_3: all_4
+ 	$(MAKE) version

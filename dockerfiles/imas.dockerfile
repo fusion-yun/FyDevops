@@ -20,13 +20,19 @@ ARG TOOLCHAIN_VERSION=2018b
 
 # need : export DOCKER_BUILDKIT=1
 RUN mkdir -p imas
-COPY ebfiles/imas/* ./imas
-COPY sources/imas/*  ./imas
+COPY ebfiles/imas/UDA-2.2.6-foss-2018b.eb ./imas/
+COPY sources/imas/uda-2.2.6.tar.gz  ./imas/
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
     eb -f imas/UDA-${UDA_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb ${EB_ARGS} 
 
-# RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
-#     eb -f imas/IMAS-${IMAS_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb  ${EB_ARGS} 
+RUN sudo yum install -y vim 
+
+USER fydev
+COPY ebfiles/imas/* ./imas/
+COPY sources/imas/* ./imas/
+
+RUN source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
+    eb -f imas/IMAS-${IMAS_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb  ${EB_ARGS} 
 
 # RUN rm -rf imas

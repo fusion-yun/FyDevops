@@ -52,7 +52,8 @@ builddependencies = [
 ]
 
 # imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
-configopts = ' -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  -DCMAKE_C_FLAGS=" -Wno-maybe-uninitialized" '
+configopts = '-DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  -DCMAKE_C_FLAGS=" -Wno-maybe-uninitialized" '
+
 
 sanity_check_paths = {
     'files': ['lib/libuda_server.a',
@@ -70,5 +71,11 @@ sanity_check_paths = {
              'lib/plugins',
              'lib/pkgconfig'],
 }
+modextravars = {
+    'UDA_DIR': '%(installdir)s',
+}
 
+modextrapaths = {
+    'PYTHONPATH': 'python'
+}
 moduleclass = 'data'
