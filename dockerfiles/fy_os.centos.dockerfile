@@ -12,11 +12,9 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 ARG BUILDPLATFORM
 
-
-
-LABEL Name         fy_base_centos_${OS_VERSION}
+LABEL Name         fyOS_${OS_VERSION}
 LABEL Author       "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description  "Bare CentOS + denpendences for EasyBuild"
+LABEL Description  "Bare CentOS + denpendences for EasyBuild and lmod"
 
 # #Dockerfile for systemd base image
 
