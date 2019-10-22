@@ -100,17 +100,14 @@ prepend_path(\"PYTHONPATH\", pathJoin(root, \"lib/python${PY_SHORTVER}/site-pack
 
 ENV  MODULEPATH="${PKG_DIR}/modules/all${MODULEPATH}"
 
-# # ################################################################################
-# # # INSTALL packages
-# COPY eb /packages/software/EasyBuild/${EB_VERSION}/bin/eb
-# COPY generaloption.py /packages/software/EasyBuild/4.0.1/lib/python2.7/site-packages/easybuild/base/generaloption.py
-# COPY optparse.py /usr/lib64/python2.7/optparse.py
-# COPY options.py /packages/software/EasyBuild/4.0.1/lib/python2.7/site-packages/easybuild/tools/options.py
+################################################################################
+# INSTALL packages
 
-RUN source /etc/profile.d/lmod.sh  && module load EasyBuild/${EB_VERSION} && eb --show-config  &&\
+RUN source /etc/profile.d/lmod.sh  && module load EasyBuild/${EB_VERSION} && eb --show-config >> eb_confg.log
+
+RUN source /etc/profile.d/lmod.sh  && module load EasyBuild/${EB_VERSION}   &&\
     eb ${TOOLCHAIN}.eb ${EB_ARGS}  
  
-
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${EB_VERSION} &&\
     eb --software=Python,${PYTHON_VERSION} --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} ${EB_ARGS}  &&\
     eb --software-name=Boost --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  --try-amend=versionsuffix=-Python-${PYTHON_VERSION} ${EB_ARGS} &&\
