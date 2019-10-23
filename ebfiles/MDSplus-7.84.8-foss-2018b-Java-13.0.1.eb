@@ -13,7 +13,11 @@ toolchainopts = {'pic': True}
 
 source_urls = ['https://github.com/%(name)s/%(namelower)s/archive']
 sources = ['stable_release-%s.tar.gz' % version.replace('.', '-')]
-checksums = [('sha512','f29680ddd34556084785e83570a1a84efffde13b05e0f2d662cd975f516612a7a7f48f6ebba0e62304178b13ec6b14b3d33f61a47d08de67cf8616b8d024a478')]
+patches=['MDSplus-7.84.8.patch']
+checksums = [
+    'afdd0fee70e20c4b7aa547b1cd897f80670ccd0eb80356e55e217a1c190e47f5',  # stable_release-7-84-8.tar.gz
+    '0452fdd9366572b61747b2b0ce3922d9f1917c406eb9b281e07193a25637c484',  # MDSplus-7.84.8.patch
+]
 
 dependencies = [
     ('Java','13','',True),
