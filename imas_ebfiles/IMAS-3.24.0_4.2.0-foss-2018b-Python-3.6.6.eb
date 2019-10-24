@@ -66,7 +66,7 @@ IMAS_IFORT = no # FORTRAN compiler
 IMAS_G95 = no # FORTRAN compiler
 IMAS_NAGFOR = no # FORTRAN compiler
 IMAS_PGI = no # FORTRAN compiler
-IMAS_JAVA = yes
+IMAS_JAVA = no
 IMAS_MATLAB = no
 IMAS_MEX = no
 IMAS_PYTHON = yes
@@ -132,7 +132,7 @@ local_envs =" export TAG_AL="+local_al +" TAG_DD=" + local_dd + \
 """ 
 
 build_cmd=local_envs+"""
- make help > imas_installer.log
+ make help 
  make """
 install_cmd=local_envs+" make "
 

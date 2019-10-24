@@ -21,7 +21,7 @@ ENV PKG_DIR=/packages
 
 ARG GCC_VERSION=7.3.0 
 
-ARG EB_ARGS=" --use-existing-modules  -r"
+ARG EB_ARGS=" --use-existing-modules --info -l -r"
 
 RUN source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
     eb ${TOOLCHAIN}.eb ${EB_ARGS}  
