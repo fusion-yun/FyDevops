@@ -4,6 +4,7 @@ name = 'UDA'
 version = '2.2.6'
 local_pyver = '3.6.6'
 local_javaver='13.0.1'
+versionsuffix='-Python-%(pyver)s'
 
 homepage = 'https://git.iter.org/projects/IMAS/repos/uda/browse'
 
@@ -26,16 +27,11 @@ sources = [{
     },
 }]
 
+patches=['UDA-2.2.6-nogit.patch']
 
-# checksums = [('sha512', 'a5f043a8a64e0a4541b6d5d6f3c4065661170d74b652f306ab24206de0998e50f4a0a70e58e41f600a9a9bc103a965cc159bf869ffeb69de8af733d82f394156')]
-
-builddependencies = [
-    
-    ('Java', local_javaver, '', True),
+dependencies = [    
     ('Python', local_pyver),
-    ('SWIG', '3.0.12', '-Python-'+local_pyver, toolchain),
     ('Boost', '1.68.0', '-Python-'+local_pyver, toolchain), 
-    ('CMake', '3.12.1'),
     ('OpenSSL', '1.1.0h'),
     ('PostgreSQL', '10.3'),
     ('libxml2', '2.9.8'),
@@ -46,10 +42,19 @@ builddependencies = [
     ('MDSplus', '7.84.8','-Java-'+local_javaver)
 ]
 
-# imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
-configopts = '-DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  -DCMAKE_C_FLAGS=" -Wno-maybe-uninitialized" '
- 
+builddependencies = [    
+    ('Java', local_javaver, '', True),
+    ('SWIG', '3.0.12', '-Python-'+local_pyver, toolchain),
+    ('CMake', '3.12.1') 
+]
 
+# imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
+configopts =" -DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  -DCMAKE_C_FLAGS=' -Wno-maybe-uninitialized ' " 
+
+install_cmd=" make install && cd %(installdir)s/python_installer && python ./setup.py install  --prefix=%(installdir)s/python"
+
+installopts=" "
+ 
 sanity_check_paths = {
     'files': ['lib/libuda_server.a',
               'lib/libuda_server.so',
@@ -67,34 +72,15 @@ sanity_check_paths = {
              'lib/pkgconfig'],
 }
 modextravars = {
-    'UDA_DIR': '%(installdir)s',
+    'UDA_DIR'       : '%(installdir)s',
+    'UDA_HOME'      : '%(installdir)s',
+    'UDA_ROOT'      : '%(installdir)s',
+    'UDA_VERSION'   : '%(version)s'
 }
 
 modextrapaths = {
-    'PYTHONPATH': 'python'
-}
-moduleclass = 'data'
+    'PYTHONPATH'        : 'lib/python%(pyshortver)s/site-packages',
 
-#pragma once
-#include <mdsshr_messages.h>
-#ifndef FALSE
-#define FALSE 0
-#endif
-#ifndef TRUE
-#define TRUE  1
-#endif
-#define B_TRUE  TRUE
-#define B_FALSE FALSE
-#define C_OK    0
-#define C_ERROR -1
-#define IS_OK(status)     ((status) & 1)
-#define STATUS_OK         IS_OK(status)
-#define IS_NOT_OK(status) (!IS_OK(status))
-#define STATUS_NOT_OK     (!STATUS_OK)
-#define INIT_STATUS_AS    int status =
-#define INIT_STATUS       INIT_STATUS_AS MDSplusSUCCESS
-#define INIT_STATUS_ERROR INIT_STATUS_AS MDSplusERROR
-#define TO_CODE(status)   (status & (-8))
-#define STATUS_TO_CODE    TO_CODE(status)
-#define RETURN_IF_STATUS_NOT_OK  if STATUS_NOT_OK return status;
-#define RETURN_IF_NOT_OK(CHECK)  do {status = CHECK; RETURN_IF_STATUS_NOT_OK;} while(0)
+}
+
+moduleclass = 'data'

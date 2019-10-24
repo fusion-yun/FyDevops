@@ -1,0 +1,202 @@
+easyblock = 'ConfigureMake'
+
+name = 'IMAS'
+
+local_dd = '3.24.0'
+local_al = '4.2.0'
+version = local_dd+'_'+local_al
+
+local_installer_version = '1.8.2'
+
+local_javashortver = '13'
+local_javaver = '13.0.1'
+local_pyver = '3.6.6'
+
+# versionsuffix='-Java-'+local_javaver
+
+
+homepage = 'https://confluence.iter.org/display/IMP'
+
+description = "Integrated Modelling & Analysis Suite (IMAS) AL=" + \
+    local_al+"  DD=" + local_dd+" installer="+local_installer_version
+
+toolchain = {'version': '2018b', 'name': 'foss'}
+toolchainopts = {'pic': True}
+
+sources = [
+# {
+#     'filename': 'installer-'+local_installer_version+'.tar.gz',
+#     'git_config': {
+#         'url': 'ssh://git@git.iter.org/imas',
+#         'repo_name': 'installer',
+#         'tag': local_installer_version,
+#     }
+# },
+
+    {
+    'filename': 'data-dictionary-'+local_dd+'.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/imas',
+        'repo_name': 'data-dictionary',
+        'tag': local_dd,
+    }},
+    {
+    'filename': 'access_layer-'+local_al+'.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/imas',
+        'repo_name': 'access-layer',
+        'tag': local_al,
+    }}
+]
+# patches = ['IMAS-installer-1.8.2.patch']
+dependencies = [
+    ('UDA', '2.2.6'),
+    ('Boost', '1.68.0', '-Python-'+local_pyver, toolchain),
+    ('Blitz++', '1.0.2'),
+    ('HDF5', '1.10.2'),
+    ('netCDF', '4.6.1'),
+    ('MDSplus', '7.84.8','-Java-'+local_javaver, toolchain),
+]
+builddependencies = [
+    ('Java', local_javaver, '', True),
+    ('SaxonHE', '9.9.1.5', '-Java-'+local_javaver,  True),
+    ('libxslt', '1.1.32'),
+    ('Python', local_pyver),     
+]
+
+configure_cmd = " echo "
+# """
+# cat > %(builddir)s/installer/Makefile.fuyun <<EOF
+# ## Site configuration Makefile for ASIPP Organization's HPC Cluster ___ShenMa___
+
+# # This file should be maintained by the administrator of the site.
+# # Users should modify Makefile.config for their personal overrides.
+
+# # Toggle what language interfaces are (not) built by default
+# # Use ?= notation to allow user override from command line.
+# IMAS_CPP = yes
+# IMAS_FORTRAN = yes
+# IMAS_GFORTRAN = yes # FORTRAN compiler
+# IMAS_IFORT = no # FORTRAN compiler
+# IMAS_G95 = no # FORTRAN compiler
+# IMAS_NAGFOR = no # FORTRAN compiler
+# IMAS_PGI = no # FORTRAN compiler
+# IMAS_JAVA = yes
+# IMAS_MATLAB = no
+# IMAS_MEX = no
+# IMAS_PYTHON = yes
+# IMAS_PYTHON2 = no
+# IMAS_PYTHON3 = yes
+
+# # Build with MDSplus backend
+# IMAS_MDSPLUS = yes
+# # Build with HDF5 backend
+# IMAS_HDF5 = no # Broken
+
+# # Build with UDA backend
+# IMAS_UDA = yes
+
+
+# # Include \\n to have pretty linebreaks in the modulefile.
+# MODULEFILE_DEPENDENCIES={\\n\\
+#     GCC/7.3.0    GCC/7.3.0 \\n\\
+#     Java         Java/%(javaver)s \\n\\
+#     Python       Python/%(pyver)s-%(toolchain_name)s-%(toolchain_version)s  \\n\\
+#     UDA          UDA/2.6.2-%(toolchain_name)s-%(toolchain_version)s \\n\\
+#     MDSplus      MDSplus/7.84.8-%(toolchain_name)s-%(toolchain_version)s-Java-%(javaver)s \\n\\
+#     Blitz++      Blitz++/1.0.0-GCCcore-7.3.0 \\n\\
+# }
+
+# # Test for this jar file in the CLASSPATH:
+# SAXONJARFILE=saxon9he.jar
+
+# # Test for this pc file in the PKG_CONFIG_PATH, leave empty to skip test:
+# BLITZPCFILE=blitz.pc
+
+# # Test that these module names are loaded for UAL compilation (compile time):
+# UAL_MODULES = Blitz++
+# # Additionally test for these module names in case of IMAS_PGI=yes IMAS_IFORT=yes,.. see below.
+# UAL_MODULES_MDSPLUS = MDSplus
+# UAL_MODULES_UDA = UDA
+# UAL_MODULES_G95 =
+# UAL_MODULES_NAGFOR =
+# UAL_MODULES_PGI =
+# UAL_MODULES_INTEL =
+# UAL_MODULES_JAVA = Java
+# UAL_MODULES_PYTHON2 =
+# UAL_MODULES_PYTHON3 = 
+
+# # Additional search path to local IMAS scripts that is added to \$PATH by imas module
+# IMAS_EXTRA_PATH = \$(IMAS_HOME)/extra/bin
+# IMAS_EXTRA_MATLABPATH = \$(IMAS_HOME)/extra/matlab
+# IMAS_EXTRA_PYTHONPATH = \$(IMAS_HOME)/core/pyual:\$(IMAS_HOME)/extra/bin
+
+# EOF
+# """
+
+prefix_opt = " echo "
+
+local_envs =" export UAL_GIT_DESCRIBE="+local_al +" DD_GIT_DESCRIBE=" + local_dd + \
+    """   
+    export IMAS_HOME=%(installdir)s  
+    export INSTALL_DIR=%(installdir)s    
+    export IMAS_INSTALL_DIR=%(installdir)s    
+    export INSTALL_MOD_DIR=%(installdir)s/../../../modules/all 
+    export IMAS_CPP=yes  
+    export IMAS_FORTRAN=yes  
+    export IMAS_GFORTRAN=yes   
+    export IMAS_IFORT=no  
+    export IMAS_G95=no   
+    export IMAS_NAGFOR=no  
+    export IMAS_PGI=no   
+    export IMAS_JAVA=yes  
+    export IMAS_MATLAB=no  
+    export IMAS_MEX=no  
+    export IMAS_PYTHON=yes  
+    export IMAS_PYTHON2=no  
+    export IMAS_PYTHON3=yes 
+""" 
+
+build_cmd = local_envs + \
+    """
+      cd %(builddir)s/data-dictionary 
+      make """
+    #   ln -s %(builddir)s/data-dictionary %(builddir)s/access-layer/xml
+    #   cd %(builddir)s/access-layer 
+    #   make """
+
+buildopts=" "
+
+install_cmd = local_envs +\
+    """
+     cd %(builddir)s/data-dictionary 
+     make install """
+    #  cd %(builddir)s/access-layer 
+    #  make  install
+
+installopts = "  "
+# installopts = "install_deps module dd_install ual_install models_install tools_install ual_sources_install "
+
+sanity_check_paths = {
+    'files': ['include/IDSDef.xml',
+              'include/IDSNames.txt'],
+    'dirs': ['share/doc/imas'],
+}
+
+modextravars = {
+    'IMAS_HOME'     : '%(installdir)s',
+    'IMAS_ROOT'     : '%(installdir)s',
+    'IMAS_DIR'      : '%(installdir)s',
+    'IMAS_PREFIX'   : '%(installdir)s',
+    'IMAS_VERSION'  : '%(version)s',
+
+    'UAL_VERSION'   :  local_al,
+}
+modextrapaths = {
+    'MATLAB_PATH'       : 'matlab',
+    'PYTHONPATH'        : 'python/lib',
+    'CLASSPATH'         : 'jar/imas.jar',
+    'PKG_CONFIG_PATH'   : 'lib/pkgconfig',
+    'LD_LIBRARY_PATH'   : 'lib'
+}
+moduleclass = 'data'
