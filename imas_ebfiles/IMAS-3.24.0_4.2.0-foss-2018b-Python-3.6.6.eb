@@ -137,9 +137,11 @@ build_cmd=local_envs+"""
 install_cmd=local_envs+" make "
 
 sanity_check_paths = {
-    'files': ['include/IDSDef.xml',
-              'include/IDSNames.txt'],
-    'dirs': ['share/doc/imas'],
+    'files': [],
+	#	['include/IDSDef.xml',
+    	#        'include/IDSNames.txt'],
+    'dirs':['.']
+	# ['share/doc/imas'],
 }
 
 modextravars = {
