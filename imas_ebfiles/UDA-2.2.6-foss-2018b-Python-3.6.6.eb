@@ -27,7 +27,6 @@ sources = [{
     },
 }]
 
-patches=['UDA-2.2.6-nogit.patch']
 
 dependencies = [    
     ('Python', local_pyver),

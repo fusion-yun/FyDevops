@@ -12,7 +12,7 @@ local_javashortver = '13'
 local_javaver = '13.0.1'
 local_pyver = '3.6.6'
 
-# versionsuffix='-Java-'+local_javaver
+versionsuffix='-Python-'+local_pyver
 
 
 homepage = 'https://confluence.iter.org/display/IMP'
@@ -32,10 +32,6 @@ sources = [
         }
     }      
 ]
-
-
-
-# patches = ['IMAS-3.24.0_4.2.0-installer-1.8.2-nogit.patch']
 
 dependencies = [
     ('Java', local_javaver, '', True),
@@ -128,8 +124,8 @@ configopts=" "
 
 local_envs =" export TAG_AL="+local_al +" TAG_DD=" + local_dd + \
     """   
+    export GIT_OFFLINE=yes
     export SITECONFIG=site-config/Makefile.fuyun
-    export GIT_OFFLINE=YES
     export IMAS_HOME=%(installdir)s  
     export INSTALL_DIR=%(installdir)s    
     export INSTALL_MOD_DIR=%(installdir)s/../../../modules/all    
