@@ -13,12 +13,15 @@ ARG IMAS_VERSION=4.2.0_3.24.0
 ARG TOOLCHAIN_NAME=foss
 ARG TOOLCHAIN_VERSION=2018b
 
+RUN source /etc/profile.d/lmod.bash  && module load Python &&\
+    pip install future matplotlib
+
 RUN --mount=type=bind,target=sources,source=imas_sources \
     --mount=type=bind,target=ebfiles,source=imas_ebfiles \
     source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources --use-existing-modules  -r"  &&\
     eb --software=UDA,${UDA_VERSION} --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} ${_EB_ARGS}
-    
+
 
 
 

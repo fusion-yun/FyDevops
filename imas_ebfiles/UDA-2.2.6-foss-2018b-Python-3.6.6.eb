@@ -51,7 +51,7 @@ builddependencies = [
 # imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
 configopts =" -DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  -DCMAKE_C_FLAGS=' -Wno-maybe-uninitialized ' " 
 
-install_cmd=" make install && cd %(installdir)s/python_installer && python ./setup.py install  --prefix=%(installdir)s/python"
+install_cmd=" make install && cd %(installdir)s/python_installer && python ./setup.py install  --prefix=%(installdir)s"
 
 installopts=" "
  
