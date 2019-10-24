@@ -2,7 +2,7 @@
 
 ARG BASE_OS=centos7
 
-FROM fy_os:${BASE_OS}
+FROM fybox_os:${BASE_OS}
 
 
 ARG PKG_DIR=/packages
@@ -36,22 +36,24 @@ USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}/
 
 # Install lmod
-RUN --mount=type=bind,target=install_sources,source=install_sources \
-    mkdir lmod_build && cd lmod_build &&\
-    tar xzf ../install_sources/lmod-${FY_LMOD_VERSION}.tar.gz  --strip-components=1 && \
+RUN --mount=type=bind,target=sources,source=bootstrap_sources \
+    BUILD_DIR=$(mktemp -d -t build-lmod-XXXXXXXXXX)  && \
+    tar xzf sources/lmod-${FY_LMOD_VERSION}.tar.gz -C ${BUILD_DIR} --strip-components=1 && \
+    cd ${BUILD_DIR} &&\
     ./configure --prefix=${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/ && \
     make install && \  
-    cd .. && rm -rf lmod_build && \
+    rm -rf ${BUILD_DIR} && \
     sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/profile     /etc/profile.d/lmod.sh && \
     sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/bash        /etc/profile.d/lmod.bash && \
     sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/zsh         /etc/profile.d/lmod.zsh && \
     sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/csh         /etc/profile.d/lmod.csh && \
     sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/lmod_bash_completions  /etc/bash_completion.d/lmod_bash_completions && \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/profile  && \
+    cd ~ &&\
     EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES \
-    EASYBUILD_BOOTSTRAP_SOURCEPATH=/home/${FYDEV_USER}/install_sources \
+    EASYBUILD_BOOTSTRAP_SOURCEPATH=~/sources \
     EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION} \
-    python install_sources/bootstrap_eb.py ${PKG_DIR}
+    python sources/bootstrap_eb.py ${PKG_DIR}
    
 ENV EASYBUILD_PREFIX=${PKG_DIR}
 ENV MODULEPATH="${PKG_DIR}/modules/all${MODULEPATH}"
