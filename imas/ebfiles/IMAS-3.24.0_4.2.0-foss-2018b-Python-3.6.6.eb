@@ -5,19 +5,20 @@ name = 'IMAS'
 local_dd = '3.24.0'
 local_al = '4.2.0'
 version = local_dd+'_'+local_al
-local_cache_tag='20191024'
+local_cache_tag = '20191024'
 local_installer = '1.8.2'
 
 local_javashortver = '13'
 local_javaver = '13.0.1'
 local_pyver = '3.6.6'
 
-versionsuffix='-Python-'+local_pyver
+versionsuffix = '-Python-'+local_pyver
 
 
 homepage = 'https://confluence.iter.org/display/IMP'
 
-description = "Integrated Modelling & Analysis Suite (IMAS) AL=" + local_al+"  DD=" + local_dd
+description = "Integrated Modelling & Analysis Suite (IMAS) AL=" + \
+    local_al+"  DD=" + local_dd + " installer= "+local_installer
 
 toolchain = {'version': '2018b', 'name': 'foss'}
 toolchainopts = {'pic': True}
@@ -30,18 +31,18 @@ sources = [
             'repo_name': 'installer',
             'tag': local_installer,
         }
-    }      
+    }
 ]
 
 dependencies = [
     ('Java', local_javaver, '', True),
-    ('Python', local_pyver),     
-    ('UDA', '2.2.6','-Python-%(pyver)s',  toolchain),
+    ('Python', local_pyver),
+    ('UDA', '2.2.6', '-Python-%(pyver)s',  toolchain),
     ('Boost', '1.68.0', '-Python-%(pyver)s', toolchain),
     ('Blitz++', '1.0.2'),
     ('HDF5', '1.10.2'),
     ('netCDF', '4.6.1'),
-    ('MDSplus', '7.84.8','-Java-%(javaver)s', toolchain),
+    ('MDSplus', '7.84.8', '-Java-%(javaver)s', toolchain),
 ]
 builddependencies = [
     ('Java', local_javaver, '', True),
@@ -50,8 +51,7 @@ builddependencies = [
 ]
 
 
-
-local_siteconfig= """EOF
+local_siteconfig = """EOF
 # Site configuration Makefile for ASIPP Organization's HPC Cluster ___ShenMa___
 
 # This file should be maintained by the administrator of the site.
@@ -118,48 +118,53 @@ IMAS_EXTRA_PYTHONPATH = \$(IMAS_HOME)/core/pyual:\$(IMAS_HOME)/extra/bin
 
 EOF
 """
-configure_cmd= "cat > %(builddir)s/installer/site-config/Makefile.fuyun <<"+local_siteconfig 
-prefix_opt =" echo "
-configopts=" "
+configure_cmd = "cat > %(builddir)s/installer/site-config/Makefile.fuyun <<" + \
+    local_siteconfig
+prefix_opt = " echo "
+configopts = " "
 
-local_envs =" export TAG_AL="+local_al +" TAG_DD=" + local_dd + \
+local_envs = " export TAG_AL="+local_al + " TAG_DD=" + local_dd + \
     """   
     export GIT_OFFLINE=yes
     export SITECONFIG=site-config/Makefile.fuyun
     export IMAS_HOME=%(installdir)s  
     export INSTALL_DIR=%(installdir)s    
-    export INSTALL_MOD_DIR=%(installdir)s/../../../modules/all    
-""" 
+"""
 
-build_cmd=local_envs+"""
+build_cmd = local_envs+"""
  make help 
  make """
 
-buildopts= " all "
+buildopts = " all "
 
-install_cmd=local_envs+" make "
+install_cmd = local_envs+" make "
 
-installopts= " install "
+installopts = " install "
 sanity_check_paths = {
-    'files':['include/IDSDef.xml',
-    	     'include/IDSNames.txt'],
+    'files': ['include/IDSDef.xml',
+              'include/IDSNames.txt'],
     'dirs': ['share/doc/imas'],
 }
 
+# whatis = "Integrated Modelling and Analysis Suite (IMAS). (imas:%(version)s ual:"+local_al+")"
+
 modextravars = {
-    'IMAS_HOME'     : '%(installdir)s',
-    'IMAS_ROOT'     : '%(installdir)s',
-    'IMAS_DIR'      : '%(installdir)s',
-    'IMAS_PREFIX'   : '%(installdir)s',
-    'IMAS_VERSION'  : '%(version)s',
-    'UAL_VERSION'   :  local_al,
+    'IMAS_HOME': '%(installdir)s/../',
+    'IMAS_ROOT': '%(installdir)s',
+    'IMAS_DIR': '%(installdir)s',
+    'IMAS_PREFIX': '%(installdir)s',
+    'IMAS_VERSION': '%(version)s',
+    'UAL_VERSION':  local_al,
 }
 modextrapaths = {
-    'MATLAB_PATH'       : 'matlab',
-    'PYTHONPATH'        : 'python/lib',
-    'CLASSPATH'         : 'jar/imas.jar',
-    'PKG_CONFIG_PATH'   : 'lib/pkgconfig',
-    'LD_LIBRARY_PATH'   : 'lib'
+    'PYTHONPATH': 'python/lib',
+    'CLASSPATH': 'jar/imas.jar',
+    'PATH': "extra/bin",
+    'MATLABPATH': "matlab:%(installdir)s/include:%(installdir)s/extra/matlab",
+    'ids_path': "models/mdsplus"
 }
+modluafooter = """
+set_alias('dd_doc', \"( module purge ; xdg-open %(installdir)s/share/doc/imas/html_documentation.html)\")
+set_alias('imasdb', \"eval `%(installdir)s/bin/imasdb $*`\")
+"""
 moduleclass = 'data'
-
