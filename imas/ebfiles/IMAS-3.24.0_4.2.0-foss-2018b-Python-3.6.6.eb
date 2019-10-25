@@ -135,11 +135,11 @@ build_cmd=local_envs+"""
  make help 
  make """
 
-buildopts= " dd"
+buildopts= " all "
 
 install_cmd=local_envs+" make "
 
-installopts= " dd_install "
+installopts= " install "
 sanity_check_paths = {
     'files':['include/IDSDef.xml',
     	     'include/IDSNames.txt'],
