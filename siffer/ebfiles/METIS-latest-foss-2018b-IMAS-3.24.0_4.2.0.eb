@@ -1,0 +1,61 @@
+easyblock = 'ConfigureMake'
+
+name = 'METIS'
+version = 'latest'
+local_pyver = '3.6.6'
+local_javaver = '13.0.1'
+local_imasver = '3.24.0_4.2.0'
+versionsuffix = '-IMAS-'+local_imasver
+
+homepage = 'https://git.iter.org/projects/SCEN/repos/metis/browse'
+
+description = """METIS is a software program developed by the Commissariat à l'énergie atomique et aux énergies alternatives (CEA). 
+It is a simplified integrated modelling transport code for rapid simulation of tokamak experiments. Its main domains of application 
+are the preparation and the analysis of tokamak experiments.
+
+METIS is written in Matlab.
+
+METIS features a graphical interface for configuring the code, running athe simulation, visualizinge the results, savinge results
+ to a file and loading input or results from a file.
+
+The reference to be cited for this code is:
+    J.F. Artaud et al., "The CRONOS suite of codes for integrated tokamak modelling", Nucl. Fusion 50 (2010) 043001.
+"""
+
+toolchain = {'version': '2018b', 'name': 'foss'}
+toolchainopts = {'pic': False}
+
+sources = [{
+    'filename': '%(namelower)s-%(version)s.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/scen',
+        'repo_name': 'metis',
+        'tag': 'master',
+    },
+}]
+
+
+dependencies = [
+    ('IMAS', local_imasver, '-Python-'+local_pyver, toolchain),
+    ('Matlab', '1.1.0h'),
+]
+
+builddependencies = [
+]
+
+# imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
+configopts = " -DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  -DCMAKE_C_FLAGS=' -Wno-maybe-uninitialized ' "
+
+install_cmd = " make install && cd %(installdir)s/python_installer && python ./setup.py install  --prefix=%(installdir)s"
+
+installopts = " "
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['doc'],
+}
+modextravars = {}
+
+modextrapaths = {}
+
+moduleclass = 'phys'

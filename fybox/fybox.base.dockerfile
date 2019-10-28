@@ -6,7 +6,6 @@ FROM fybox_os:${BASE_OS}
 
 
 ARG PKG_DIR=/packages
-ENV PKG_DIR=${PKG_DIR}
 
 ARG FY_LMOD_VERSION=8.1.18
 ARG FY_EB_VERSION=4.0.1
@@ -54,51 +53,63 @@ RUN --mount=type=bind,target=sources,source=bootstrap_sources \
     EASYBUILD_BOOTSTRAP_SOURCEPATH=~/sources \
     EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION} \
     python sources/bootstrap_eb.py ${PKG_DIR}
-   
+
 ENV EASYBUILD_PREFIX=${PKG_DIR}
 ENV MODULEPATH="${PKG_DIR}/modules/all${MODULEPATH}"
 
 
+# Java 
+ARG JAVA_VERSION=13.0.1
 
-   
-    # pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-framework-v${FY_EB_VERSION}.tar.gz && \
-    # pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz && \
-    # pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz && \
-    # mkdir -p ${PKG_DIR}/modules/all/EasyBuild/ && \
-    # export PY_SHORTVER=`python -c "import sys;print(str(sys.version_info.major)+'.'+str(sys.version_info.minor))"` && \
-    # echo -e \
-    # \
-    # "   \n\
-    # help([==[   \n\
-    # \n\
-    # Description   \n\
-    # ===========   \n\
-    # EasyBuild is a software build and installation framework   \n\
-    # written in Python that allows you to install software in a structured,   \n\
-    # repeatable and robust way.   \n\
-    # \n\
-    # \n\
-    # More information   \n\
-    # ================   \n\
-    # - Homepage: http://easybuilders.github.com/easybuild/   \n\
-    # ]==])   \n\
-    # \n\
-    # whatis([==[Description: EasyBuild is a software build and installation framework   \n\
-    # written in Python that allows you to install software in a structured,   \n\
-    # repeatable and robust way.]==])   \n\
-    # whatis([==[Homepage: http://easybuilders.github.com/easybuild/]==])   \n\
-    # \n\
-    # local root = \"${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}\"   \n\
-    # \n\
-    # conflict(\"EasyBuild\")   \n\
-    # \n\
-    # prepend_path(\"PATH\", pathJoin(root, \"bin\"))   \n\
-    # setenv(\"EASYBUILD_PREFIX\", \"${PKG_DIR}\")   \n\    
-    # setenv(\"EBROOTEASYBUILD\", root)   \n\
-    # setenv(\"EBVERSIONEASYBUILD\", \"${FY_EB_VERSION}\")   \n\
-    # setenv(\"EBDEVELEASYBUILD\", pathJoin(root, \"easybuild/EasyBuild-${FY_EB_VERSION}-easybuild-devel\"))   \n\
-    # \n\
-    # prepend_path(\"PYTHONPATH\", pathJoin(root, \"lib/python${PY_SHORTVER}/site-packages\"))   \n\
-    # -- Built with EasyBuild version ${FY_EB_VERSION}   \n\
-    # \n\
-    # " > ${PKG_DIR}/modules/all/EasyBuild/${FY_EB_VERSION}.lua
+RUN --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=ebfiles,source=ebfiles \
+    source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
+    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources ${EB_ARGS}"  &&\
+    eb --software=Java,${JAVA_VERSION} --toolchain-name=system ${_EB_ARGS}  &&\
+    eb --software-name=ant --amend=versionsuffix=-Java-${JAVA_VERSION} ${_EB_ARGS}  &&\
+    eb --software-name=SaxonHE --amend=versionsuffix=-Java-${JAVA_VERSION}  ${_EB_ARGS} 
+
+
+ENV FY_PKG_DIR=${PKG_DIR}
+ENV FY_JAVA_VERSION=${JAVA_VERSION}
+
+# pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-framework-v${FY_EB_VERSION}.tar.gz && \
+# pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz && \
+# pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz && \
+# mkdir -p ${PKG_DIR}/modules/all/EasyBuild/ && \
+# export PY_SHORTVER=`python -c "import sys;print(str(sys.version_info.major)+'.'+str(sys.version_info.minor))"` && \
+# echo -e \
+# \
+# "   \n\
+# help([==[   \n\
+# \n\
+# Description   \n\
+# ===========   \n\
+# EasyBuild is a software build and installation framework   \n\
+# written in Python that allows you to install software in a structured,   \n\
+# repeatable and robust way.   \n\
+# \n\
+# \n\
+# More information   \n\
+# ================   \n\
+# - Homepage: http://easybuilders.github.com/easybuild/   \n\
+# ]==])   \n\
+# \n\
+# whatis([==[Description: EasyBuild is a software build and installation framework   \n\
+# written in Python that allows you to install software in a structured,   \n\
+# repeatable and robust way.]==])   \n\
+# whatis([==[Homepage: http://easybuilders.github.com/easybuild/]==])   \n\
+# \n\
+# local root = \"${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}\"   \n\
+# \n\
+# conflict(\"EasyBuild\")   \n\
+# \n\
+# prepend_path(\"PATH\", pathJoin(root, \"bin\"))   \n\
+# setenv(\"EASYBUILD_PREFIX\", \"${PKG_DIR}\")   \n\    
+# setenv(\"EBROOTEASYBUILD\", root)   \n\
+# setenv(\"EBVERSIONEASYBUILD\", \"${FY_EB_VERSION}\")   \n\
+# setenv(\"EBDEVELEASYBUILD\", pathJoin(root, \"easybuild/EasyBuild-${FY_EB_VERSION}-easybuild-devel\"))   \n\
+# \n\
+# prepend_path(\"PYTHONPATH\", pathJoin(root, \"lib/python${PY_SHORTVER}/site-packages\"))   \n\
+# -- Built with EasyBuild version ${FY_EB_VERSION}   \n\
+# \n\
+# " > ${PKG_DIR}/modules/all/EasyBuild/${FY_EB_VERSION}.lua

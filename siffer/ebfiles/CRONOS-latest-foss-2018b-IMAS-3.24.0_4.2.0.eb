@@ -1,0 +1,53 @@
+easyblock = 'ConfigureMake'
+
+name = 'CRONOS'
+version = 'latest'
+local_pyver = '3.6.6'
+local_javaver = '13.0.1'
+local_imasver = '3.24.0_4.2.0'
+versionsuffix = '-IMAS-'+local_imasver
+
+homepage = ''
+
+description = """CRONOS is a suite of numerical codes for the predictive/interpretative 
+simulation of a full tokamak discharge. It integrates, in a modular structure, a 1D transport 
+solver with general 2D magnetic equilibria, several heat, particle and impurities transport 
+models, as well as heat, particle and momentum sources. This paper gives a first comprehensive
+ description of the CRONOS suite: overall structure of the code, main available models, 
+ details on the simulation workflow and numerical implementation. Some examples of applications
+ to the analysis of experimental discharges and the predictions of ITER scenarios are also given.
+
+Ref:The CRONOS suite of codes for integrated tokamak modelling, 2010(March),Nuclear Fusion 50(4):043001 
+DOI: 10.1088/0029-5515/50/4/043001 
+"""
+
+toolchain = {'version': '2018b', 'name': 'foss'}
+toolchainopts = {'pic': False}
+
+sources = ['%(namelower)s-%(version)s.tar.gz']
+
+
+dependencies = [
+    ('IMAS', local_imasver, '-Python-'+local_pyver, toolchain),
+    ('Matlab', '2019b'),
+]
+
+builddependencies = [
+]
+
+# imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
+configopts = " "
+
+install_cmd = ""
+
+installopts = " "
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['doc'],
+}
+modextravars = {}
+
+modextrapaths = {}
+
+moduleclass = 'phys'

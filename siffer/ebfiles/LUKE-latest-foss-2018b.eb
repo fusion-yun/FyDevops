@@ -1,0 +1,61 @@
+easyblock = 'ConfigureMake'
+
+name = 'LUKE'
+version = 'latest'
+local_pyver = '3.6.6'
+local_javaver = '13.0.1'
+local_imasver = '3.24.0_4.2.0'
+versionsuffix = '-IMAS-'+local_imasver
+
+homepage = 'https://git.iter.org/projects/SCEN/repos/metis/browse'
+
+description = """   LUKE
+
+J. Decker and Y. Peysson. DKE: "a fast numerical solver for the 3-D relativistic bounce-averaged electron 
+drift kinetic equation". Euratom-CEA report EUR-CEA-FC-1736, Association EURATOM-CEA sur la 
+Fusion Controlee, Saint-Paul-lez-Durance, France, 2004.
+
+For all detailed analytic calculations concerning C3PO ray-tracing :
+
+Y. Peysson, J. Decker. "C3PO, a ray-tracing code for arbitrary axisymmetric magnetic equilibrium". 
+Euratom-CEA report EUR-CEA-FC-1739, Association EURATOM-CEA sur la 
+Fusion Controlee, Saint-Paul-lez-Durance, France, 2008.
+"""
+
+toolchain = {'version': '2018b', 'name': 'foss'}
+toolchainopts = {'pic': False}
+
+sources = [{
+    'filename': '%(namelower)s-%(version)s.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/heat/',
+        'repo_name': 'luke',
+        'tag': 'master',
+    },
+}]
+
+
+dependencies = [
+    ('IMAS', local_imasver, '-Python-'+local_pyver, toolchain),
+    ('Matlab', '2018b'),
+]
+
+builddependencies = [
+]
+
+# imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
+configopts = "  "
+
+install_cmd = " "
+
+installopts = " "
+
+sanity_check_paths = {
+    'files': ['README.m'],
+    'dirs': [],
+}
+modextravars = {}
+
+modextrapaths = {}
+
+moduleclass = 'phys'
