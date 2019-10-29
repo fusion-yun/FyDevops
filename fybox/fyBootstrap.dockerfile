@@ -2,31 +2,30 @@
 
 ARG BASE_OS=centos7
 
-FROM fybox_os:${BASE_OS}
-
+FROM fyos:${BASE_OS} 
 
 ARG PKG_DIR=/packages
+
+ARG FYDEV_USER=fydev 
+ARG FYDEV_USER_ID=1000
 
 ARG FY_LMOD_VERSION=8.1.18
 ARG FY_EB_VERSION=4.0.1
 
-LABEL Description   "fyBox base: lmod ${FY_LMOD_VERSION} + EasyBuild ${FY_EB_VERSION}, PKG_DIR=${PKG_DIR}"
-LABEL Name          "fybox_base"
+LABEL Description   "fyBox bootstrap: lmod ${FY_LMOD_VERSION} + EasyBuild ${FY_EB_VERSION}, PKG_DIR=${PKG_DIR} FYDEV_USER=${FYDEV_USER}:${FYDEV_USER_ID} "
+LABEL Name          "fyBootstrap"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
 LABEL Description   "Create module envirnments "
+
 
 ################################################################################
 # Add user for DevOps
 # Add user for DevOps
 # RUN groupadd -f ${FYDEV_GROUP} -g ${FYDEV_GROUP_ID}
-ARG FYDEV_USER=fydev 
-ARG FYDEV_USER_ID=1000
-ENV FYDEV_USER=${FYDEV_USER}
-
 RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER}  && \
     usermod -a -G wheel  ${FYDEV_USER} && \
     mkdir -m755 -p ${PKG_DIR}  && \
-    chown  ${FYDEV_USER}.${FYDEV_GROUP}  -R ${PKG_DIR}   && \
+    chown  ${FYDEV_USER}.${FYDEV_USER}  -R ${PKG_DIR}   && \
     echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
 
 ################################################################################
@@ -35,7 +34,7 @@ USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}/
 
 # Install lmod
-RUN --mount=type=bind,target=sources,source=bootstrap_sources \
+RUN --mount=type=bind,target=sources,source=bootstrap/sources \
     BUILD_DIR=$(mktemp -d -t build-lmod-XXXXXXXXXX)  && \
     tar xzf sources/lmod-${FY_LMOD_VERSION}.tar.gz -C ${BUILD_DIR} --strip-components=1 && \
     cd ${BUILD_DIR} &&\
@@ -54,23 +53,15 @@ RUN --mount=type=bind,target=sources,source=bootstrap_sources \
     EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION} \
     python sources/bootstrap_eb.py ${PKG_DIR}
 
+
+ENV FYDEV_USER=${FYDEV_USER}
+ENV FYDEV_USER_ID=${FYDEV_USER_ID}
+ENV PKG_DIR=${PKG_DIR}
 ENV EASYBUILD_PREFIX=${PKG_DIR}
 ENV MODULEPATH="${PKG_DIR}/modules/all${MODULEPATH}"
 
 
-# Java 
-ARG JAVA_VERSION=13.0.1
 
-RUN --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=ebfiles,source=ebfiles \
-    source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources ${EB_ARGS}"  &&\
-    eb --software=Java,${JAVA_VERSION} --toolchain-name=system ${_EB_ARGS}  &&\
-    eb --software-name=ant --amend=versionsuffix=-Java-${JAVA_VERSION} ${_EB_ARGS}  &&\
-    eb --software-name=SaxonHE --amend=versionsuffix=-Java-${JAVA_VERSION}  ${_EB_ARGS} 
-
-
-ENV FY_PKG_DIR=${PKG_DIR}
-ENV FY_JAVA_VERSION=${JAVA_VERSION}
 
 # pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-framework-v${FY_EB_VERSION}.tar.gz && \
 # pip install --install-option "--prefix=${PKG_DIR}/software/EasyBuild/${FY_EB_VERSION}" install_sources/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz && \
