@@ -20,7 +20,7 @@ checksums = [
 ]
 
 dependencies = [
-    ('Java','13','',True),
+    ('Java','13.0.1','',True),
     ('HDF5', '1.10.2'),
     ('libxml2', '2.9.8'),
     ('zlib', '1.2.11'),
