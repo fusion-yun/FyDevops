@@ -1,0 +1,25 @@
+easyblock = 'ConfigureMake'
+
+name = 'libxslt'
+version = '1.1.33'
+
+homepage = 'http://xmlsoft.org/'
+description = """Libxslt is the XSLT C library developed for the GNOME project
+ (but usable outside of the Gnome platform)."""
+
+toolchain = {'version': '8.3.0', 'name': 'GCCcore'}
+
+source_urls = [
+    'http://xmlsoft.org/sources/',
+    'http://xmlsoft.org/sources/old/'
+]
+sources = [SOURCELOWER_TAR_GZ]
+checksums = []
+builddependencies = [('binutils', '2.32')]
+
+dependencies = [
+    ('zlib', '1.2.11'),
+    ('libxml2', '2.9.9'),
+]
+
+moduleclass = 'lib'

@@ -1,12 +1,8 @@
 # syntax=docker/dockerfile:experimental
 
-ARG BASE_VERSION=centos7
+ARG BASE_VERSION=latest
 
-FROM fysystem:${BASE_VERSION}
-
-
-# Base binutils,glibc
-
+FROM fybase:${BASE_VERSION}
 
 ENV PKG_DIR=${PKG_DIR:-/packages}
 
@@ -18,7 +14,7 @@ ARG EB_ARGS=" --use-existing-modules --info -l -r"
 
 #-------------------------------------------------------------------------------
 # GCCcore 
-ARG GCCCORE_VERSION=${GCCCORE_VERSION:-7.3.0} 
+ARG GCCCORE_VERSION=${GCCCORE_VERSION:-6.3.0} 
 
 RUN  --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=ebfiles,source=ebfiles \
     source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
@@ -40,7 +36,7 @@ RUN --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=eb
 RUN --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=ebfiles,source=ebfiles \
     source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources ${EB_ARGS}"  &&\
-    # eb --software-name=PostgreSQL       --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\ 
+    eb --software-name=PostgreSQL       --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\ 
     eb --software-name=libMemcached     --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\ 
     eb --software-name=MDSplus          --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} 
 # #-------------------------------------------------------------------------------
@@ -103,16 +99,7 @@ RUN --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=eb
 
 # RUN source /etc/profile.d/lmod.bash  && module load Python &&\ 
 #     pip install future matplotlib  numpy scipy pandas jupyter jupyterlab dask ipyparallel
-
-#-------------------------------------------------------------------------------
-# libs: java-dep   
-
-ARG JAVA_VERSION=${JAVA_VERSION:-13.0.1}
-
-
-
-
-
+ 
 LABEL Description   "Toolchain ${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION} gcccore:${GCCCORE_VERSION}"
 LABEL Name          "fybox"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"

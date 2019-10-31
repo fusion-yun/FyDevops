@@ -34,7 +34,7 @@ USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}/
 
 # Install lmod
-RUN --mount=type=bind,target=sources,source=bootstrap/sources \
+RUN --mount=type=bind,target=sources,source=sources \
     BUILD_DIR=$(mktemp -d -t build-lmod-XXXXXXXXXX)  && \
     tar xzf sources/lmod-${FY_LMOD_VERSION}.tar.gz -C ${BUILD_DIR} --strip-components=1 && \
     cd ${BUILD_DIR} &&\
@@ -60,6 +60,19 @@ ENV PKG_DIR=${PKG_DIR}
 ENV EASYBUILD_PREFIX=${PKG_DIR}
 ENV MODULEPATH="${PKG_DIR}/modules/all${MODULEPATH}"
 
+ARG EB_ARGS=" --use-existing-modules --info -l -r"
+
+#-------------------------------------------------------------------------------
+# Java 
+ARG JAVA_VERSION=${JAVA_VERSION:-13.0.1}
+ENV JAVA_VERSION=${JAVA_VERSION}
+
+RUN --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=ebfiles,source=ebfiles \
+    source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
+    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources ${EB_ARGS}"  &&\
+    eb --software=Java,${JAVA_VERSION} --toolchain-name=system ${_EB_ARGS}  &&\
+    eb --software-name=ant --amend=versionsuffix=-Java-${JAVA_VERSION} ${_EB_ARGS}  &&\
+    eb --software-name=SaxonHE --amend=versionsuffix=-Java-${JAVA_VERSION}  ${_EB_ARGS} 
 
 
 
