@@ -4,7 +4,6 @@ ARG BASE_OS=centos7
 
 FROM fyos:${BASE_OS} 
 
-ARG PKG_DIR=/packages
 
 ARG FYDEV_USER=fydev 
 ARG FYDEV_USER_ID=1000
@@ -24,34 +23,38 @@ LABEL Description   "Create module envirnments "
 # RUN groupadd -f ${FYDEV_GROUP} -g ${FYDEV_GROUP_ID}
 RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER}  && \
     usermod -a -G wheel  ${FYDEV_USER} && \
-    mkdir -m755 -p ${PKG_DIR}  && \
-    chown  ${FYDEV_USER}.${FYDEV_USER}  -R ${PKG_DIR}   && \
     echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
 
 ################################################################################
 # Install lmod+easybuild
-USER ${FYDEV_USER}
-WORKDIR /home/${FYDEV_USER}/
-
 # Install lmod
-RUN --mount=type=bind,target=sources,source=sources \
+RUN --mount=type=bind,target=/tmp/sources,source=sources \
     BUILD_DIR=$(mktemp -d -t build-lmod-XXXXXXXXXX)  && \
-    tar xzf sources/lmod-${FY_LMOD_VERSION}.tar.gz -C ${BUILD_DIR} --strip-components=1 && \
-    cd ${BUILD_DIR} &&\
-    ./configure --prefix=${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/ && \
-    make install && \  
-    rm -rf ${BUILD_DIR} && \
-    sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/profile     /etc/profile.d/lmod.sh && \
-    sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/bash        /etc/profile.d/lmod.bash && \
-    sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/zsh         /etc/profile.d/lmod.zsh && \
-    sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/csh         /etc/profile.d/lmod.csh && \
-    sudo ln -s ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/lmod_bash_completions  /etc/bash_completion.d/lmod_bash_completions && \
-    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/lmod/lmod/init/profile  && \
-    cd ~ &&\
+    mkdir -p ${BUILD_DIR}/lmod  && \
+    tar xzf /tmp/sources/lmod-${FY_LMOD_VERSION}.tar.gz -C ${BUILD_DIR}/lmod --strip-components=1 && \
+    cd ${BUILD_DIR}/lmod &&\
+    ./configure  && make install && \  
+    ls /usr/local &&\
+    sudo ln -s /usr/local/lmod/lmod/init/profile     /etc/profile.d/lmod.sh && \
+    sudo ln -s /usr/local/lmod/lmod/init/bash        /etc/profile.d/lmod.bash && \
+    sudo ln -s /usr/local/lmod/lmod/init/zsh         /etc/profile.d/lmod.zsh && \
+    sudo ln -s /usr/local/lmod/lmod/init/csh         /etc/profile.d/lmod.csh && \
+    sudo ln -s /usr/local/lmod/lmod/init/lmod_bash_completions  /etc/bash_completion.d/lmod_bash_completions  && \
+    rm -rf ${BUILD_DIR}
+ 
+USER ${FYDEV_USER}
+ARG PKG_DIR=/packages
+
+RUN sudo mkdir -p ${PKG_DIR} &&\
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} ${PKG_DIR} 
+
+RUN --mount=type=bind,target=/tmp/sources,source=sources \
+    source /etc/profile.d/lmod.bash  &&\   
     EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES \
-    EASYBUILD_BOOTSTRAP_SOURCEPATH=~/sources \
+    EASYBUILD_BOOTSTRAP_SOURCEPATH=/tmp/sources \
     EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION} \
-    python sources/bootstrap_eb.py ${PKG_DIR}
+    python /tmp/sources/bootstrap_eb.py ${PKG_DIR}   
+   
 
 
 ENV FYDEV_USER=${FYDEV_USER}
@@ -60,6 +63,9 @@ ENV PKG_DIR=${PKG_DIR}
 ENV EASYBUILD_PREFIX=${PKG_DIR}
 ENV MODULEPATH="${PKG_DIR}/modules/all${MODULEPATH}"
 
+
+
+
 ARG EB_ARGS=" --use-existing-modules --info -l -r"
 
 #-------------------------------------------------------------------------------
@@ -67,7 +73,9 @@ ARG EB_ARGS=" --use-existing-modules --info -l -r"
 ARG JAVA_VERSION=${JAVA_VERSION:-13.0.1}
 ENV JAVA_VERSION=${JAVA_VERSION}
 
-RUN --mount=type=bind,target=sources,source=sources  --mount=type=bind,target=ebfiles,source=ebfiles \
+RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
+    --mount=type=bind,target=sources,source=sources  \
+    --mount=type=bind,target=ebfiles,source=ebfiles \
     source /etc/profile.d/lmod.bash  && module load EasyBuild &&\
     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources ${EB_ARGS}"  &&\
     eb --software=Java,${JAVA_VERSION} --toolchain-name=system ${_EB_ARGS}  &&\

@@ -11,7 +11,7 @@ description = """
  object-oriented interface
 """
 
-toolchain = {'version': '7.3.0', 'name': 'GCCcore'}
+toolchain = {'version': '8.3.0', 'name': 'GCCcore'}
 toolchainopts = {'pic': True}
 
 sources = [{
@@ -25,8 +25,8 @@ sources = [{
 
 checksums = []
 builddependencies = [
-    ('CMake', '3.12.1'),
-    ('binutils', '2.30'),
+    ('CMake', '3.15.3'),
+    ('binutils', '2.32'),
 ]
 
 configopts = '--enable-shared'
