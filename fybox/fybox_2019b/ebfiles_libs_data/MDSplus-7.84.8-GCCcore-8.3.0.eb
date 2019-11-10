@@ -8,7 +8,7 @@ homepage = 'http://mdsplus.org/'
 description = """MDSplus is a set of software tools for data acquisition and storage and a methodology
  for management of complex scientific data."""
 
-toolchain = {'version': '7.3.0', 'name': 'GCCcore'}
+toolchain = {'version': '8.3.0', 'name': 'GCCcore'}
 toolchainopts = {'pic': True}
 
 source_urls = ['https://github.com/%(name)s/%(namelower)s/archive']
@@ -19,16 +19,21 @@ checksums = [
     '0452fdd9366572b61747b2b0ce3922d9f1917c406eb9b281e07193a25637c484',  # MDSplus-7.84.8.patch
 ]
 
-dependencies = [
-    ('Java','13.0.1','',True),
-    ('HDF5', '1.10.2'),
-    ('libxml2', '2.9.8'),
-    ('zlib', '1.2.11'),
-    ('ncurses', '6.1'),
-    ('libreadline', '7.0')
+builddependencies = [
+    ('Autotools', '20180311'),
+    ('Doxygen', '1.8.16'),
 ]
 
-configopts = '--disable-doxygen-doc --enable-java '
+dependencies = [
+    ('Java','13.0.1','',True),
+    ('HDF5', '1.10.5'),
+    ('libxml2', '2.9.9'),
+    ('zlib', '1.2.11'),
+    ('ncurses', '6.1'),
+    ('libreadline', '8.0')
+]
+
+configopts = ' --enable-java '
 
 configure_cmd_prefix = 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
 

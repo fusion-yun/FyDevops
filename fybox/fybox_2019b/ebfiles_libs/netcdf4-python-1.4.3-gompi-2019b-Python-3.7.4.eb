@@ -5,7 +5,7 @@ versionsuffix = '-Python-%(pyver)s'
 homepage = 'https://unidata.github.io/netcdf4-python/'
 description = """Python/numpy interface to netCDF."""
 
-toolchain = {'version': '2019b', 'name': 'foss'}
+toolchain = {'version': '2019b', 'name': 'gompi'}
 toolchainopts = {'usempi': True}
 
 source_urls = ['https://github.com/Unidata/netcdf4-python/archive/']
