@@ -1,0 +1,83 @@
+easyblock = 'CMakeMake'
+
+name = 'UDA'
+version = '2.2.6'
+local_pyver = '3.7.4'
+local_javaver='13.0.1'
+versionsuffix='-Python-%(pyver)s'
+
+homepage = 'https://git.iter.org/projects/IMAS/repos/uda/browse'
+
+description = """The UDA API provides plugin driven data abstraction.
+The UDA can be either run as a client-server API, running as thin client
+ with all functionality being handled on a remote server, or as fat-client 
+ API where both the client access and plugin functionality is run on the
+ local machine.
+"""
+
+toolchain = {'version': '2019b', 'name': 'gompi'}
+toolchainopts = {'pic': False}
+
+sources = [{
+    'filename': '%(namelower)s-%(version)s.tar.gz',
+    'git_config': {
+        'url': 'ssh://git@git.iter.org/imas',
+        'repo_name': 'uda',
+        'tag': '%(version)s',
+    },
+}]
+
+
+dependencies = [    
+    ('Python', local_pyver),
+    ('Boost', '1.71.0'), 
+    ('PostgreSQL', '11.3','-Python-'+local_pyver),
+    ('libxml2', '2.9.9'),
+    ('libMemcached', '1.0.18'),
+    ('HDF5', '1.10.2'),
+    ('netCDF', '4.6.2'),
+    ('MDSplus', '7.84.8','-Java-'+local_javaver),
+]
+
+builddependencies = [    
+    ('Java', local_javaver, '', True),
+    ('SWIG', '3.0.12', '-Python-'+local_pyver),
+    ('CMake', '3.15.3') 
+]
+
+# imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
+configopts =" -DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  -DCMAKE_C_FLAGS=' -Wno-maybe-uninitialized ' " 
+
+install_cmd=" make install && cd %(installdir)s/python_installer && python ./setup.py install  --prefix=%(installdir)s"
+
+installopts=" "
+ 
+sanity_check_paths = {
+    'files': ['lib/libuda_server.a',
+              'lib/libuda_server.so',
+              'lib/libuda_client.a',
+              'lib/libuda_client.so',
+              'lib/libfatuda_client.a',
+              'lib/libfatuda_client.so'
+              ],
+    'dirs': ['include/uda/client',
+             'include/uda/clientserver',
+             'include/uda/plugins',
+             'include/uda/server',
+             'include/uda/structures',
+             'lib/plugins',
+             'lib/pkgconfig'],
+}
+modextravars = {
+    'UDA_DIR'       : '%(installdir)s',
+    'UDA_HOME'      : '%(installdir)s',
+    'UDA_ROOT'      : '%(installdir)s',
+    'UDA_VERSION'   : '%(version)s'
+}
+
+modextrapaths = {
+    'PYTHONPATH'        : 'lib/python%(pyshortver)s/site-packages',
+
+}
+
+moduleclass = 'data'

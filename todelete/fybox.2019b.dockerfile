@@ -131,11 +131,11 @@ RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharin
     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
     eb --software=Python,${PYTHON_VERSION}  --toolchain=GCCcore,${GCCCORE_VERSION} ${EB_ARGS}   
 
-RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles_java \
-    source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
-    eb --software-name=SWIG    --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${EB_ARGS}
+# RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
+#     --mount=type=bind,target=ebfiles,source=ebfiles_java \
+#     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
+#     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+#     eb --software-name=SWIG    --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${EB_ARGS}
 
 # -------------------------------------------------------------------------------
 # Perl : 
@@ -213,8 +213,13 @@ RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharin
     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=HDF5             --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS}  
 
-COPY --from=fy_java /packages/software/Java ${PKG_DIR}/Java
-COPY --from=fy_java /packages/modules/all/Java ${PKG_DIR}/modules/all/Java
+COPY --from=fy_python /packages/ebfiles_repo  ${PKG_DIR}/ebfiles_repo
+COPY --from=fy_python /packages/software  ${PKG_DIR}/software
+COPY --from=fy_python /packages/modules  ${PKG_DIR}/modules
+
+COPY --from=fy_java /packages/ebfiles_repo  ${PKG_DIR}/ebfiles_repo
+COPY --from=fy_java /packages/software ${PKG_DIR}/software
+COPY --from=fy_java /packages/modules ${PKG_DIR}/modules
 
 RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
     --mount=type=bind,target=ebfiles,source=ebfiles_libs_data \
@@ -232,14 +237,14 @@ RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharin
 
 
 
-RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles_libs_data \
-    source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
-    eb --software-name=HDF5           --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\ 
-    eb --software-name=netCDF           --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\ 
-    eb --software-name=netCDF-Fortran   --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\
-    eb --software-name=netCDF-C++4      --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  
+# RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
+#     --mount=type=bind,target=ebfiles,source=ebfiles_libs_data \
+#     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
+#     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+#     eb --software-name=HDF5           --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\ 
+#     eb --software-name=netCDF           --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\ 
+#     eb --software-name=netCDF-Fortran   --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\
+#     eb --software-name=netCDF-C++4      --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  
 
 # RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
 #     --mount=type=bind,target=ebfiles,source=ebfiles_libs_data/${FY_EB_VERSION} \
