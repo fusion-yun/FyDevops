@@ -55,6 +55,11 @@ RUN yum install -y \
     python-pip \
     python-wheel \
     openssl \
-    openssl-devel 
+    openssl-devel \
+    perl \
+    pcre \
+    tcl \
+    libXt \
+    libXext 
 
     
