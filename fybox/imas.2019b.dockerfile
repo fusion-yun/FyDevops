@@ -27,29 +27,29 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=Python       --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\
-    eb --software-name=PostgreSQL   --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS} &&\
     eb --software-name=libxml2      --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\
     eb --software-name=libMemcached --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\
+    eb --software-name=MDSplus      --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\
+    eb --software-name=PostgreSQL   --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS} &&\
+    eb --software-name=SWIG         --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS} &&\
     eb --software-name=HDF5         --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} &&\
     eb --software-name=netCDF       --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} &&\
-    eb --software-name=MDSplus      --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} &&\
-    eb --software-name=Boost        --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} &&\
-    eb --software-name=SWIG         --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${_EB_ARGS} 
+    eb --software-name=Boost        --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} 
 
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 WORKDIR /home/${FYDEV_USER}
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=sources,source=sources_imas \
-    --mount=type=bind,target=ebfiles,source=ebfiles_imas \
+    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=sources,source=sources \
     --mount=type=ssh \
     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources --use-existing-modules  -l --info  -r "  &&\
     eb --software-name=UDA --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS}
  
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=sources,source=sources_imas \
-    --mount=type=bind,target=ebfiles,source=ebfiles_imas \
+    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=sources,source=sources \
     --mount=type=ssh \
     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources --use-existing-modules  -l --info  -r "  &&\

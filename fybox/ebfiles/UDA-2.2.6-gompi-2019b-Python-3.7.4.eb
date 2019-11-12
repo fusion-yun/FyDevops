@@ -34,9 +34,9 @@ dependencies = [
     ('PostgreSQL', '11.3','-Python-'+local_pyver),
     ('libxml2', '2.9.9'),
     ('libMemcached', '1.0.18'),
-    ('HDF5', '1.10.2'),
+    ('HDF5', '1.10.5'),
     ('netCDF', '4.6.2'),
-    ('MDSplus', '7.84.8','-Java-'+local_javaver),
+    ('MDSplus', '7.84.8'),
 ]
 
 builddependencies = [    

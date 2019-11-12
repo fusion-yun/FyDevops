@@ -38,16 +38,16 @@ dependencies = [
     ('Java', local_javaver, '', True),
     ('Python', local_pyver),
     ('UDA', '2.2.6', '-Python-%(pyver)s',  toolchain),
-    ('Boost', '1.68.0'),
+    ('Boost', '1.71.0'),
     ('Blitz++', '1.0.2'),
-    ('HDF5', '1.10.2'),
-    ('netCDF', '4.6.1'),
+    ('HDF5', '1.10.5'),
+    ('netCDF', '4.6.2'),
     ('MDSplus', '7.84.8'),
 ]
 builddependencies = [
     ('Java', local_javaver, '', True),
     ('SaxonHE', '9.9.1.5', '-Java-%(javaver)s',   True),
-    ('libxslt', '1.1.32'),
+    ('libxslt', '1.1.33'),
 ]
 
 
