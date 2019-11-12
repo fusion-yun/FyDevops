@@ -221,6 +221,7 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
     eb --software-name=OpenBLAS            --toolchain=GCC,${GCCCORE_VERSION}  ${_EB_ARGS} && \
     eb --software-name=ScaLAPACK           --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} && \
     eb --software-name=FFTW                --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} && \
+    eb --software=foss,${TOOLCHAIN_VERSION}  ${_EB_ARGS}
 
 
 # -------------------------------------------------------------------------------
