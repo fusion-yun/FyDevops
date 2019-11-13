@@ -17,7 +17,6 @@ use_pip = True
 
 dependencies = [
     ('Python', '3.7.4'),
-    ('cftime', '1.0.1', '-Python-%(pyver)s'),
     ('netCDF', '4.6.2'),
     ('cURL', '7.66.0'),
 ]

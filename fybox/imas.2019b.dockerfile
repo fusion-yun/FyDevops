@@ -23,9 +23,9 @@ ARG FY_EB_VERSION=${FY_EB_VERSION}
 ARG EB_ARGS=${EB_ARGS:-" --use-existing-modules --info -l -r"}
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=Python       --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\
     eb --software-name=libxml2      --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\
     eb --software-name=libMemcached --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} &&\
@@ -40,20 +40,32 @@ ARG FYDEV_USER=${FYDEV_USER:-fydev}
 WORKDIR /home/${FYDEV_USER}
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
-    --mount=type=bind,target=sources,source=sources \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/sources,source=sources \
     --mount=type=ssh \
     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources --use-existing-modules  -l --info  -r "  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:/tmp/sources --use-existing-modules  -l --info  -r "  &&\
     eb --software-name=UDA --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS}
- 
+
+
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
-    --mount=type=bind,target=sources,source=sources \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/sources,source=sources \
     --mount=type=ssh \
     source /etc/profile.d/lmod.bash  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:sources --use-existing-modules  -l --info  -r "  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs --sourcepath=$EASYBUILD_PREFIX/sources/:/tmp/sources --use-existing-modules  -l --info  -r "  &&\
     eb --software-name=IMAS --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS} 
+
+
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages/cache,sharing=shared \
+    cp -rf /packages/cache/software/UDA             ${PKG_DIR}/                 &&\
+    cp -rf /packages/cache/modules/all/UDA          ${PKG_DIR}/modules/all/     &&\
+    cp -rf /packages/cache/modules/data/UDA         ${PKG_DIR}/modules/data/    &&\
+    cp -rf /packages/cache/ebfiles_repo/UDA         ${PKG_DIR}/                 &&\
+    cp -rf /packages/cache/software/IMAS            ${PKG_DIR}/                 &&\
+    cp -rf /packages/cache/modules/all/IMAS         ${PKG_DIR}/modules/all/     &&\
+    cp -rf /packages/cache/modules/data/IMAS        ${PKG_DIR}/modules/data/    &&\
+    cp -rf /packages/cache/ebfiles_repo/IMAS        ${PKG_DIR}/ 
 
 # RUN source /etc/profile.d/lmod.bash  && module load Python &&\
 #     pip install future matplotlib

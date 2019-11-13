@@ -113,6 +113,11 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
 #     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
 #     eb --software-name=SWIG    --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${EB_ARGS}
 
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
+    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
+    module load Python/${PYTHON_VERSION}-GCCcore-${GCCCORE_VERSION} && \
+    pip install pkgconfig cftime  numpy scipy matplotlib ipython jupyter pandas sympy nose jupyter 
+ 
 # # -------------------------------------------------------------------------------
 # # Perl : 
 # ARG PERL_VERSION=${PERL_VERSION:-5.30.0}
@@ -129,9 +134,9 @@ ARG JAVA_VERSION=${JAVA_VERSION:-13.0.1}
 ENV JAVA_VERSION=${JAVA_VERSION}
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software=Java,${JAVA_VERSION} --toolchain-name=system ${_EB_ARGS}  &&\
     eb --software-name=ant --amend=versionsuffix=-Java-${JAVA_VERSION} ${_EB_ARGS}  &&\
     eb --software-name=SaxonHE --amend=versionsuffix=-Java-${JAVA_VERSION}  ${_EB_ARGS} 
@@ -145,35 +150,34 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
     eb --software-name=Doxygen      --toolchain=GCCcore,${GCCCORE_VERSION}  ${EB_ARGS}  
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} && \    
-    eb ebfiles/Ninja-1.9.0-GCCcore-8.3.0-withfortran.eb --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs ${EB_ARGS}
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    eb /tmp/ebfiles/Ninja-1.9.0-GCCcore-8.3.0-withfortran.eb ${_EB_ARGS} 
 
 
 
 #-------------------------------------------------------------------------------
 # libs:data
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    rm -rf ${PKG_DIR}/modules/all/MDSplus && \
-    rm -rf ${PKG_DIR}/software/MDSplus && \
-    export _EB_ARGS=" --robot-paths=ebfiles ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles ${EB_ARGS}"  &&\
     eb --software-name=HDF5             --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS}  &&\
     eb --software-name=MDSplus          --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS}  
 
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=HDF5             --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  
 
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=PostgreSQL       --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS}   &&\
     eb --software-name=libMemcached     --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS}  
 
@@ -181,57 +185,63 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
 
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=netCDF           --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\ 
     eb --software-name=netCDF-Fortran   --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  &&\
     eb --software-name=netCDF-C++4      --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  
 
 
-# RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-#     --mount=type=bind,target=ebfiles,source=ebfiles \
-#     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-#     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs    ${EB_ARGS}"  &&\
-#     eb --software-name=netcdf4-python   --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS}  
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
+    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs    ${EB_ARGS}"  &&\
+    eb --software-name=netcdf4-python   --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS}  &&\
+    eb --software-name=h5py             --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS}  
 
 #-------------------------------------------------------------------------------
 # libs:build tools
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=Boost            --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} && \
     eb --software-name=Blitz++          --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} && \
     eb --software-name=libxslt          --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} && \
     eb --software-name=libxml2          --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS}  
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=SWIG            --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${_EB_ARGS} 
 
 #-------------------------------------------------------------------------------
 # libs:math libs
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software-name=OpenBLAS            --toolchain=GCC,${GCCCORE_VERSION}  ${_EB_ARGS} && \
     eb --software-name=ScaLAPACK           --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} && \
     eb --software-name=FFTW                --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} 
-    # && \
-    # eb --software=foss,${TOOLCHAIN_VERSION}  ${_EB_ARGS}
+
+#-------------------------------------------------------------------------------
+# libs:math libs
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
+    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    eb --software=foss,${TOOLCHAIN_VERSION}  ${EB_ARGS}
 
 
 # -------------------------------------------------------------------------------
 # 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages/cache,sharing=shared \
     sudo chown -R ${FYDEV_USER}:${FYDEV_USER} ${PKG_DIR} &&\
-    cp -rf /packages/cache/software         ${PKG_DIR}/  &&\
-    cp -rf /packages/cache/modules          ${PKG_DIR}/ &&\
-    cp -rf /packages/cache/ebfiles_repo     ${PKG_DIR}/ &&\
+    cp -rf /packages/cache/software           ${PKG_DIR}/  &&\
+    cp -rf /packages/cache/modules            ${PKG_DIR}/ &&\
+    cp -rf /packages/cache/ebfiles_repo       ${PKG_DIR}/ &&\
     sudo ln -sf ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile     /etc/profile.d/lmod.sh && \
     sudo ln -sf ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/bash        /etc/profile.d/lmod.bash && \
     sudo ln -sf ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/zsh         /etc/profile.d/lmod.zsh && \
