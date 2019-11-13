@@ -113,11 +113,7 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
 #     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
 #     eb --software-name=SWIG    --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${EB_ARGS}
 
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    module load Python/${PYTHON_VERSION}-GCCcore-${GCCCORE_VERSION} && \
-    pip install pkgconfig cftime  numpy scipy matplotlib ipython jupyter pandas sympy nose jupyter 
- 
+
 # # -------------------------------------------------------------------------------
 # # Perl : 
 # ARG PERL_VERSION=${PERL_VERSION:-5.30.0}
@@ -193,13 +189,6 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
     eb --software-name=netCDF-C++4      --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS}  
 
 
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
-    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs    ${EB_ARGS}"  &&\
-    eb --software-name=netcdf4-python   --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS}  &&\
-    eb --software-name=h5py             --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS}  
-
 #-------------------------------------------------------------------------------
 # libs:build tools
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
@@ -211,11 +200,6 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
     eb --software-name=libxslt          --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS} && \
     eb --software-name=libxml2          --toolchain=GCCcore,${GCCCORE_VERSION}  ${_EB_ARGS}  
 
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
-    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
-    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
-    eb --software-name=SWIG            --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${_EB_ARGS} 
 
 #-------------------------------------------------------------------------------
 # libs:math libs
@@ -228,12 +212,18 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
     eb --software-name=FFTW                --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${_EB_ARGS} 
 
 #-------------------------------------------------------------------------------
-# libs:math libs
+# libs:python libs
+
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
+    source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
+    export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+    eb --software-name=SWIG            --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${_EB_ARGS} 
+
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages,sharing=shared \
     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
     export _EB_ARGS=" --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
     eb --software=foss,${TOOLCHAIN_VERSION}  ${EB_ARGS}
-
 
 # -------------------------------------------------------------------------------
 # 
