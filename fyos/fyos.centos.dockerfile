@@ -44,12 +44,6 @@ RUN yum install -y \
     which \
     libibverbs-dev \
     libibverbs-devel \
-    python3 \
-    python3-devel \
-    lua \
-    lua-posix \
-    lua-filesystem \
-    lua-devel \
     tcl \
     tcl-devel \
     python-pip \
@@ -60,6 +54,19 @@ RUN yum install -y \
     pcre \
     tcl \
     libXt \
-    libXext 
-
+    libXext \
+    readline \
+    readline-devel
     
+ARG FYDEV_USER=${FYDEV_USER:-fydev}
+ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
+ENV FYDEV_USER=${FYDEV_USER}
+ENV FYDEV_USER_ID=${FYDEV_USER_ID}
+
+################################################################################
+# Add user for DevOps
+# Add user for DevOps
+# RUN groupadd -f ${FYDEV_GROUP} -g ${FYDEV_GROUP_ID}
+RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER}  && \
+    usermod -a -G wheel  ${FYDEV_USER} && \
+    echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers

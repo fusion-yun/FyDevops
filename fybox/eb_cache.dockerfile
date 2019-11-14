@@ -3,17 +3,14 @@
 
 FROM fybox:2019b as cache
 
-RUN --mount=type=cache,uid=1000,id=fy_eb_sources,target=/packages/sources,sharing=shared \
-    --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages_cache,sharing=shared \
-    cp -rf /packages/* /packages_cache/
-      
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
+    mkdir -p /eb_repos/centos7 &&\
+    mv /eb_repos/centos7/sources   /eb_repos/   
+    # mv /eb_repos/software          /eb_repos/centos7/    &&\
+    # mv /eb_repos/modules           /eb_repos/centos7/    &&\
+    # mv /eb_repos/sources           /eb_repos/centos7/    &&\
 
-FROM imas:20191028
 
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/packages_cache,sharing=shared \  
-    mkdir -p  /packages &&\
-    cp -rf /packages_cache/software/IMAS /packages/software/ &&\
-    ls /packages  
 
 
 # ARG GCCCORE_VERSION=${GCCCORE_VERSION:-8.3.0} 
