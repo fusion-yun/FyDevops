@@ -1,13 +1,7 @@
 # syntax=docker/dockerfile:experimental
-FROM fybox:latest
 
-LABEL Description   "IMAS (${IMAS_VERSION}) + UDA(${UDA_VERSION})"
-LABEL Name          "IMAS"
-LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description   "IMAS + UDA"
-
-
-
+ARG BASE_VERSION=latest
+FROM fybox:${BASE_VERSION}  
 
 ARG PYTHON_VERSION=${PYTHON_VERSION:-3.7.4}
 ARG JAVA_VERSION=${JAVA_VERSION:-13.0.1}
@@ -23,8 +17,6 @@ ARG FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.2.3}
 ARG FY_EB_VERSION=${FY_EB_VERSION:-4.0.1}
 
 ARG EB_ARGS=${EB_ARGS:-" --use-existing-modules --info -l -r"}
-
-
 
 # RUN --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
 #     source ${PKG_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} && \    
@@ -61,3 +53,7 @@ RUN --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     eb --software-name=IMAS --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION} ${_EB_ARGS} 
 
   
+LABEL Description   "IMAS (${IMAS_VERSION}) + UDA(${UDA_VERSION})"
+LABEL Name          "IMAS"
+LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
+LABEL Description   "IMAS + UDA"

@@ -1,0 +1,63 @@
+easyblock = 'CMakeMake'
+
+name = 'UDA'
+version = '2.2.6'
+local_pyver = '3.7.4'
+local_javaver='13.0.1'
+versionsuffix='-Python-%(pyver)s'
+
+homepage = 'https://git.iter.org/projects/IMAS/repos/uda/browse'
+
+description = """ UDA Plugin for EAST experiment.
+"""
+
+toolchain = {'version': '2019b', 'name': 'gompi'}
+toolchainopts = {'pic': False}
+
+sources = [{
+    'filename': '%(namelower)s-%(version)s.tar.gz',
+    'git_config': {
+        'url': 'git@gitee.com:fusion_yun/uda-plugins.git',
+        'repo_name': 'uda',
+        'tag': '%(version)s',
+    },
+}]
+
+
+dependencies = [    
+    ('Python', local_pyver),
+    ('UDA', '1.71.0'), 
+    ('libxml2', '2.9.9'),
+    ('HDF5', '1.10.5'),
+    ('netCDF', '4.6.2'),
+    ('MDSplus', '7.84.8'),
+]
+
+builddependencies = [    
+    ('CMake', '3.15.3') 
+]
+
+# imas_plugin: mdsplus error, redefine TRUE,FALSE in status.h, system defined TRUE in rpc/types.h
+configopts =" -DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=imas_mapping\;east   ' " 
+
+install_cmd="make && make install "
+
+installopts=" "
+ 
+sanity_check_paths = {
+    'files': [],
+    'dirs': [],
+}
+modextravars = {
+    'UDA_DIR'       : '%(installdir)s',
+    'UDA_HOME'      : '%(installdir)s',
+    'UDA_ROOT'      : '%(installdir)s',
+    'UDA_VERSION'   : '%(version)s'
+}
+
+modextrapaths = {
+    'PYTHONPATH'        : 'lib/python%(pyshortver)s/site-packages',
+
+}
+
+moduleclass = 'data'

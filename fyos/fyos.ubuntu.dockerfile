@@ -61,7 +61,8 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
     apt-get install -y \
     python-setuptools \
     openssh-client \
-    git 
+    git \
+    pkg-config
     
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
