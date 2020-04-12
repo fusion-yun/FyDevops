@@ -98,17 +98,14 @@ RUN mkdir -p /home/${FYDEV_USER}/.local/share/fonts/otf \
     && fc-cache -fv
 
 
-# ENV PATH ${CONDA_DIR}/bin:$PATH
-# RUN pip install jupyterlmod \
-#     && jupyter labextension install jupyterlab-lmod
+ENV PYTHONPATH=${PKG_DIR}/software/lmod/lmod/init:$PYTHONPATH
+ENV XDG_CACHE_HOME /home/${FYDEV_USER}/.cache/
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
 EXPOSE  8888
 
-ENV XDG_CACHE_HOME /home/${FYDEV_USER}/.cache/
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 # ENTRYPOINT [ "/bin/bash" ]
 ##########################################3
 # Usage:
 # - load jupyter
-# $docker run -p 8888:8888 --name fybox fydev:2019c "source /packages/software/lmod/lmod/init/bash ; module load IMAS; module unload Python ; jupyter lab --ip=0.0.0.0 --no-browser"
-
+# $docker run -p 8888:8888 --name fybox fydev:2019c "jupyter lab --ip=0.0.0.0 --no-browser"
