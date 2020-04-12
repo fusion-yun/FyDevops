@@ -1,9 +1,5 @@
 # syntax=docker/dockerfile:experimental
-
-ARG BASE_VERSION=latest
-FROM fydev:${BASE_VERSION}  
-
-MAINTAINER Zhi YU <yuzhi@ipp.ac.cn>
+FROM registry.cn-hangzhou.aliyuncs.com/fusionyun/fydev:2019 
 
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ENV FYDEV_USER=${FYDEV_USER}
@@ -93,6 +89,15 @@ RUN uname -a \
     && jupyter lab build  \
     && jupyter lab clean 
 
+
+
+RUN mkdir -p /home/${FYDEV_USER}/.local/share/fonts/otf \
+    && cd /home/${FYDEV_USER}/.local/share/fonts/otf \
+    && curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Regular.otf \
+    && curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Bold.otf \
+    && fc-cache -fv
+
+
 # ENV PATH ${CONDA_DIR}/bin:$PATH
 # RUN pip install jupyterlmod \
 #     && jupyter labextension install jupyterlab-lmod
@@ -101,9 +106,9 @@ EXPOSE  8888
 
 ENV XDG_CACHE_HOME /home/${FYDEV_USER}/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
-ENTRYPOINT [ "/usr/bin/bash","-c" ]
+# ENTRYPOINT [ "/bin/bash" ]
 ##########################################3
 # Usage:
 # - load jupyter
 # $docker run -p 8888:8888 --name fybox fydev:2019c "source /packages/software/lmod/lmod/init/bash ; module load IMAS; module unload Python ; jupyter lab --ip=0.0.0.0 --no-browser"
-    
+
