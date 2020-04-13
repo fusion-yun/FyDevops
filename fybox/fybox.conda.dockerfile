@@ -96,7 +96,7 @@ RUN mkdir -p /home/${FYDEV_USER}/.local/share/fonts/otf \
     && curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Bold.otf \
     && fc-cache -fv
 
-
+ENV LMOD_DIR ${PKG_DIR}/software/lmod/lmod
 ENV PYTHONPATH=${PKG_DIR}/software/lmod/lmod/init:$PYTHONPATH
 ENV XDG_CACHE_HOME /home/${FYDEV_USER}/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
@@ -107,4 +107,4 @@ ENTRYPOINT  ["/bin/bash","-c"]
 ##########################################3
 # Usage:
 # - load jupyter
-# docker run -p 8888:8888 --name fybox fydev:2019c "source /packages/software/lmod/lmod/init/bash ; module load IMAS; jupyter lab --ip=0.0.0.0 "  
+# docker run --rm -p 8889:8888/tcp fydev:2019c "source \${LMOD_DIR}/init/bash ; module load IMAS; module unload Python ; jupyter lab --ip=\$(hostname -i)"
