@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:experimental
 FROM registry.cn-hangzhou.aliyuncs.com/fusionyun/fydev:2019 
 
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
@@ -26,6 +25,7 @@ RUN uname -a \
     && ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/pkgs/r \
     && ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/pkgs/pro \
     && ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/cloud/conda-forge \
+    && ${CONDA_DIR}/bin/conda config --remove channels defaults \
     && ${CONDA_DIR}/bin/conda config --set show_channel_urls yes \
     && ${CONDA_DIR}/bin/conda update -n base -c defaults conda  \
     ##############################################################################
@@ -34,8 +34,7 @@ RUN uname -a \
     && ${CONDA_DIR}/bin/pip install --upgrade pip 
 
 
-RUN ${CONDA_DIR}/bin/conda config --remove channels defaults \
-    && ${CONDA_DIR}/bin/conda install --quiet --yes \    
+RUN ${CONDA_DIR}/bin/conda install --quiet --yes \    
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
     'jupyterlab=2.0.1' \
@@ -104,8 +103,8 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
 EXPOSE  8888
 
-# ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT  ["/bin/bash","-c"]
 ##########################################3
 # Usage:
 # - load jupyter
-# $docker run -p 8888:8888 --name fybox fydev:2019c "jupyter lab --ip=0.0.0.0 --no-browser"
+# docker run -p 8888:8888 --name fybox fydev:2019c "source /packages/software/lmod/lmod/init/bash ; module load IMAS; jupyter lab --ip=0.0.0.0 "  
