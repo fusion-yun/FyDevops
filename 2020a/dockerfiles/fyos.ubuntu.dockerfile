@@ -1,23 +1,19 @@
+# syntax=docker/dockerfile:experimental
 
-ARG OS_VERSION=7
+ARG OS_VERSION=18.04
 
-FROM centos:${OS_VERSION}
+FROM ubuntu:${OS_VERSION}
 
 ENV container=docker
 
-
-ARG TARGETPLATFORM
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
 ARG BUILDPLATFORM
 
-LABEL Name         fyOS_${OS_VERSION}
+LABEL Name         fyOS_ubuntu_${OS_VERSION}
 LABEL Author       "salmon <yuzhi@ipp.ac.cn>"
 LABEL Description  "Bare CentOS + denpendences for EasyBuild and lmod"
 
-# #Dockerfile for systemd base image
-
+# Dockerfile for systemd base image
+#
 # RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
 #     systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 #     rm -f /lib/systemd/system/multi-user.target.wants/*;\
@@ -30,43 +26,56 @@ LABEL Description  "Bare CentOS + denpendences for EasyBuild and lmod"
 # VOLUME [ "/sys/fs/cgroup" ]
 # CMD ["/usr/sbin/init"]
 
+ARG TZ=${TZ:-Asia/Shanghai}
+ENV TV=${TV}
 
 ############################
 # base development tools
-RUN yum -y --enablerepo=extras install epel-release 
-RUN yum update -y
-RUN yum groupinstall -y "Development Tools" 
-
+RUN apt-get  update -y
+RUN export DEBIAN_FRONTEND=noninteractive &&\
+    apt-get install -y  tzdata  && \
+    ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime &&\
+    dpkg-reconfigure --frontend noninteractive tzdata
 # Requirement for lmod and easybuild
 # TODO (salmon 20191015): include packages for IB,GPU...
-RUN yum install -y \
+RUN export DEBIAN_FRONTEND=noninteractive &&\
+    apt-get install -y \
+    build-essential \
     sudo \
-    which \
+    curl \
+    vim \
+    bash-completion \
+    libreadline-dev \
+    unzip  \
     libibverbs-dev \
-    libibverbs-devel \
     tcl \
-    tcl-devel \
-    python-pip \
-    python-wheel \
+    tcl-dev \
+    python \
     openssl \
-    openssl-devel \
+    libssl-dev \
     perl \
-    pcre \
-    tcl \
-    libXt \
-    libXext \
-    readline \
-    readline-devel
+    libpcre3 \
+    libxt6 \
+    libxext6 
+
+RUN export DEBIAN_FRONTEND=noninteractive &&\
+    apt-get install -y \
+    python-setuptools \
+    openssh-client \
+    git \
+    pkg-config
     
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
 ENV FYDEV_USER=${FYDEV_USER}
 ENV FYDEV_USER_ID=${FYDEV_USER_ID}
-
 ################################################################################
 # Add user for DevOps
 # Add user for DevOps
 # RUN groupadd -f ${FYDEV_GROUP} -g ${FYDEV_GROUP_ID}
-RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER}  && \
-    usermod -a -G wheel  ${FYDEV_USER} && \
-    echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
+RUN useradd -m -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER}  && \
+    usermod -aG sudo  ${FYDEV_USER} && \
+    echo '%sudo ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
+
+USER   ${FYDEV_USER}
+WORKDIR /home/${FYDEV_USER}

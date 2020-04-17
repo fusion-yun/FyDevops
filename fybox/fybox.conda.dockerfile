@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/fusionyun/fydev:2019 
+FROM fydev:2019 
 
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ENV FYDEV_USER=${FYDEV_USER}
