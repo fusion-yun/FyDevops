@@ -1,61 +1,37 @@
+# syntax=docker/dockerfile:experimental
+
 ARG OS_TAG=centos_8
 FROM fybase:${OS_TAG}  
 
 ARG OS_TAG=${OS_TAG:-centos8}
 ARG FUYUN_DIR=${FUYUN_DIR:-/packages}
-# ENV FUYUN_DIR ${FUYUN_DIR}
-RUN echo ${FUYUN_DIR}
 
-# ARG EB_ARGS=${EB_ARGS:-" --use-existing-modules --info -l -r"}
+ARG EB_ARGS=${EB_ARGS:-" --use-existing-modules --info -r"}
 
-# #-------------------------------------------------------------------------------
-# # GCCcore 
-# ARG GCCCORE_VERSION=${GCCCORE_VERSION:-8.3.0} 
-# ENV GCCCORE_VERSION=${GCCCORE_VERSION} 
 
-# RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
-#     source ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-#     eb --software=GCCcore,${GCCCORE_VERSION}  ${EB_ARGS}
+ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
+ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
-# #-------------------------------------------------------------------------------
-# # gompi :  compiler + MPI 
 
-# ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-gompi}
-# ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
-
-# ENV TOOLCHAIN_NAME=${TOOLCHAIN_NAME}
-# ENV TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION}
-
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
+    source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
+    module load EasyBuild ; \
+    eb ${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb   ${EB_ARGS} 
 
 # RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
+#     --mount=type=bind,target=ebfiles,source=ebfiles \
 #     source ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-#     eb --software=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}   ${EB_ARGS} 
+#     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
+#     eb --software-name=SWIG    --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${EB_ARGS}
 
-# #-------------------------------------------------------------------------------
-# # Python : 
 
-# ARG PYTHON_VERSION=${PYTHON_VERSION:-3.7.4}
-# ENV PYTHON_VERSION=${PYTHON_VERSION}
-
+# # -------------------------------------------------------------------------------
+# # Perl : 
+# ARG PERL_VERSION=${PERL_VERSION:-5.30.0}
+# ENV PERL_VERSION=${PERL_VERSION}
 # RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
 #     source ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-#     eb --software=Python,${PYTHON_VERSION}  --toolchain=GCCcore,${GCCCORE_VERSION} ${EB_ARGS}   
-
-# # RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
-# #     --mount=type=bind,target=ebfiles,source=ebfiles \
-# #     source ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-# #     export _EB_ARGS=" --robot-paths=ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  ${EB_ARGS}"  &&\
-# #     eb --software-name=SWIG    --toolchain=GCCcore,${GCCCORE_VERSION} --amend=versionsuffix=-Python-${PYTHON_VERSION}  ${EB_ARGS}
-
-
-# # # -------------------------------------------------------------------------------
-# # # Perl : 
-# # ARG PERL_VERSION=${PERL_VERSION:-5.30.0}
-# # ENV PERL_VERSION=${PERL_VERSION}
-
-# # RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
-# #     source ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile  && module load EasyBuild/${FY_EB_VERSION} &&\
-# #     eb --software=Perl,${PERL_VERSION}  --toolchain=GCCcore,${GCCCORE_VERSION} ${EB_ARGS}  
+#     eb --software=Perl,${PERL_VERSION}  --toolchain=GCCcore,${GCCCORE_VERSION} ${EB_ARGS}  
 
 # #-------------------------------------------------------------------------------
 # # Java 
