@@ -1,0 +1,29 @@
+
+ARG CONDA_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/anaconda
+ARG CONDA_DIR=${FUYUN_DIR}/software/conda
+ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple/
+
+RUN  --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \       
+    if ! [ -f ${FUYUN_DIR}/sources/bootstrap/miniconda3.sh ]; then  \    
+    # install conda with China mirror
+    mkdir -p  ${FUYUN_DIR}/sources/bootstrap/ ; \
+    curl -L ${CONDA_MIRROR}/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ${FUYUN_DIR}/sources/bootstrap/miniconda3.sh  ;\
+    fi  ; \    
+    /usr/bin/bash ${FUYUN_DIR}/sources/bootstrap/miniconda3.sh  -b -p ${CONDA_DIR} ; \
+    ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/pkgs/main ; \
+    ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/pkgs/free ; \
+    ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/pkgs/r ; \
+    ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/pkgs/pro ; \
+    ${CONDA_DIR}/bin/conda config --add channels ${CONDA_MIRROR}/cloud/conda-forge ; \
+    ${CONDA_DIR}/bin/conda config --remove channels defaults ; \
+    ${CONDA_DIR}/bin/conda config --set show_channel_urls yes ; \
+    ${CONDA_DIR}/bin/conda update -n base -c defaults conda  ; \
+    ${CONDA_DIR}/bin/conda clean --all ; \
+    ##############################################################################
+    # add pip mirror
+    ${CONDA_DIR}/bin/pip config set global.index-url ${PIP_MIRROR}} ; \
+    ${CONDA_DIR}/bin/pip install --upgrade pip ;
+
+
+ENV PATH=${CONDA_DIR}/bin:${PATH}
+

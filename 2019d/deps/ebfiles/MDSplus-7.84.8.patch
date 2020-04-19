@@ -1,0 +1,14 @@
+--- mdsplus-stable_release-7-84-8/include/status.h.orig	2019-10-23 13:32:10.555435087 +0800
++++ mdsplus-stable_release-7-84-8/include/status.h	2019-10-23 13:32:40.783617168 +0800
+@@ -1,7 +1,11 @@
+ #pragma once
+ #include <mdsshr_messages.h>
++#ifndef FALSE
+ #define FALSE 0
++#endif
++#ifndef TRUE
+ #define TRUE  1
++#endif
+ #define B_TRUE  TRUE
+ #define B_FALSE FALSE
+ #define C_OK    0
