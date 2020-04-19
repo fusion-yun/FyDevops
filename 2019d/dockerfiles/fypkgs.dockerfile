@@ -12,20 +12,18 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
     source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     module load EasyBuild ; \    
     export EB_ARGS=" --use-existing-modules --info -r" ; \
+    eb --show-config ; \
     eb ${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb  ${EB_ARGS} 
 
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
     source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     module load EasyBuild ; \
-    export EB_ARGS=" --use-existing-modules --minimal-toolchains --info -r" ; \
+    export EB_ARGS=" --use-existing-modules --minimal-toolchains --info -r" ; \    
     eb --software-name=HDF5 --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${EB_ARGS} 
 
-
-
-# ####################################################################
-# # Install Conda for Python
-
+#####################################################################
+# Install Conda for Python
 # ARG CONDA_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/anaconda
 # ARG CONDA_DIR=${FUYUN_DIR}/software/conda
 # ARG PIP_MIRROR=https://mirrors.aliyun.com/pypi/simple/
