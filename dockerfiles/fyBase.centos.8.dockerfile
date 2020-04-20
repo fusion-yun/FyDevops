@@ -24,9 +24,11 @@ RUN uname -a ;\
     yum update -y ; \
     yum install -y \
     sudo \
-    openssl \   
+    openssl \
+    xmlto \    
     tcl \ 
     python3 \
     which ;\
     yum clean all -y -q
 
+# xmlto for git

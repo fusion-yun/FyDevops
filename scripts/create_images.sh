@@ -1,0 +1,53 @@
+#!/usr/bin/bash
+FY_OS=centos
+FY_OS_VERSION=8
+FY_VERSION=2019b
+TOOLCHAIN_NAME=foss
+TOOLCHAIN_VERSION=${FY_VERSION}
+
+echo "======= Build FyBase [" $(date) "] ============ "  > /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
+
+docker build  --rm \
+     --build-arg FY_OS=${FY_OS} --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
+     -t fybase:${FY_OS}_${FY_OS_VERSION} \
+     - < ../dockerfiles/fyBase.${FY_OS}.${FY_OS_VERSION}.dockerfile \
+      >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1  
+
+
+echo "======= Build FyScratch [" $(date) "] ============ "  >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
+docker build  --rm \
+     --build-arg FY_OS=${FY_OS} --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
+     -t fyscratch:${FY_OS}_${FY_OS_VERSION} \
+     - < ../dockerfiles/fyScratch.${FY_OS}.${FY_OS_VERSION}.dockerfile \
+      >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1  
+
+# echo "=======  Build FyEasyBuild [" $(date) "] ============ ">> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1
+
+# docker build  --rm \
+#      --build-arg FY_OS=${FY_OS}  --build-arg  FY_OS_VERSION=${FY_OS_VERSION} \
+#      -t fyeb:${FY_OS}_${FY_OS_VERSION} \
+#      - < dockerfiles/fyEasyBuild.dockerfile \
+#      >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1  
+
+# echo "=======  Build packages [" $(date) "] ============ ">> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1
+# docker build --progress=plain  --rm \
+#      --build-arg FY_OS=${FY_OS}  \
+#      --build-arg  FY_OS_VERSION=${FY_OS_VERSION} \
+#      -t fypkgs:${FY_OS}_${FY_OS_VERSION} \
+#      - < dockerfiles/fypkgs.dockerfile \
+#      >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
+
+
+echo "=======  Build FyDev" ${FY_VERSION}_$(date +"%Y%m%d") " [" $(date) "] ============ ">> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
+docker build --progress=plain  --rm \
+     --build-arg FY_OS=${FY_OS}  \
+     --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
+     --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
+     --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
+     -t fydev:${FY_VERSION}_$(date +"%Y%m%d") \
+     -f ../dockerfiles/fydev.dockerfile \
+     ../ebfiles
+     >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1       
+
+
+echo "======= Done [" $(date) "]============ " >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
