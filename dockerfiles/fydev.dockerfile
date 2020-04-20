@@ -123,7 +123,8 @@ ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \
-    --mount=type=bind,target=/tmp/ebfiles,source=. \
+    --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
+    --mount=type=bind,target=/tmp/sources,source=build_src \
     sudo ln -sf /eb_cache/${FY_OS}_${FY_OS_VERSION}   ${FUYUN_DIR} ; \
     sudo rm -rf ${FUYUN_DIR}/software/.locks ;\  
     source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
@@ -133,6 +134,7 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \
     eb --info -lr \
     --use-existing-modules \
     --minimal-toolchain \
+    --sourcepath=/tmp/sources:${FUYUN_DIR}/sources \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
     /tmp/ebfiles/fydev-2019b.eb  

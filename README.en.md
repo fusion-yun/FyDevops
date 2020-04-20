@@ -10,9 +10,8 @@ Everything is ___FuYun___!
 
 ## Installation
 
-1. xxxx
-2. xxxx
-3. xxxx
+    $cd scripts
+    $./main.sh
 
 ## Instructions
 

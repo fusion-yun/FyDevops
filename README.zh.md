@@ -12,13 +12,20 @@ ___FuYun___ 是面向大科学工程应用和物理研究的集成数据分析�
 
 * 交互环境UI/UX (___SpUI___)：为用户提供，编辑、调试工作流，以及可视化数据分析的交互环境。
 
-___FuYun___ 采用 Docker + EasyBuild 搭建容器作为开发和运行的基础环境，代称为 ___FyBox___。
+___FuYun___ 采用 Docker + EasyBuild 搭建容器作为开发和运行的基础环境，代称为 ___FyDev___。
 
 ## 目录结构
 
-    - ebfiles       # EasyBuild module 环境
-    - dockerfiles   # Docker 容器
-    - sources       # 源代码缓存 .gitignore
+    - ebfiles       # ebfiles 编译安装描述文件
+        - fydev-2019b.eb # FyDev 环境安装文件
+    - dockerfiles   # Docker 容器    
+    - scripts       # 执行脚本
+    - build_src     # 源代码打包缓存 .gitignore
+
+## 安装
+
+    $cd scripts
+    $./main.sh
 
 ## ___FyBox___ 架构
 
