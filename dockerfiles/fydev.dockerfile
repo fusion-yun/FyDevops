@@ -134,7 +134,7 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \
     eb --info -lr \
     --use-existing-modules \
     --minimal-toolchain \
-    --sourcepath=/tmp/sources:${FUYUN_DIR}/sources \
+    --sourcepath=${FUYUN_DIR}/sources:/tmp/sources \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
     /tmp/ebfiles/fydev-2019b.eb  
