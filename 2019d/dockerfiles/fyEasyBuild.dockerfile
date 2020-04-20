@@ -94,7 +94,7 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
 ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \    
-    if ! [ -f ${FUYUN_DIR}/sources/bootstrap/bootstrap_eb.py ]; then  \
+    if ! [ -f ${FUYUN_DIR}/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  ]; then  \
     mkdir -p ${FUYUN_DIR}/sources/bootstrap/ ; \
     cd ${FUYUN_DIR}/sources/bootstrap/ ; \
     curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py ;\

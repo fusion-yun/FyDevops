@@ -24,13 +24,13 @@ ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 ENV FUYUN_DIR ${FUYUN_DIR}
 
 USER ${FYDEV_USER}
-
 WORKDIR ${FUYUN_DIR}
 COPY --from=scratch_stage ${FUYUN_DIR}/software ./software
 COPY --from=scratch_stage ${FUYUN_DIR}/modules ./modules
-COPY --from=scratch_stage /home/${FYDEV_USER}/.* /home/${FYDEV_USER}/
+COPY --from=scratch_stage ${FUYUN_DIR}/ebfiles_repo ./ebfiles_repo
 
-RUN sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/profile        /etc/profile.d/00_lmod.sh ; \
+RUN sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} ; \
+    sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/profile        /etc/profile.d/00_lmod.sh ; \
     sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/cshrc          /etc/profile.d/00_lmod.csh ; \
     sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/zshrc          /etc/profile.d/00_lmod.zsh ; \
     sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/lmod_bash_completions  /etc/bash_completion.d/lmod_bash_completions  
@@ -52,4 +52,4 @@ LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
 LABEL Description   "FuYun : EasyBuild ${FY_EB_VERSION} lmod ${FY_LMOD_VERSION} + conda , FUYUN_DIR=${FUYUN_DIR} FYDEV_USER=${FYDEV_USER}:${FYDEV_USER_ID} "
 
 USER ${FYDEV_USER}
-# WORKDIR /home/${FYDEV_USER}
+WORKDIR /home/${FYDEV_USER}

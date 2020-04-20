@@ -18,10 +18,19 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
 
 RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
     source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
+    module load EasyBuild ; \    
+    export EB_ARGS=" --use-existing-modules --info -r" ; \
+    eb foss-${TOOLCHAIN_VERSION}.eb  ${EB_ARGS} 
+
+
+RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_repos,sharing=shared \
+    source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     module load EasyBuild ; \
     export EB_ARGS=" --use-existing-modules --minimal-toolchains --info -r" ; \    
     eb --software-name=HDF5 --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION}  ${EB_ARGS} 
 
+
+eb --software-name=SciPy-bundle --try-toolchain=foss,${TOOLCHAIN_VERSION} --amend=versionsuffix=-Python-3.7.4 -Dr 
 #####################################################################
 # Install Conda for Python
 # ARG CONDA_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/anaconda

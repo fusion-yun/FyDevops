@@ -27,21 +27,21 @@ docker build  --rm \
 
 echo "=======  Build packages [" $(date) "] ============ ">> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1
 docker build --progress=plain  --rm \
-     --build-arg FY_OS=${FY_OS}  --build-arg  FY_OS_VERSION=${FY_OS_VERSION} \
+     --build-arg FY_OS=${FY_OS}  \
+     --build-arg  FY_OS_VERSION=${FY_OS_VERSION} \
      -t fypkgs:${FY_OS}_${FY_OS_VERSION} \
      - < dockerfiles/fypkgs.dockerfile \
      >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
 
 
-# echo "=======  Export FyDev [" $(date) "] ============ ">> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
-
-# docker build --progress=plain  --rm \
-#      --build-arg FY_SCRATCH=fyeb:centos_8 \
-#      --build-arg FY_OS=${FY_OS}  \
-#      --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
-#      -t fydev:${FY_OS}_${FY_OS_VERSION} \
-#      - < dockerfiles/fydev.dockerfile \
-#      >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1       
+echo "=======  Export FyDev [" $(date) "] ============ ">> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
+docker build --progress=plain  --rm \
+     --build-arg FY_SCRATCH=fypkgs:centos_8 \
+     --build-arg FY_OS=${FY_OS}  \
+     --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
+     -t fydev:${FY_OS}_${FY_OS_VERSION} \
+     - < dockerfiles/fydev.dockerfile \
+     >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1       
 
 
 echo "======= Done [" $(date) "]============ " >> /tmp/build_${FY_OS}_${FY_OS_VERSION}.log 2>&1     
