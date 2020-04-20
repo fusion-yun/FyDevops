@@ -2,8 +2,6 @@ easyblock = 'CMakeMake'
 
 name = 'UDA'
 version = '2.2.6'
-local_pyver = '3.7.4'
-local_javaver='13.0.1'
 versionsuffix='-Python-%(pyver)s'
 
 homepage = 'https://git.iter.org/projects/IMAS/repos/uda/browse'
@@ -29,9 +27,9 @@ sources = [{
 
 
 dependencies = [    
-    ('Python', local_pyver),
+    ('Python', '3.7.4'),
     ('Boost', '1.71.0'), 
-    ('PostgreSQL', '11.3','-Python-'+local_pyver),
+    ('PostgreSQL', '11.3',versionsuffix),
     ('libxml2', '2.9.9'),
     ('libMemcached', '1.0.18'),
     ('HDF5', '1.10.5'),
@@ -40,7 +38,7 @@ dependencies = [
 ]
 
 builddependencies = [    
-    ('Java', local_javaver, '', True),
+    ('Java', '1.13.0'),
     ('SWIG', '3.0.12', '-Python-'+local_pyver),
     ('CMake', '3.15.3') 
 ]

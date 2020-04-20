@@ -2,7 +2,8 @@ easyblock = 'Bundle'
 
 name = 'FuYun'
 version = '2019b' # date of the most recent change
-versionsuffix='-Python-%(pyver)s'
+
+
 homepage = 'https://gitee.com/fusion_yun/'
 description = """FuYun 是面向大科学工程应用和物理研究的集成数据分析、建模环境。"""
 
@@ -12,19 +13,28 @@ toolchainopts = {'usempi': True}
 dependencies = [   
     ('git','2.23.0'),
     ('CMake','3.15.3'),
-    ('Ninja','1.9.0','kitware'),
+    # ('Ninja','1.9.0','-kitware'),
     ################################
     ('HDF5', '1.10.5'),
     ('netCDF', '4.7.1'),
     ('netCDF-Fortran', '4.5.2'),
     # ('netCDF-C++4', '4.3.1'),
     ('MDSplus','7.84.8'),
-    ('PostgreSQL','11.3','%(versionsuffix)s'),
+    ('PostgreSQL','11.3','-Python-%(pyver)s'),
+    ('libMemcached','1.0.18'),
     ################################
     ('Python','3.7.4'),
-    ('SciPy-bundle', '2019.10',  '%(versionsuffix)s'),
-    ('h5py','2.10.0','%(versionsuffix)s'),
-
+    ('SciPy-bundle', '2019.10','-Python-%(pyver)s'),
+    ('h5py','2.10.0','-Python-%(pyver)s'),
+    ('netcdf4-python','1.5.3','-Python-%(pyver)s'),
+    ('JupyterLab','1.2.5','-Python-%(pyver)s'),
+    ################################
+    ('Java','13','',True),
+    ('ant','1.10.7','-Java-%(javashortver)s',True),
+    # ('Saxon-HE','9.9.1.5','-Java-%(javashortver)s',True)
+    ################################
+    ('Blitz++','1.0.2'),
+    ('PETSc','3.12.4')
 ]
 
 moduleclass = 'devel'
