@@ -19,7 +19,13 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     -i.bak \
     /etc/yum.repos.d/epel.repo ; \
     yum update -y ; \
-    sudo yum install -y \    
+    yum install -y \    
+    sudo \
+    openssl \
+    xmlto \    
+    tcl \ 
+    python3 \
+    which \
     libXt \
     libXext \
     perl \
