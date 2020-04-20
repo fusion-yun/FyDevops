@@ -1,9 +1,25 @@
 ARG FY_OS=${FY_OS:-centos}
 ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
 
-FROM fybase:${FY_OS}_${FY_OS_VERSION}
+FROM ${FY_OS}:${FY_OS_VERSION}
 
-RUN sudo yum install -y \    
+
+RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
+    # mirror.ustc.edu.cn
+    sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+    -e 's|^#baseurl=http://mirror.centos.org/$contentdir|baseurl=https://mirrors.ustc.edu.cn/centos|g' \
+    -i.bak \
+    /etc/yum.repos.d/CentOS-Base.repo \
+    /etc/yum.repos.d/CentOS-Extras.repo \
+    /etc/yum.repos.d/CentOS-AppStream.repo ;\
+    #################################################
+    yum -y --enablerepo=extras install epel-release ;\
+    sed -e 's|^metalink=|#metalink=|g' \
+    -e 's|^#baseurl=https\?://download.fedoraproject.org/pub/epel/|baseurl=https://mirrors.ustc.edu.cn/epel/|g' \
+    -i.bak \
+    /etc/yum.repos.d/epel.repo ; \
+    yum update -y ; \
+    sudo yum install -y \    
     libXt \
     libXext \
     perl \

@@ -6,8 +6,7 @@ ARG FY_OS=${FY_OS:-centos}
 ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
 
 
-RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  
-RUN uname -a ;\
+RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     # mirror.ustc.edu.cn
     sed -e 's|^mirrorlist=|#mirrorlist=|g' \
     -e 's|^#baseurl=http://mirror.centos.org/$contentdir|baseurl=https://mirrors.ustc.edu.cn/centos|g' \
