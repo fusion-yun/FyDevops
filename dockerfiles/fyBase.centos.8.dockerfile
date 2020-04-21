@@ -26,7 +26,6 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     openssl \
     xmlto \    
     tcl \ 
-    python2 \
     python3 \
     which ;\
     yum clean all -y -q

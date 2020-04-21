@@ -133,18 +133,14 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     --mount=type=bind,target=/tmp/sources,source=build_src \
     sudo ln -sf /fycache/${FY_OS}_${FY_OS_VERSION}   ${FUYUN_DIR} ; \
-    rm -rf ${FUYUN_DIR}/software/.locks ;\ 
     rm -rf ${FUYUN_DIR}/software/FyDev/${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION} ;\  
     rm -rf ${FUYUN_DIR}/modules/all/FyDev/${FYDEV_VERSION} ;\  
     rm -rf ${FUYUN_DIR}/modules/devel/FyDev/${FYDEV_VERSION} ;\  
     rm -rf ${FUYUN_DIR}/ebfiles_repo/FyDev/FyDev-${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb ;\  
+    ls -lh ${FUYUN_DIR}/software/lmod/ ; \
     source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     module avail ; \
     module load EasyBuild ; \    
-    ######################################################
-    # NOTE (salmon 20200421): build OpenPGM need python2
-    sudo alternatives --set python /usr/bin/python2 ; \
-    /usr/bin/python --version ; \
     eb --show-config ; \
     eb --info -r \
     --use-existing-modules \
@@ -158,9 +154,12 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     sudo rm ${FUYUN_DIR} ;\
     sudo mkdir -p ${FUYUN_DIR} ; \              
     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     ; \
-    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/software ; \
-    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/modules ; \
-    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ebfiles_repo 
+    sudo rm -rf /fycache/${FY_OS}_${FY_OS_VERSION}/software/software ; \
+    sudo rm -rf /fycache/${FY_OS}_${FY_OS_VERSION}/modules/modules ; \
+    sudo rm -rf /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo/ebfiles_repo ; \
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/ ; \
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/ ; \
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ 
 
 
 
