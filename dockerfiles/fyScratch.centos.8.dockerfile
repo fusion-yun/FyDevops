@@ -1,31 +1,16 @@
 ARG FY_OS=${FY_OS:-centos}
 ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
 
-FROM ${FY_OS}:${FY_OS_VERSION}
+FROM fybase:${FY_OS}_${FY_OS_VERSION}
 
-
-RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
-    # mirror.ustc.edu.cn
-    sed -e 's|^mirrorlist=|#mirrorlist=|g' \
-    -e 's|^#baseurl=http://mirror.centos.org/$contentdir|baseurl=https://mirrors.ustc.edu.cn/centos|g' \
-    -i.bak \
-    /etc/yum.repos.d/CentOS-Base.repo \
-    /etc/yum.repos.d/CentOS-Extras.repo \
-    /etc/yum.repos.d/CentOS-AppStream.repo ;\
-    #################################################
-    yum -y --enablerepo=extras install epel-release ;\
-    sed -e 's|^metalink=|#metalink=|g' \
-    -e 's|^#baseurl=https\?://download.fedoraproject.org/pub/epel/|baseurl=https://mirrors.ustc.edu.cn/epel/|g' \
-    -i.bak \
-    /etc/yum.repos.d/epel.repo ; \
-    yum update -y ; \
-    yum install -y \    
-    sudo \
-    openssl \
-    xmlto \    
-    tcl \ 
-    python3 \
-    which \
+USER root
+RUN yum install -y \    
+    # sudo \
+    # openssl \
+    # xmlto \    
+    # tcl \ 
+    # python3 \
+    # which \
     libXt \
     libXext \
     perl \
@@ -33,8 +18,21 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     tcl-devel \          
     openssl-devel   \    
     readline-devel ;\
-    sudo yum groupinstall -y "Development Tools" ; \    
-    yum clean all -y -q
+    yum groupinstall -y "Development Tools" ; \    
+    yum clean all -y -q 
 
 
 
+
+# ARG FYDEV_USER=${FYDEV_USER:-fydev}
+# ENV FYDEV_USER=${FYDEV_USER}
+
+# ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
+# ENV FYDEV_USER_ID=${FYDEV_USER_ID}
+
+# RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
+#     usermod -a -G wheel  ${FYDEV_USER} ; \
+#     echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
+
+USER ${FYDEV_USER}
+# WORKDIR /home/${FYDEV_USER}

@@ -1,6 +1,6 @@
 easyblock = 'Tarball'
 
-name = 'SaxonHE'
+name = 'Saxon-HE'
 version = '9.9.1.5'
 versionsuffix = '-Java-%(javashortver)s'
 

@@ -11,12 +11,12 @@ ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ENV FYDEV_USER=${FYDEV_USER}
 
-ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
-ENV FYDEV_USER_ID=${FYDEV_USER_ID}
+# ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
+# ENV FYDEV_USER_ID=${FYDEV_USER_ID}
 
-RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
-    usermod -a -G wheel  ${FYDEV_USER} ; \
-    echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
+# RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
+#     usermod -a -G wheel  ${FYDEV_USER} ; \
+#     echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
 
 ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 ENV FUYUN_DIR=${FUYUN_DIR}
@@ -141,7 +141,11 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     module avail ; \
     module load EasyBuild ; \    
-    eb --show-config ;\
+    ######################################################
+    # NOTE (salmon 20200421): build OpenPGM need python2
+    sudo alternatives --set python /usr/bin/python2 ; \
+    /usr/bin/python --version ; \
+    eb --show-config ; \
     eb --info -r \
     --use-existing-modules \
     --minimal-toolchain \
@@ -153,11 +157,10 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \      
     sudo rm ${FUYUN_DIR} ;\
     sudo mkdir -p ${FUYUN_DIR} ; \              
-    sudo cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/software ;\
-    sudo cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/modules ;\
-    sudo cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ebfiles_repo 
-
-# sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     ; \
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/software ; \
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/modules ; \
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ebfiles_repo 
 
 
 
@@ -180,12 +183,11 @@ ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ENV FYDEV_USER=${FYDEV_USER}
 
-ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
-ENV FYDEV_USER_ID=${FYDEV_USER_ID}
-
-RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
-    usermod -a -G wheel  ${FYDEV_USER} ; \
-    echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
+# ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
+# ENV FYDEV_USER_ID=${FYDEV_USER_ID}
+# RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
+#     usermod -a -G wheel  ${FYDEV_USER} ; \
+#     echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
 
 
 ENV EASYBUILD_PREFIX=${FUYUN_DIR}

@@ -19,7 +19,7 @@ dependencies = [
     ('netCDF', '4.7.1'),
     ('netCDF-Fortran', '4.5.2'),
     ('netCDF-C++4', '4.3.1'),
-    #('MDSplus','7.84.8'),
+    ('MDSplus','7.96.12'),
     ('PostgreSQL','11.3','-Python-%(pyver)s'),
     ('libMemcached','1.0.18'),
     ('FFTW','3.3.8'),
@@ -28,14 +28,16 @@ dependencies = [
     ('SciPy-bundle', '2019.10','-Python-%(pyver)s'),
     ('h5py','2.10.0','-Python-%(pyver)s'),
     ('netcdf4-python','1.5.3','-Python-%(pyver)s'),
-    ('JupyterLab','1.2.5','-Python-%(pyver)s'),
     ###############################
     ('Java','13','',True),
     ('ant','1.10.7','-Java-%(javashortver)s',True),
-    # ('Saxon-HE','9.9.1.5','-Java-%(javashortver)s',True)
+    ('Saxon-HE','9.9.1.5','-Java-%(javashortver)s',True),
     ################################
-    # ('Blitz++','1.0.2'),
+    ('Blitz++','1.0.2'),
     # ('PETSc','3.12.4')
+    ################################
+    ('JupyterLab','1.2.5','-Python-%(pyver)s'),
+
 ]
 
 moduleclass = 'devel'
