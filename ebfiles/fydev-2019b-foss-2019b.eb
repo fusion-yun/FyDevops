@@ -31,6 +31,7 @@ dependencies = [
     ('Blitz++','1.0.2'),
     # ('PETSc','3.12.4')
     ################################
+    ('Miniconda3','4.7',None,True),
     # ('Python','3.7.4'),
     # ('SciPy-bundle', '2019.10','-Python-%(pyver)s'),
     # ('h5py','2.10.0','-Python-%(pyver)s'),
