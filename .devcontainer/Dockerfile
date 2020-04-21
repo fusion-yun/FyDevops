@@ -1,4 +1,4 @@
-FROM fybase:centos_8
+FROM fydev:latest
 
 ENV FYDEV_USER fydev
 # Copy environment.yml (if found) to a temp locaition so we update the environment. Also

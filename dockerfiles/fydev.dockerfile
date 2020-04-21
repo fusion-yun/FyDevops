@@ -191,7 +191,7 @@ ENV FYDEV_USER=${FYDEV_USER}
 
 ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 ENV PYTHONPATH=${FUYUN_DIR}/software/lmod/lmod/init/:${PYTHONPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/all:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/all${MODULEPATH}
 
 LABEL Name          "fyDev"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"

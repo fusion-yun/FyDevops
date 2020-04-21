@@ -20,7 +20,7 @@ dependencies = [
     ('netCDF-Fortran', '4.5.2'),
     ('netCDF-C++4', '4.3.1'),
     ('MDSplus','7.96.12'),
-    # ('PostgreSQL','11.3','-Python-%(pyver)s'),
+    ('PostgreSQL','12.2'),
     ('libMemcached','1.0.18'),
     ('FFTW','3.3.8'),
      ###############################
