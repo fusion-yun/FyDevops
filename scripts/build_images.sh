@@ -8,6 +8,8 @@ TOOLCHAIN_NAME=foss
 TOOLCHAIN_VERSION=2019b
 DOCKER_IMAGE_NAME=fydev
 
+FYDEV_EBFILE=fydev-2019b-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
+
 echo "======= Build FyBase [" $(date) "] ============ " 
 
 docker build  --rm \
@@ -18,7 +20,8 @@ docker build  --rm \
 
 echo "======= Build FyScratch [" $(date) "] ============ "  
 docker build  --rm \
-     --build-arg FY_OS=${FY_OS} --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
+     --build-arg FY_OS=${FY_OS} \
+     --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
      -t fyscratch:${FY_OS}_${FY_OS_VERSION} \
      - < ../dockerfiles/fyScratch.${FY_OS}.${FY_OS_VERSION}.dockerfile 
       
@@ -46,7 +49,8 @@ docker build --progress=plain  --rm \
      --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
-     -t ${DOCKER_IMAGE_NAME}:${FY_VERSION}_$(date +"%Y%m%d") \
+     --build-arg FYDEV_EBFILE=${FYDEV_EBFILE} \
+     -t ${DOCKER_IMAGE_NAME}:$(date +"%Y%m%d") \
      -f ../dockerfiles/fydev.dockerfile \
      ../
 

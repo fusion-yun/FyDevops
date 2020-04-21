@@ -26,14 +26,13 @@ USER   ${FYDEV_USER}
 ################################################################################
 # Bootstrap
 
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \  
-    sudo mkdir -p /eb_cache/sources ; \ 
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /eb_cache/sources ; \   
-    sudo mkdir -p /eb_cache/${FY_OS}_${FY_OS_VERSION} ; \
-    sudo ln -sf /eb_cache/sources   /eb_cache/${FY_OS}_${FY_OS_VERSION}/sources ; \         
-    sudo ln -sf /eb_cache/${FY_OS}_${FY_OS_VERSION}   ${FUYUN_DIR} ; \  
-    sudo chown ${FYDEV_USER}:${FYDEV_USER}   ${FUYUN_DIR} ; \   
-    ls -lh  ${FUYUN_DIR}
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \  
+    sudo mkdir -p /fycache/sources ; \ 
+    sudo mkdir -p /fycache/${FY_OS}_${FY_OS_VERSION} ; \
+    sudo ln -sf /fycache/sources   /fycache/${FY_OS}_${FY_OS_VERSION}/sources ; \ 
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /fycache ; \   
+    sudo ln -sf /fycache/${FY_OS}_${FY_OS_VERSION}   ${FUYUN_DIR}  
+
 
 
 # Install Lua
@@ -42,8 +41,11 @@ ARG FY_LUA_VERSION=${FY_LUA_VERSION:-5.3.5}
 ARG FY_LUAROCKS_VERSION=${FY_LUAROCKS_VERSION:-3.2.1}
 ARG FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.3.8}
 
-
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared  \    
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared  \    
+    if ! [ -d ${FUYUN_DIR}/sources/bootstrap ] ; then \
+    mkdir -p ${FUYUN_DIR}/sources/bootstrap ;\
+    fi
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared  \    
     if ! [ -d ${FUYUN_DIR}/software/lua/${FY_LUA_VERSION} ] ; then    \      
     if ! [ -f ${FUYUN_DIR}/sources/bootstrap/lua-${FY_LUA_VERSION}.tar.gz ]; then  \
     curl -L https://www.lua.org/ftp/lua-${FY_LUA_VERSION}.tar.gz  -o ${FUYUN_DIR}/sources/bootstrap/lua-${FY_LUA_VERSION}.tar.gz  ; \
@@ -80,7 +82,7 @@ ENV LUA_CPATH="${LUA_DIR}/lib/lua/${FY_LUA_SHORTVERSION}/?.so;${LUAROCKS_PREFIX}
 ENV PATH=${LUA_DIR}/bin:${PATH}
 
 # Install lmod
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \ 
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \ 
     if ! [ -d ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION} ]; then \    
     if ! [ -f ${FUYUN_DIR}/sources/bootstrap/lmod-${FY_LMOD_VERSION}.tar.gz ]; then  \
     curl -L https://github.com/TACC/Lmod/archive/${FY_LMOD_VERSION}.tar.gz -o ${FUYUN_DIR}/sources/bootstrap/lmod-${FY_LMOD_VERSION}.tar.gz  ; \
@@ -93,10 +95,15 @@ RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \
     rm -rf ${TMP_BUILD} ; \
     fi
 
+RUN sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/profile        /etc/profile.d/00_lmod.sh ; \
+    sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/cshrc          /etc/profile.d/00_lmod.csh ; \
+    sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/zshrc          /etc/profile.d/00_lmod.zsh ; \
+    sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/lmod_bash_completions  /etc/bash_completion.d/lmod_bash_completions  
+
 # Install EasyBuild
 ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \    
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \    
     if ! [ -d ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION} ]; then \
     if ! [ -f ${FUYUN_DIR}/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  ]; then  \
     mkdir -p ${FUYUN_DIR}/sources/bootstrap/ ; \
@@ -121,63 +128,65 @@ ENV MODULEPATH=${FUYUN_DIR}/modules/all:${MODULEPATH}
 
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
-
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \
+ARG FYDEV_EBFILE=${FYDEV_EBFILE:-fydev-2019b-${TOOLCHAIN_VERSION}-${TOOLCHAIN_VERSION}.eb}
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     --mount=type=bind,target=/tmp/sources,source=build_src \
-    sudo ln -sf /eb_cache/${FY_OS}_${FY_OS_VERSION}   ${FUYUN_DIR} ; \
-    sudo rm -rf ${FUYUN_DIR}/software/.locks ;\  
+    sudo ln -sf /fycache/${FY_OS}_${FY_OS_VERSION}   ${FUYUN_DIR} ; \
+    rm -rf ${FUYUN_DIR}/software/.locks ;\ 
+    rm -rf ${FUYUN_DIR}/software/FyDev/${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION} ;\  
+    rm -rf ${FUYUN_DIR}/modules/all/FyDev/${FYDEV_VERSION} ;\  
+    rm -rf ${FUYUN_DIR}/modules/devel/FyDev/${FYDEV_VERSION} ;\  
+    rm -rf ${FUYUN_DIR}/ebfiles_repo/FyDev/FyDev-${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb ;\  
     source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
-    module load EasyBuild ; \    
     module avail ; \
+    module load EasyBuild ; \    
     eb --show-config ;\
-    eb --info -lr \
+    eb --info -r \
     --use-existing-modules \
     --minimal-toolchain \
     --sourcepath=${FUYUN_DIR}/sources:/tmp/sources \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    /tmp/ebfiles/fydev-2019b.eb  
+    --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
+    /tmp/ebfiles/${FYDEV_EBFILE}  
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \      
+    sudo rm ${FUYUN_DIR} ;\
+    sudo mkdir -p ${FUYUN_DIR} ; \              
+    sudo cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/software ;\
+    sudo cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/modules ;\
+    sudo cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ebfiles_repo 
+
+# sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     
 
 
 
-# SHELL ["/bin/bash","-c"]
-# FROM ${FY_OS}:${FY_OS_VERSION}
 
 
-FROM fybase:${FY_OS}_${FY_OS_VERSION} AS export_stage  
+# FROM fybase:${FY_OS}_${FY_OS_VERSION} AS export_stage  
+
+# ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
+# ENV FUYUN_DIR ${FUYUN_DIR}
+
+# COPY --from=scratch_stage /etc/profile.d/00-lmod*  /etc/profile.d/ 
+# COPY --from=scratch_stage /etc/bash_completion.d/lmod_*  /etc/bash_completion.d/
+# COPY --from=scratch_stage ${FUYUN_DIR}/modules  ${FUYUN_DIR}/modules 
+# COPY --from=scratch_stage ${FUYUN_DIR}/software  ${FUYUN_DIR}/software 
+# COPY --from=scratch_stage ${FUYUN_DIR}/ebfiles_repo  ${FUYUN_DIR}/ebfiles_repo 
 
 ARG FY_OS=${FY_OS:-centos}
 ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
 
-ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
-ENV FUYUN_DIR ${FUYUN_DIR}
-
-
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ENV FYDEV_USER=${FYDEV_USER}
 
-ARG FYDEV_USER_ID=${FYDEV_USER:-1000}
+ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
 ENV FYDEV_USER_ID=${FYDEV_USER_ID}
-
-COPY --from=scratch_stage  /etc/yum.repos.d/* /etc/yum.repos.d/
 
 RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
     usermod -a -G wheel  ${FYDEV_USER} ; \
     echo '%wheel ALL=(ALL)    NOPASSWD: ALL' >>/etc/sudoers
 
-
-RUN --mount=type=cache,uid=1000,id=fy_pkgs,target=/eb_cache,sharing=shared \  
-    mkdir -p ${FUYUN_DIR} ; \              
-    cp -r /eb_cache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/software ;\
-    cp -r /eb_cache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/modules ;\
-    cp -r /eb_cache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ebfiles_repo  ; \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     
-
-RUN sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/profile        /etc/profile.d/00_lmod.sh ; \
-    sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/cshrc          /etc/profile.d/00_lmod.csh ; \
-    sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/zshrc          /etc/profile.d/00_lmod.zsh ; \
-    sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/lmod_bash_completions  /etc/bash_completion.d/lmod_bash_completions  
 
 ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 ENV PYTHONPATH=${FUYUN_DIR}/software/lmod/lmod/init/:${PYTHONPATH}
@@ -189,3 +198,4 @@ LABEL Description   "FuYun : EasyBuild ${FY_EB_VERSION} lmod ${FY_LMOD_VERSION} 
 
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}
+

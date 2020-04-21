@@ -17,12 +17,12 @@ ___FuYun___ 采用 Docker + EasyBuild 搭建容器作为开发和运行的基础
 ## 目录结构
 
     - ebfiles       # ebfiles 编译安装描述文件
-        - fydev-2019b.eb # FyDev 环境安装文件
+        - fydev-2019b.eb # FyDev 环境build文件
     - dockerfiles   # Docker 容器    
     - scripts       # 执行脚本
     - build_src     # 源代码打包缓存 .gitignore
 
-## 安装
+## 生成 build
 
     $cd scripts
     $./main.sh
