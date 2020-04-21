@@ -131,7 +131,7 @@ ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 ARG FYDEV_EBFILE=${FYDEV_EBFILE:-fydev-2019b-${TOOLCHAIN_VERSION}-${TOOLCHAIN_VERSION}.eb}
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
-    --mount=type=bind,target=/tmp/sources,source=build_src \
+    # --mount=type=bind,target=/tmp/sources,source=build_src \
     sudo ln -sf /fycache/${FY_OS}_${FY_OS_VERSION}   ${FUYUN_DIR} ; \
     rm -rf ${FUYUN_DIR}/software/FyDev/${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION} ;\  
     rm -rf ${FUYUN_DIR}/modules/all/FyDev/${FYDEV_VERSION} ;\  

@@ -4,11 +4,14 @@ FROM fydev:${FYDEV_TAG}
 
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ENV FYDEV_USER=${FYDEV_USER}
-
+ARG CONDA_MIRROR=${CONDA_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/anaconda}
+ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
+ENV FUYUN_DIR=${FUYUN_DIR}
 
 USER ${FYDEV_USER}
 
 RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
+    module use ${FUYUN_DIR}/modules/all ; \
     module avail ; \
     module load Miniconda3 ; \
     conda config --add channels ${CONDA_MIRROR}/pkgs/main ; \
@@ -61,7 +64,14 @@ RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     requests \
     NetworkX \
     python-graphviz \
-    nodejs   ; \
+    nodejs  ;\
+    conda clean -afy 
+
+
+RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
+    module use ${FUYUN_DIR}/modules/all ; \
+    module avail ; \
+    module load Miniconda3 ; \
     # Activate ipywidgets extension in the environment that runs the notebook server
     # Also activate ipywidgets extension for JupyterLab
     # Check this URL for most recent compatibilities
