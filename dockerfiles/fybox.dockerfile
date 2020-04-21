@@ -7,7 +7,6 @@ ENV FYDEV_USER=${FYDEV_USER}
 
 
 USER ${FYDEV_USER}
-CONDA_MIRROR
 
 RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     module avail ; \

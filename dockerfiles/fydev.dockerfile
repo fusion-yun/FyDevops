@@ -104,6 +104,7 @@ RUN sudo ln -sf ${FUYUN_DIR}/software/lmod/lmod/init/profile        /etc/profile
 ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \    
+    source  ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile ;\
     if ! [ -d ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION} ]; then \
     if ! [ -f ${FUYUN_DIR}/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  ]; then  \
     mkdir -p ${FUYUN_DIR}/sources/bootstrap/ ; \
@@ -113,7 +114,6 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz ; \
     curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz ; \
     fi ; \  
-    source  ${FUYUN_DIR}/software/lmod/${FY_LMOD_VERSION}/init/profile ;\
     export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  ; \
     export EASYBUILD_BOOTSTRAP_SOURCEPATH=${FUYUN_DIR}/sources/bootstrap/  ; \
     export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  ; \
