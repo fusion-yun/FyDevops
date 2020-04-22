@@ -37,7 +37,6 @@ ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \    
     source /etc/profile.d/modules.sh ; \
-    ls -lh ${FUYUN_DIR} ;\
     if ! [ -d ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION} ]; then \
     if ! [ -f ${FUYUN_DIR}/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  ]; then  \
     mkdir -p ${FUYUN_DIR}/sources/bootstrap/ ; \
@@ -70,31 +69,26 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     module use ${FUYUN_DIR}/modules/all ;\
     module avail ; \
     module load EasyBuild ; \    
-    eb --show-config ; \
     eb --info -r \
     --use-existing-modules \
     --minimal-toolchain \
     --sourcepath=${FUYUN_DIR}/sources:/tmp/sources \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    /tmp/ebfiles/FyDev-${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb ;\
-    eb --info -r \
-    --use-existing-modules \
-    --minimal-toolchain \
-    --sourcepath=${FUYUN_DIR}/sources:/tmp/sources \
-    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb 
-
+    /tmp/ebfiles/FyDev-${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
+  
 ENV MODULEPATH=${FUYUN_DIR}/modules/all:${MODULEPATH}
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \      
     sudo rm ${FUYUN_DIR} ;\
     sudo mkdir -p ${FUYUN_DIR} ; \              
     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     ; \  
-    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/ ; \
+    ################################
     cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/ ; \
-    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ 
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ ; \
+    cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/ 
 
+RUN sudo rm -rf /fycache
 
 ARG FY_OS=${FY_OS:-centos}
 ARG FY_OS_VERSION=${FY_OS_VERSION:-8}

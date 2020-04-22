@@ -9,10 +9,14 @@ ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 USER root
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \  
-    mkdir -p ${FUYUN_DIR} ; \                  
-    cp -r /fycache/centos_8  ${FUYUN_DIR} ;\
-    rm -f ${FUYUN_DIR}/sources ; \
-    cp -r /fycache/sources ${FUYUN_DIR}/sources  
+    # mv /fycache/centos_8/software/Miniconda3 /fycache ;\
+    rm -rf /fycache/centos_8/modules/all/FyDev/2019b-foss-2019b.lua ;\
+    rm -rf /fycache/centos_8/modules/devel/FyDev/2019b-foss-2019b.lua ;\
+    rm -rf /fycache/centos_8/ebfiles_repo/FyDev/FyDev-2019b-foss-2019b.eb
+    # mkdir -p ${FUYUN_DIR} ; \                  
+    # cp -r /fycache/centos_8  ${FUYUN_DIR} ;\
+    # rm -f ${FUYUN_DIR}/sources ; \
+    # cp -r /fycache/sources ${FUYUN_DIR}/sources  
 
 
 # RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \  
