@@ -12,16 +12,14 @@
 	// You can edit these settings after create using File > Preferences > Settings > Remote.
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash",
-
-
-		"python.pythonPath": "/packages/software/conda/bin/python",
-		"python.condaPath": "/packages/software/conda/bin/conda",
+		"python.pythonPath": "/opt/conda/bin/python",
+		"python.condaPath": "/opt/conda/bin/conda",
 		"python.linting.pylintEnabled": true,
 		"python.testing.unittestEnabled": true,
-		"python.testing.pytestPath": "/packages/software/conda/bin/pytest",
-		"python.linting.pylintPath": "/packages/software/conda/bin/pylint",
+		"python.testing.pytestPath": "/opt/conda/bin/pytest",
+		"python.linting.pylintPath": "/opt/conda/bin/pylint",
 		"python.formatting.provider": "autopep8",
-		"python.formatting.autopep8Path": "/packages/software/conda/bin/autopep8"
+		"python.formatting.autopep8Path": "/opt/conda/bin/autopep8"
 	},
 	// Use 'appPort' to create a container with published ports. If the port isn't working, be sure
 	// your server accepts connections from all interfaces (0.0.0.0 or '*'), not just localhost.

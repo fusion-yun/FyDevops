@@ -10,7 +10,7 @@ ENV FUYUN_DIR=${FUYUN_DIR}
 
 USER ${FYDEV_USER}
 
-RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
+RUN  source /etc/profile.d/modules.sh ;\
     module use ${FUYUN_DIR}/modules/all ; \
     module avail ; \
     module load Miniconda3 ; \
@@ -21,12 +21,12 @@ RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     conda config --add channels ${CONDA_MIRROR}/cloud/conda-forge ; \
     conda config --remove channels defaults ; \
     conda config --set show_channel_urls yes ; \
-    conda update -n base -c defaults conda    ; \
+    # conda update -n base -c defaults conda    ; \
     ##############################################################################
     # add pip mirror
     pip config set global.index-url  https://mirrors.aliyun.com/pypi/simple/ ; \
-    pip install --upgrade pip ; \
-    conda install --quiet --yes \
+    # pip install --upgrade pip ; \
+    conda install --quiet --yes --freeze-installed  \
     'notebook=6.0.3' \
     'jupyterhub=1.1.0' \
     'jupyterlab=2.0.1' \
@@ -70,7 +70,6 @@ RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
 
 RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
     module use ${FUYUN_DIR}/modules/all ; \
-    module avail ; \
     module load Miniconda3 ; \
     # Activate ipywidgets extension in the environment that runs the notebook server
     # Also activate ipywidgets extension for JupyterLab
@@ -91,14 +90,24 @@ RUN mkdir -p /home/${FYDEV_USER}/.local/share/fonts/otf && \
     curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Bold.otf ;\
     fc-cache -fv
 
-ENV LMOD_DIR=${PKG_DIR}/software/lmod/lmod
-ENV PYTHONPATH=${PKG_DIR}/software/lmod/lmod/init:$PYTHONPATH
+
+ENV LMOD_DIR=${FUYUN_DIR}/software/lmod/lmod
 ENV XDG_CACHE_HOME=/home/${FYDEV_USER}/.cache/
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
+
+# ARG PYTHONPATH=${PYTHONPATH}
+# ENV PYTHONPATH=${FUYUN_DIR}/software/lmod/lmod/init/:${PYTHONPATH}
+
+# ARG MODULEPATH=${MODULEPATH}
+# ENV MODULEPATH=${MODULEPATH}
+
+RUN source ${FUYUN_DIR}/software/lmod/lmod/init/profile ; \
+    module use ${FUYUN_DIR}/modules/all ; \
+    module load Miniconda3 ; \
+    MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
 EXPOSE  8888
 
-ENTRYPOINT  ["/bin/bash","-c"]
+# ENTRYPOINT  ["/bin/bash","-c"]
 ##########################################3
 # Usage:
 # - load jupyter
