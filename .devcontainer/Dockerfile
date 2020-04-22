@@ -1,4 +1,4 @@
-FROM fybase:centos_8
+FROM fydev:latest
 
 
 ENV FYDEV_USER fydev

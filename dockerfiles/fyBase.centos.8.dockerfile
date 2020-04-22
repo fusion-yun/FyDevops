@@ -32,6 +32,7 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     autoconf automake binutils \
     bison flex gcc gcc-c++ gettext \
     elfutils libtool make patch pkgconfig \
+    git \
     # ctags  indent patchutils \
     # Dependences
     openssl openssl-devel xmlto \  

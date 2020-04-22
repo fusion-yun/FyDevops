@@ -14,6 +14,12 @@ ENV FYDEV_USER=${FYDEV_USER}
 ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 ENV FUYUN_DIR=${FUYUN_DIR}
 
+ARG FYDEV_VERSION=${FYDEV_VERSION:-0.0.0}
+ENV FYDEV_VERSION=${FYDEV_VERSION}
+
+ARG FYLAB_VERSION=${FYLAB_VERSION:-${FYDEV_VERSION}}
+ENV FYLAB_VERSION=${FYLAB_VERSION}
+
 USER   ${FYDEV_USER}
 
 ################################################################################
@@ -70,16 +76,21 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     --minimal-toolchain \
     --sourcepath=${FUYUN_DIR}/sources:/tmp/sources \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    --toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    /tmp/ebfiles/${FYDEV_EBFILE}  
+    --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
+    /tmp/ebfiles/FyDev-${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb ;\
+    eb --info -r \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --sourcepath=${FUYUN_DIR}/sources:/tmp/sources \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb 
+
+ENV MODULEPATH=${FUYUN_DIR}/modules/all:${MODULEPATH}
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \      
     sudo rm ${FUYUN_DIR} ;\
     sudo mkdir -p ${FUYUN_DIR} ; \              
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     ; \
-    sudo rm -rf /fycache/${FY_OS}_${FY_OS_VERSION}/software/software ; \
-    sudo rm -rf /fycache/${FY_OS}_${FY_OS_VERSION}/modules/modules ; \
-    sudo rm -rf /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo/ebfiles_repo ; \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}     ; \  
     cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/software ${FUYUN_DIR}/ ; \
     cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/modules ${FUYUN_DIR}/ ; \
     cp -r /fycache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ${FUYUN_DIR}/ 
