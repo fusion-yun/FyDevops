@@ -8,9 +8,8 @@ TOOLCHAIN_NAME=foss
 TOOLCHAIN_VERSION=2019b
 DOCKER_IMAGE_NAME=fydev
 FYDEV_TAG=$(date +"%Y%m%d")
-FUYUN_VERSION=0.0.0
-
-FYDEV_EBFILE=FyDev-${FUYUN_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
+FYDEV_VERSION=0.0.0
+FYLAB_VERSION=0.0.0
 
 echo "======= Build FyBase [" $(date) "] ============ " 
 
@@ -26,11 +25,18 @@ docker build --progress=plain  --rm \
      --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
-     --build-arg FYDEV_EBFILE=${FYDEV_EBFILE} \
+     --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
      -t fydev:${FYDEV_TAG} \
      -f ../dockerfiles/fydev.dockerfile \
      ../
-
+     
+echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
+docker build --progress=plain  --rm \
+     --build-arg FYDEV_TAG=${FYDEV_TAG} \
+     --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
+     -t fylab:${FYLAB_VERSION} \
+     -f ../dockerfiles/fylab.dockerfile \
+     ../
 
 # echo "=======  Build FyBox" $(date +"%Y%m%d") " [" $(date) "] ============ "
 # docker build --progress=plain  --rm \

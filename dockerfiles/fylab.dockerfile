@@ -13,9 +13,6 @@ ENV FYDEV_USER=${FYDEV_USER}
 ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 ENV FUYUN_DIR=${FUYUN_DIR}
 
-ARG FYDEV_VERSION=${FYDEV_VERSION:-0.0.0}
-ENV FYDEV_VERSION=${FYDEV_VERSION}
-
 ARG FYLAB_VERSION=${FYLAB_VERSION:-${FYDEV_VERSION}}
 ENV FYLAB_VERSION=${FYLAB_VERSION}
 
@@ -25,7 +22,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     module use ${FUYUN_DIR}/modules/all ;\
     module avail ; \
     module load EasyBuild ; \    
-    eb --info -lr --rebuild\
+    eb --info -r \
     --use-existing-modules \
     --minimal-toolchain \
     --sourcepath=${FUYUN_DIR}/sources:/tmp/sources \
