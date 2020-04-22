@@ -63,6 +63,9 @@ ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 ARG FYDEV_EBFILE=${FYDEV_EBFILE:-fydev-2019b-${TOOLCHAIN_VERSION}-${TOOLCHAIN_VERSION}.eb}
+
+ENV MODULEPATH=${FUYUN_DIR}/modules/all:${MODULEPATH}
+
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     --mount=type=bind,target=/tmp/ebfiles,source=ebfiles \
     source /etc/profile.d/modules.sh ;\
@@ -77,7 +80,6 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \
     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
     /tmp/ebfiles/FyDev-${FYDEV_VERSION}-${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
   
-ENV MODULEPATH=${FUYUN_DIR}/modules/all:${MODULEPATH}
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fycache,sharing=shared \      
     sudo rm ${FUYUN_DIR} ;\

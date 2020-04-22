@@ -9,7 +9,7 @@ toolchain =SYSTEM
 
 
 dependencies = [   
-    ("Miniconda3","4.7")
+    ("Anaconda3","2019.10")
 ]
 
 local_conda_miroor="https://mirrors.tuna.tsinghua.edu.cn/anaconda"

@@ -30,13 +30,16 @@ docker build --progress=plain  --rm \
      -f ../dockerfiles/fydev.dockerfile \
      ../
      
-echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
+echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
 docker build --progress=plain  --rm \
      --build-arg FYDEV_TAG=${FYDEV_TAG} \
      --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
      -t fylab:${FYLAB_VERSION} \
      -f ../dockerfiles/fylab.dockerfile \
      ../
+
+
+
 
 # echo "=======  Build FyBox" $(date +"%Y%m%d") " [" $(date) "] ============ "
 # docker build --progress=plain  --rm \

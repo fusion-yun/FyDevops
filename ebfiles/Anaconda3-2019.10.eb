@@ -16,7 +16,7 @@ that empowers companies to adopt a modern open data science analytics architectu
 toolchain = SYSTEM
 
 source_urls = ['https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/']
-sources = ['%(name)s-%(version)s-Linux-x86_64.sh']
+sources = ['%(name)s-%(version)s-Linux-%(arch)s.sh']
 checksums = ['46d762284d252e51cd58a8ca6c8adc9da2eadc82c342927b2f66ed011d1d8b53']
 
 moduleclass = 'lang'
