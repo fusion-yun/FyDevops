@@ -42,6 +42,7 @@ builddependencies = [
     ('Java', '13'),
     ('SaxonHE', '9.9.1.5', '-Java-%(javashortver)s',   True),
     ('libxslt', '1.1.34'),
+    ('bzip2','1.0.8')
 ]
 
 

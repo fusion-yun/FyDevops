@@ -86,4 +86,4 @@ modextrapaths = {
 moduleclass = 'data'
 
 
-# eb ebfiles/UDA-2.2.6-foss-2019b-Python-3.7.4.eb --minimal-toolchain --use-existing-modules --robot-paths=ebfiles/:/opt/EasyBuild/software/EasyBuild/4.2.0/easybuild/easyconfigs/ --sourcepath=build_src/ --rebuild  -lr
+# eb ebfiles/UDA-2.2.6-foss-2019b-Python-3.7.4.eb --minimal-toolchain --use-existing-modules --robot-paths=ebfiles/:/opt/EasyBuild/software/EasyBuild/4.2.0/easybuild/easyconfigs/ --sourcepath=build_src/imas --rebuild  -lr

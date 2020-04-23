@@ -59,14 +59,15 @@ ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\
-    module avail ; \
-    module load EasyBuild ; \      
-    eb --info -r  \
+    module load EasyBuild ; \        
+    eb --info -r --rebuild  \
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb 
+    /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb ; \
+    module avail  
+
 
 
 
