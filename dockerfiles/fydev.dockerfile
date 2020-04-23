@@ -60,15 +60,13 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\
     module avail ; \
-    module load EasyBuild ; \    
-    eb --show-config ;\   
-    eb --rebuild Java-13.eb --info -lr 
-    # eb --info -lr  --rebuild \
-    # --use-existing-modules \
-    # --minimal-toolchain \
-    # --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    # --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    # /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb 
+    module load EasyBuild ; \      
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
+    /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb 
 
 
 

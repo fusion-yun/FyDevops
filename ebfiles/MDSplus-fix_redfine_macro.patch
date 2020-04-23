@@ -1,0 +1,31 @@
+diff -ur mdsplus-stable_release-7-96-12.orig/include/mdsplus/mdsconfig.h.in mdsplus-stable_release-7-96-12/include/mdsplus/mdsconfig.h.in
+--- mdsplus-stable_release-7-96-12.orig/include/mdsplus/mdsconfig.h.in	2020-04-23 07:41:13.480004565 +0000
++++ mdsplus-stable_release-7-96-12/include/mdsplus/mdsconfig.h.in	2020-04-23 07:42:52.952221081 +0000
+@@ -191,10 +191,10 @@
+ 
+ /* Define to 1 if you have the <windows.h> header file. */
+ #undef HAVE_WINDOWS_H
+-
++#ifndef NDEBUG
+ /* Define if debugging is disabled */
+ #undef NDEBUG
+-
++#endif
+ /* "Define NEED_SEMUN" */
+ #undef NEED_SEMUN
+ 
+diff -ur mdsplus-stable_release-7-96-12.orig/include/status.h mdsplus-stable_release-7-96-12/include/status.h
+--- mdsplus-stable_release-7-96-12.orig/include/status.h	2020-04-23 07:41:13.480004565 +0000
++++ mdsplus-stable_release-7-96-12/include/status.h	2020-04-23 07:41:48.800078914 +0000
+@@ -1,7 +1,11 @@
+ #pragma once
+ #include <mdsshr_messages.h>
++#ifndef FALSE
+ #define FALSE 0
++#endif
++#ifndef TRUE
+ #define TRUE  1
++#endif
+ #define B_TRUE  TRUE
+ #define B_FALSE FALSE
+ #define C_OK    0
