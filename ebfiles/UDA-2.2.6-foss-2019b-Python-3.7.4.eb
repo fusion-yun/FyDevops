@@ -48,7 +48,7 @@ builddependencies = [
 
 configopts =" -DGIT_VERSION=%(version)s -DTARGET_TYPE=OTHER -DBUILD_PLUGINS=hdf5  \
             -DCMAKE_C_FLAGS=' -Wno-maybe-uninitialized -Wno-incompatible-pointer-types  -I${EBROOTLIBTIRPC}/include/tirpc/ -ltirpc' \
-            -DCMAKE_CXX_FLAGS='-Wno-maybe-uninitialized -Wno-incompatible-pointer-types  -I${EBROOTLIBTIRPC}/include/tirpc/ -ltirpc' \
+            -DCMAKE_CXX_FLAGS='-Wno-maybe-uninitialize -I${EBROOTLIBTIRPC}/include/tirpc/ -ltirpc' \
                 " 
 
 install_cmd=" make install && cd %(installdir)s/python_installer && python ./setup.py install  --prefix=%(installdir)s"

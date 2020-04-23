@@ -59,13 +59,14 @@ ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\
-    module load EasyBuild ; \        
-    eb --info -r --rebuild  \
-    --use-existing-modules \
-    --minimal-toolchain \
-    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb ; \
+    module load EasyBuild ; \     
+    eb  --rebuild /tmp/ebfiles/MDSplus-7.96.12-GCCcore-8.3.0.eb -lr   ;\
+    # eb --info -r --rebuild  \
+    # --use-existing-modules \
+    # --minimal-toolchain \
+    # --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    # --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
+    # /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb ; \
     module avail  
 
 

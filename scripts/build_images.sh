@@ -17,6 +17,8 @@ docker build  --progress=plain --rm \
      --build-arg FY_OS=${FY_OS} --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
      -t fybase:${FYDEV_TAG} \
      - < ../dockerfiles/fyBase.${FY_OS}.${FY_OS_VERSION}.dockerfile 
+     
+dcoker tag fybase:${FYDEV_TAG} fybase:latest
 
 
 echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
@@ -30,6 +32,7 @@ docker build --progress=plain  --rm \
      -f ../dockerfiles/fydev.dockerfile \
      ../ebfiles
      
+dcoker tag fydev:${FYDEV_TAG} fydev:latest
 # echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
 # docker build --progress=plain  --rm \
 #      --build-arg FYDEV_TAG=${FYDEV_TAG} \
