@@ -15,7 +15,7 @@ echo "======= Build FyBase [" $(date) "] ============ "
 
 docker build  --progress=plain --rm \
      --build-arg FY_OS=${FY_OS} --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
-     -t fybase:${FY_OS}_${FY_OS_VERSION} \
+     -t fybase:${FYDEV_TAG} \
      - < ../dockerfiles/fyBase.${FY_OS}.${FY_OS_VERSION}.dockerfile 
 
 
@@ -28,15 +28,15 @@ docker build --progress=plain  --rm \
      --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
      -t fydev:${FYDEV_TAG} \
      -f ../dockerfiles/fydev.dockerfile \
-     ../
+     ../ebfiles
      
-echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
-docker build --progress=plain  --rm \
-     --build-arg FYDEV_TAG=${FYDEV_TAG} \
-     --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
-     -t fylab:${FYLAB_VERSION} \
-     -f ../dockerfiles/fylab.dockerfile \
-     ../
+# echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
+# docker build --progress=plain  --rm \
+#      --build-arg FYDEV_TAG=${FYDEV_TAG} \
+#      --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
+#      -t fylab:${FYLAB_VERSION} \
+#      -f ../dockerfiles/fylab.dockerfile \
+#      ../
 
 
 

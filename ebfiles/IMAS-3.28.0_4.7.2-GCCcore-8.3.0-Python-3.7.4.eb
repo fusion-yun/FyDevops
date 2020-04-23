@@ -1,0 +1,170 @@
+easyblock = 'ConfigureMake'
+
+name = 'IMAS'
+
+local_dd = '3.24.0'
+local_al = '4.2.0'
+version = local_dd+'_'+local_al
+local_cache_tag = '20191024'
+local_installer = '1.8.2'
+
+local_javashortver = '13'
+local_javaver = '13.0.1'
+local_pyver = '3.7.4'
+
+versionsuffix = '-Python-'+local_pyver
+
+
+homepage = 'https://confluence.iter.org/display/IMP'
+
+description = "Integrated Modelling & Analysis Suite (IMAS) AL=" + \
+    local_al+"  DD=" + local_dd + " installer= "+local_installer
+
+toolchain = {'version': '2019b', 'name': 'foss'}
+toolchainopts = {'pic': True}
+
+sources = [
+    {
+        'filename': 'installer-'+local_installer+'.tar.gz',
+        'git_config': {
+            'url': 'ssh://git@git.iter.org/imas',
+            'repo_name': 'installer',
+            'tag': local_installer,
+        }
+    }
+]
+
+dependencies = [
+    ('Java',  '13'),
+    ('Python', '3.7.4'),
+    ('UDA', '2.2.6', '-Python-%(pyver)s'),
+    ('Boost', '1.71.0'),
+    ('Blitz++', '1.0.2'),
+    ('HDF5', '1.10.5'),
+    ('netCDF', '4.7.1'),
+    ('MDSplus', '7.84.8'),
+]
+builddependencies = [
+    ('Java', '13'),
+    ('SaxonHE', '9.9.1.5', '-Java-%(javaver)s',   True),
+    ('libxslt', '1.1.34'),
+]
+
+
+local_siteconfig = """EOF
+# Site configuration Makefile for ASIPP Organization's HPC Cluster ___ShenMa___
+
+# This file should be maintained by the administrator of the site.
+# Users should modify Makefile.config for their personal overrides.
+
+# Toggle what language interfaces are (not) built by default
+# Use ?= notation to allow user override from command line.
+IMAS_CPP = yes
+IMAS_FORTRAN = yes
+IMAS_GFORTRAN = yes # FORTRAN compiler
+IMAS_IFORT = no # FORTRAN compiler
+IMAS_G95 = no # FORTRAN compiler
+IMAS_NAGFOR = no # FORTRAN compiler
+IMAS_PGI = no # FORTRAN compiler
+IMAS_JAVA = no
+IMAS_MATLAB = no
+IMAS_MEX = no
+IMAS_PYTHON = yes
+IMAS_PYTHON2 = no
+IMAS_PYTHON3 = yes
+
+# Build with MDSplus backend
+IMAS_MDSPLUS = yes
+# Build with HDF5 backend
+IMAS_HDF5 = no # Broken
+
+# Build with UDA backend
+IMAS_UDA = yes
+
+
+# Include \\\\n to have pretty linebreaks in the modulefile.
+MODULEFILE_DEPENDENCIES={\\n\\\\
+    GCC/7.3.0    GCC/7.3.0 \\n\\\\
+    Java         Java/%(javashortver)s \\n\\\\
+    Python       Python/%(pyver)s \\n\\\\
+    UDA          UDA/2.6.2-%(toolchain_name)s-%(toolchain_version)s \\n\\\\
+    MDSplus      MDSplus/7.84.8-%(toolchain_name)s-%(toolchain_version)s-Java-%(javashortver)s \\n\\\\
+    Blitz++      Blitz++/1.0.2 \\n\\\\
+}
+
+# Test for this jar file in the CLASSPATH:
+SAXONJARFILE=saxon9he.jar
+
+# Test for this pc file in the PKG_CONFIG_PATH, leave empty to skip test:
+BLITZPCFILE=blitz.pc
+
+# Test that these module names are loaded for UAL compilation (compile time):
+UAL_MODULES = Blitz++
+# Additionally test for these module names in case of IMAS_PGI=yes IMAS_IFORT=yes,.. see below.
+UAL_MODULES_MDSPLUS = MDSplus
+UAL_MODULES_UDA = UDA
+UAL_MODULES_G95 =
+UAL_MODULES_NAGFOR =
+UAL_MODULES_PGI =
+UAL_MODULES_INTEL =
+UAL_MODULES_JAVA = Java
+UAL_MODULES_PYTHON2 =
+UAL_MODULES_PYTHON3 = Python
+
+# Additional search path to local IMAS scripts that is added to \$PATH by imas module
+IMAS_EXTRA_PATH = \$(IMAS_HOME)/extra/bin
+IMAS_EXTRA_MATLABPATH = \$(IMAS_HOME)/extra/matlab
+IMAS_EXTRA_PYTHONPATH = \$(IMAS_HOME)/core/pyual:\$(IMAS_HOME)/extra/bin
+
+EOF
+"""
+configure_cmd = "cat > %(builddir)s/installer/site-config/Makefile.fuyun <<" + \
+    local_siteconfig
+prefix_opt = " echo "
+configopts = " "
+
+local_envs = " export TAG_AL="+local_al + " TAG_DD=" + local_dd + \
+    """   
+    export GIT_OFFLINE=yes
+    export SITECONFIG=site-config/Makefile.fuyun
+    export IMAS_HOME=%(installdir)s  
+    export INSTALL_DIR=%(installdir)s    
+"""
+
+build_cmd = local_envs+"""
+ make help 
+ make """
+
+buildopts = " all "
+
+install_cmd = local_envs+" make "
+
+installopts = " install "
+sanity_check_paths = {
+    'files': ['include/IDSDef.xml',
+              'include/IDSNames.txt'],
+    'dirs': ['share/doc/imas'],
+}
+
+# whatis = "Integrated Modelling and Analysis Suite (IMAS). (imas:%(version)s ual:"+local_al+")"
+
+modextravars = {
+    'IMAS_HOME': '%(installdir)s/../',
+    'IMAS_ROOT': '%(installdir)s',
+    'IMAS_DIR': '%(installdir)s',
+    'IMAS_PREFIX': '%(installdir)s',
+    'IMAS_VERSION': '%(version)s',
+    'UAL_VERSION':  local_al,
+}
+modextrapaths = {
+    'PYTHONPATH': 'python/lib',
+    'CLASSPATH': 'jar/imas.jar',
+    'PATH': "extra/bin",
+    'MATLABPATH': "matlab:%(installdir)s/include:%(installdir)s/extra/matlab",
+    'ids_path': "models/mdsplus"
+}
+modluafooter = """
+set_alias('dd_doc', \"( module purge ; xdg-open %(installdir)s/share/doc/imas/html_documentation.html)\")
+set_alias('imasdb', \"eval `%(installdir)s/bin/imasdb $*`\")
+"""
+moduleclass = 'data'

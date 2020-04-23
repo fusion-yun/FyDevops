@@ -17,7 +17,7 @@ toolchain = {'version': '2019b', 'name': 'gompi'}
 toolchainopts = {'pic': False}
 
 sources = [{
-    'filename': '%(namelower)s-%(version)s.tar.gz',
+    'filename': '%(namelower)s-%(version)s@3bb347969fb.zip',
     'git_config': {
         'url': 'ssh://git@git.iter.org/imas',
         'repo_name': 'uda',
@@ -28,18 +28,18 @@ sources = [{
 
 dependencies = [    
     ('Python', '3.7.4'),
+    ('Java', '13',None,True),
     ('Boost', '1.71.0'), 
-    ('PostgreSQL', '11.3',versionsuffix),
+    ('PostgreSQL', '12.2'),
     ('libxml2', '2.9.9'),
     ('libMemcached', '1.0.18'),
     ('HDF5', '1.10.5'),
-    ('netCDF', '4.6.2'),
-    ('MDSplus', '7.84.8'),
+    ('netCDF', '4.7.1'),
+    ('MDSplus', '7.96.12'),
 ]
 
 builddependencies = [    
-    ('Java', '1.13.0'),
-    ('SWIG', '3.0.12', '-Python-'+local_pyver),
+    ('SWIG', '4.0.1'),
     ('CMake', '3.15.3') 
 ]
 
