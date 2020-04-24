@@ -29,7 +29,7 @@ ENV FUYUN_DIR=${FUYUN_DIR}
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
-ARG EB_ARGS="--info -r \
+ARG EB_ARGS="--info -lr \
     --use-existing-modules \
     --minimal-toolchain \
     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
@@ -50,16 +50,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     source /etc/profile.d/modules.sh ;\
     export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
     module load EasyBuild ; \   
-    eb ${EB_ARGS} --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    Graphviz-2.42.2-foss-2019b-Python-3.7.4.eb  
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
-    module load EasyBuild ; \   
-    eb ${EB_ARGS} --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    PyYAML-5.1.2-GCCcore-8.3.0-Python-3.7.4.eb
+    eb ${EB_ARGS} matplotlib-3.1.1-foss-2019b-Python-3.7.4.eb   
 
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
@@ -74,24 +65,35 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     source /etc/profile.d/modules.sh ;\
     export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
     module load EasyBuild ; \   
-    eb ${EB_ARGS} matplotlib-3.1.1-foss-2019b-Python-3.7.4.eb   
+    eb ${EB_ARGS} --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    Graphviz-2.42.2-foss-2019b-Python-3.7.4.eb  
 
-##############################################################################
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \ 
+    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
     module load EasyBuild ; \   
-    module avail  ; \  
-    eb --info -r \
-    --use-existing-modules \
-    --minimal-toolchain \
-    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    --moduleclasses=fuyun \
-    /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb ; \
-    module avail  
+    eb ${EB_ARGS} --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    PyYAML-5.1.2-GCCcore-8.3.0-Python-3.7.4.eb
+
+
+# ##############################################################################
+
+# RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
+#     --mount=type=bind,target=/tmp/ebfiles,source=./ \
+#     source /etc/profile.d/modules.sh ;\
+#     export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \ 
+#     module load EasyBuild ; \   
+#     module avail  ; \  
+#     eb --info -r \
+#     --use-existing-modules \
+#     --minimal-toolchain \
+#     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+#     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
+#     --moduleclasses=fuyun \
+#     /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb ; \
+#     module avail  
 
 
 

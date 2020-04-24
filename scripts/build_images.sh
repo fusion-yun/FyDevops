@@ -48,13 +48,4 @@ docker build --progress=plain  --rm \
 
 docker tag fylab:${IMAGE_TAG} fylab:latest
 
-
-
-# echo "=======  Build FyBox" $(date +"%Y%m%d") " [" $(date) "] ============ "
-# docker build --progress=plain  --rm \
-#      --build-arg IMAGE_TAG=${IMAGE_TAG} \
-#      -t fybox:${IMAGE_TAG} \
-#      - < ../dockerfiles/fybox.dockerfile
-
 echo "======= Done [" $(date) "]============ "  
-# ./create_images.sh > /tmp/build_fydev_$(date +"%Y%m%d").log 2>&1 &
