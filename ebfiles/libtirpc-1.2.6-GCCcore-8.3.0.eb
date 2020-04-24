@@ -5,9 +5,9 @@ version = '1.2.6'
 
 homepage = 'https://sourceforge.net/projects/libtirpc/'
 description = "Libtirpc is a port of Suns Transport-Independent RPC library to Linux. \
-     The libtirpc package contains libraries that support programs that use \
-     the Remote Procedure Call (RPC) API. It replaces the RPC, but not the \
-     NIS library entries that used to be in glibc."
+ The libtirpc package contains libraries that support programs that use \
+ the Remote Procedure Call (RPC) API. It replaces the RPC, but not the \
+ NIS library entries that used to be in glibc."
 
 toolchain = {'name': 'GCCcore', 'version': '8.3.0'}
 

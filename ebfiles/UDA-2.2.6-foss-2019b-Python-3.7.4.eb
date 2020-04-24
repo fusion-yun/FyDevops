@@ -29,7 +29,7 @@ sources = [
 
 
 dependencies = [   
-    ('libtirpc','1.2.6'), 
+    ('libtirpc','1.2.6'),  # new version glibc (>2.*) removed "rpc/*.h",  using libtirpc replace 
     ('Python', '3.7.4'),
     # ('Java', '13',None,True),
     ('Boost', '1.71.0'), 

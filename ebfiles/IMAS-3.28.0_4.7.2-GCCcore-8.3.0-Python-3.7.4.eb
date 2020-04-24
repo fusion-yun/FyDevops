@@ -11,8 +11,7 @@ versionsuffix = '-Python-%(pyver)s'
 
 homepage = 'https://confluence.iter.org/display/IMP'
 
-description = "Integrated Modelling & Analysis Suite (IMAS) AL=" + \
-    local_al+"  DD=" + local_dd + " installer= "+local_installer
+description = "Integrated Modelling & Analysis Suite (IMAS) AL=%(local_al)s  DD=%(local_dd)s installer=%(local_installer) UDA=%(local_uda)s"
 
 toolchain = { 'name': 'foss','version': '2019b'}
 toolchainopts = {'pic': True}
@@ -162,4 +161,4 @@ modluafooter = """
 set_alias('dd_doc', \"( module purge ; xdg-open %(installdir)s/share/doc/imas/html_documentation.html)\")
 set_alias('imasdb', \"eval `%(installdir)s/bin/imasdb $*`\")
 """
-moduleclass = 'data'
+moduleclass = 'phys'

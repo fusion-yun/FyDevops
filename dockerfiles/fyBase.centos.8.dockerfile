@@ -27,7 +27,7 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     /etc/yum.repos.d/epel.repo ; \
     yum update -y ; \
     yum install -y \      
-    sudo which  Lmod \         
+    sudo which  Lmod bzip2\         
     # Development tools
     python3 perl  \
     autoconf automake binutils \

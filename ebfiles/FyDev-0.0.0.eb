@@ -37,8 +37,6 @@ dependencies = [
     ################################
     ('Python','3.7.4'),
     ('SWIG','4.0.1'),
-
-
 ]
 
-moduleclass = 'devel'
+moduleclass = 'fuyun'
