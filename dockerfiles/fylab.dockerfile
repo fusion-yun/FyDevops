@@ -39,6 +39,7 @@ ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\    
+    module use ${FUYUN_DIR}/modules/all ; \
     module load EasyBuild ; \   
     eb --show-config ;\   
     eb --info -r \
@@ -50,6 +51,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\    
+    module use ${FUYUN_DIR}/modules/all ; \
     module load EasyBuild ; \   
     eb --info -r \
     --use-existing-modules \
@@ -60,6 +62,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\    
+    module use ${FUYUN_DIR}/modules/all ; \
     module load EasyBuild ; \   
     eb --info -r \
     --use-existing-modules \
@@ -70,6 +73,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\    
+    module use ${FUYUN_DIR}/modules/all ; \
     module load EasyBuild ; \   
     eb --info -lr \
     --use-existing-modules \
