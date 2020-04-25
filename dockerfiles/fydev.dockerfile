@@ -79,27 +79,31 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \
     module use ${FUYUN_DIR}/modules/all ; \
     module avail ; \
     module load EasyBuild/${FY_EB_VERSION} ; \      
+    rm -rf ${FUYUN_DIR}/software/.locks/*.lock ; \
     eb --info -r  \
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    --moduleclasses=fuyun  \
-    /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb 
+    --rebuild \
+    /tmp/ebfiles/GCCcore-8.3.0.eb 
+
+    # --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
+    # --moduleclasses=fuyun  \
+    # /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb 
 
 
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
-    if ! [ -d ${FUYUN_DIR} ] ; then \
-    sudo mkdir -p ${FUYUN_DIR}   ; \
-    fi ; \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} ;\
-    ################################
-    cp -r /tmp/cache/modules ${FUYUN_DIR}/ ; \
-    cp -r /tmp/cache/ebfiles_repo ${FUYUN_DIR}/ ; \
-    cp -r /tmp/cache/software ${FUYUN_DIR}/ ; \
-    cp -r /tmp/cache/sources ${FUYUN_DIR}/ 
+# RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
+#     if ! [ -d ${FUYUN_DIR} ] ; then \
+#     sudo mkdir -p ${FUYUN_DIR}   ; \
+#     fi ; \
+#     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} ;\
+#     ################################
+#     cp -r /tmp/cache/modules ${FUYUN_DIR}/ ; \
+#     cp -r /tmp/cache/ebfiles_repo ${FUYUN_DIR}/ ; \
+#     cp -r /tmp/cache/software ${FUYUN_DIR}/ ; \
+#     cp -r /tmp/cache/sources ${FUYUN_DIR}/ 
 
 
 ENV MODULEPATH=${FUYUN_DIR}/modules/base:${MODULEPATH}

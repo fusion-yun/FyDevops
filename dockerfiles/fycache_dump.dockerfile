@@ -9,19 +9,13 @@ ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 USER root
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
-    # # mv /tmp/cache/centos_8/software/Miniconda3 /tmp/cache ;\
-    # rm -rf /tmp/cache/centos_8/modules/all/FyDev/2019b-foss-2019b.lua ;\
-    # rm -rf /tmp/cache/centos_8/modules/devel/FyDev/2019b-foss-2019b.lua ;\
-    # rm -rf /tmp/cache/centos_8/ebfiles_repo/FyDev/FyDev-2019b-foss-2019b.eb
-    # mkdir -p /fycache ; \                  
-    # cp -r /tmp/cache/centos_8/ebfiles_repo  /fycache/ebfiles_repo ;\
-    # cp -r /tmp/cache/centos_8/modules  /fycache/modules ;\
-    # cp -r /tmp/cache/centos_8/software  /fycache/software ;\
-    # cp -r /tmp/cache/sources  /fycache/sources ;\
-    ls -lh /fuyun/ ;\
-    ls -lh /fuyun/software ;\
-    du -sh /fuyun/* 
-
+    --mount=type=bind,target=/tmp/eb,source=./ \
+    # cp -r /tmp/eb/modules /fuyun/modules ; \
+    # cp -r /tmp/eb/software /fuyun/software ; \
+    # cp -r /tmp/eb/ebfiles_repo /fuyun/ebfiles_repo ; \
+    # cp -r /tmp/eb/sources /fuyun/sources ; \
+    ls -lhR /tmp/eb/modules ; \
+    ls -lh /fuyun/modules/all/GCCcore
 
 
     # RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  

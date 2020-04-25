@@ -25,6 +25,9 @@ USER   ${FYDEV_USER}
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
+
+ENV EASYBUILD_PREFIX=${FUYUN_DIR} 
+
 ################################################################################
 # For release
 # RUN sudo mkdir -p  ${FUYUN_DIR} ;\
@@ -32,12 +35,42 @@ ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 # RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \  
 # -------------------------
 # For debug
+
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\    
     module load EasyBuild ; \   
-    export EASYBUILD_PREFIX=${FUYUN_DIR} ;\
-    eb --show-config ;\    
+    eb --show-config ;\   
+    eb --info -r \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    Qt5-5.13.1-GCCcore-8.3.0.eb 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh ;\    
+    module load EasyBuild ; \   
+    eb --info -r \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    IPython-7.9.0-foss-2019b-Python-3.7.4.eb
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh ;\    
+    module load EasyBuild ; \   
+    eb --info -r \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \    
+    JupyterLab-1.2.5-foss-2019b-Python-3.7.4.eb
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh ;\    
+    module load EasyBuild ; \   
     eb --info -lr \
     --use-existing-modules \
     --minimal-toolchain \
@@ -46,6 +79,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \
     --moduleclasses=fuyun \
     /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb ; \
     module avail  
+
 # eb  --info  --use-existing-modules  --minimal-toolchain --robot-paths=/workspaces/FyDevOps/ebfiles/:$EBROOTEASYBUILD/easybuild/easyconfigs  --moduleclasses=fuyun /workspaces/FyDevOps/ebfiles/FyLab-0.0.0.eb -Dr
 ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
 

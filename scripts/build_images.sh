@@ -46,7 +46,7 @@ docker build --progress=plain  --rm \
      -f ../dockerfiles/fylab.dockerfile \
      ../ebfiles
 
-docker tag fylab:${IMAGE_TAG} fylab:latest
+# docker tag fylab:${IMAGE_TAG} fylab:latest
 
 echo "======= Done [" $(date) "]============ "  
 
