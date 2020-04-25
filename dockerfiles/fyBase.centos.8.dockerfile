@@ -27,16 +27,19 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     /etc/yum.repos.d/epel.repo ; \
     yum update -y ; \
     yum install -y \      
-    sudo which  Lmod bzip2\         
-    # Development tools
-    python3 perl  \
-    autoconf automake binutils \
-    bison flex gcc gcc-c++ gettext \
-    elfutils libtool make patch pkgconfig \
-    git \
+    sudo which  Lmod \         
+    # Development tools    
+    autoconf automake make \
+    m4 binutils bison flex\    
+    gettext elfutils libtool \
+    patch pkgconfig bzip2\
     # ctags  indent patchutils \
-    # Dependences
-    openssl openssl-devel xmlto \  
+    # Language
+    gcc gcc-c++ python3 perl  \    
+    # For git
+    asciidoc xmlto \  
+    # Python,Perl,PostgreSQL,CMake,cURL
+    openssl openssl-devel \
     ;\
     yum clean all -y -q
 

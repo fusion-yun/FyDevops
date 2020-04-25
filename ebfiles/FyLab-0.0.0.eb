@@ -15,7 +15,7 @@ dependencies = [
     ('SciPy-bundle', '2019.10', versionsuffix),
     ('h5py', '2.10.0', versionsuffix,toolchain),
     ('netcdf4-python', '1.5.3', versionsuffix,toolchain),
-    ('PyYAML','5.1.2',versionsuffix),
+    # ('PyYAML','5.1.2',versionsuffix),
     ('networkx','2.4', versionsuffix),
     ('Graphviz','2.42.2',versionsuffix),
     ('matplotlib','3.1.1',versionsuffix),

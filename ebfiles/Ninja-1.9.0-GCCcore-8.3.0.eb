@@ -2,7 +2,7 @@ easyblock = 'CmdCp'
 
 name = 'Ninja'
 version = '1.9.0'
-versionsuffix='-kitware'
+
 homepage = 'https://ninja-build.org/'
 description = "Ninja is a small build system with a focus on speed."
 

@@ -1,9 +1,25 @@
 # syntax=docker/dockerfile:experimental
 ARG IMAGE_TAG=${IMAGE_TAG:-latest}
-FROM fydev:${IMAGE_TAG}
+FROM fybase:${IMAGE_TAG}
 
 ARG FY_OS=${FY_OS:-centos}
 ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
+
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
+    sudo mkdir -p /tmp/cache/sources ; \ 
+    sudo mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION} ; \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /tmp/cache/${FY_OS}_${FY_OS_VERSION} ;\
+    sudo mkdir ${FUYUN_DIR} ;\
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} ;\
+    mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION}/software ;\
+    mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION}/modules ;\
+    mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ;\
+    ln -sf /tmp/cache/${FY_OS}_${FY_OS_VERSION}/software  ${FUYUN_DIR}/software ; \ 
+    ln -sf /tmp/cache/${FY_OS}_${FY_OS_VERSION}/modules   ${FUYUN_DIR}/modules  ; \
+    ln -sf /tmp/cache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo   ${FUYUN_DIR}/ebfiles_repo 
+
+ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 
 
 ################################################################################
@@ -29,76 +45,27 @@ ENV FUYUN_DIR=${FUYUN_DIR}
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
-ARG EB_ARGS="--info -lr \
+##############################################################################
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh ;\
+    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \ 
+    module load EasyBuild ; \   
+    module avail  ; \  
+    eb --info -r \
     --use-existing-modules \
     --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-    --moduleclasses=fuyun" 
-
-##############################################################################
-# only for cache, not necessary
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
-    module load EasyBuild ; \   
-    eb ${EB_ARGS}  --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb  
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
-    module load EasyBuild ; \   
-    eb ${EB_ARGS} matplotlib-3.1.1-foss-2019b-Python-3.7.4.eb   
-
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
-    module load EasyBuild ; \   
-    eb ${EB_ARGS} JupyterLab-1.2.5-foss-2019b-Python-3.7.4.eb   
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
-    module load EasyBuild ; \   
-    eb ${EB_ARGS} --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    Graphviz-2.42.2-foss-2019b-Python-3.7.4.eb  
-
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \     
-    module load EasyBuild ; \   
-    eb ${EB_ARGS} --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    PyYAML-5.1.2-GCCcore-8.3.0-Python-3.7.4.eb
-
-
-# ##############################################################################
-
-# RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-#     --mount=type=bind,target=/tmp/ebfiles,source=./ \
-#     source /etc/profile.d/modules.sh ;\
-#     export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \ 
-#     module load EasyBuild ; \   
-#     module avail  ; \  
-#     eb --info -r \
-#     --use-existing-modules \
-#     --minimal-toolchain \
-#     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-#     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-#     --moduleclasses=fuyun \
-#     /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb ; \
-#     module avail  
+    --moduleclasses=fuyun \
+    /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb ; \
+    module avail  
 
 
 
 
-# ENV MODULEPATH=${FUYUN_DIR}/modules/base:${FUYUN_DIR}/modules/compiler:${FUYUN_DIR}/modules/data:${FUYUN_DIR}/modules/devel:${FUYUN_DIR}/modules/lang:${FUYUN_DIR}/modules/lib:${FUYUN_DIR}/modules/math:${FUYUN_DIR}/modules/mpi:${FUYUN_DIR}/modules/numlib:${FUYUN_DIR}/modules/system:${FUYUN_DIR}/modules/toolchain:${FUYUN_DIR}/modules/tools:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
 # # RUN sudo rm -rf /tmp/cache
 
 

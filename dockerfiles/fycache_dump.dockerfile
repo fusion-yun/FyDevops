@@ -18,7 +18,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     cp -r /tmp/cache/centos_8/modules  /fycache/modules ;\
     cp -r /tmp/cache/centos_8/software  /fycache/software ;\
     cp -r /tmp/cache/sources  /fycache/sources ;\
-    ls -lh /fycache/  
+    ls -lh /fycache/software
 
 
 
