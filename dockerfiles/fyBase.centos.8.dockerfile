@@ -30,7 +30,7 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     sudo which  Lmod \         
     # Development tools    
     autoconf automake make \
-    m4 binutils bison flex\    
+    m4 binutils bison flex diffutils\    
     gettext elfutils libtool \
     patch pkgconfig bzip2\
     # ctags  indent patchutils \
@@ -58,51 +58,9 @@ ENV PYTHONPATH=/usr/share/lmod/lmod/init/:${PYTHONPATH}
 RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
     echo "%${FYDEV_USER} ALL=(ALL)    NOPASSWD: ALL" >>/etc/sudoers
 
-
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    sudo mkdir -p /tmp/cache/sources ; \ 
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R  /tmp/cache/sources ;
-
-
 USER ${FYDEV_USER}
-
-################################################################################
-# Bootstrap
-# Install EasyBuild
-ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
-ARG FY_EB_ROOT=${FY_EB_ROOT:-/opt/EasyBuild}
-ENV FY_EB_ROOT=${FY_EB_ROOT}
-
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \    
-    source /etc/profile.d/modules.sh ; \
-    if ! [ -d ${FY_EB_ROOT}/software/EasyBuild/${FY_EB_VERSION} ]; then \
-    if ! [ -f /tmp/cache/sources/bootstrap/bootstrap_eb.py  ]; then  \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R  /tmp/cache/ ; \
-    mkdir -p  /tmp/cache/sources/bootstrap/ ; \    
-    curl -L https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py -o /tmp/cache/sources/bootstrap/bootstrap_eb.py ;\
-    curl -L https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz -o /tmp/cache/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz; \
-    curl -L https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz -o /tmp/cache/sources/bootstrap/easybuild-framework-v${FY_EB_VERSION}.tar.gz ; \
-    curl -L https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz -o /tmp/cache/sources/bootstrap/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz ; \
-    fi ; \  
-    sudo mkdir -p ${FY_EB_ROOT} ; \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R  ${FY_EB_ROOT} ; \
-    export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  ; \
-    export EASYBUILD_BOOTSTRAP_SOURCEPATH=/tmp/cache/sources/bootstrap/  ; \
-    export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  ; \
-    /usr/bin/python3 /tmp/cache/sources/bootstrap/bootstrap_eb.py    ${FY_EB_ROOT} ; \
-    unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0 ; \
-    unset EASYBUILD_BOOTSTRAP_SOURCEPATH ; \
-    unset EASYBUILD_BOOTSTRAP_FORCE_VERSION ; \
-    fi; \
-    sudo ln -s  ${FY_EB_ROOT}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/
-
-
-RUN rm -rf /tmp/cache/sources
 WORKDIR /home/${FYDEV_USER}
-ENV MODULEPATH=${FY_EB_ROOT}/modules/all:${MODULEPATH}
-ENV PYTHONPATH=${LMOD_ROOT}/lmod/init/:${PYTHONPATH}
+
 
 
 

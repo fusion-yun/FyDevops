@@ -1,12 +1,11 @@
 # syntax=docker/dockerfile:experimental
 
-FROM centos:8
+FROM fydev:latest
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    --mount=type=bind,target=/tmp/sources,source=./ \
-    mkdir -p /tmp/cache/sources/imas ;\
-    cp -rf /tmp/sources/* /tmp/cache/sources/imas/ ;\
-    ls /tmp/cache/sources/imas
+RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \      
+    cp -r /fuyun/* /tmp/cache/
+    
+
     # cp -r /fuyun/sources /fycache/
     # for _name in b  bootstrap  f  g  generic  h  i  j  l  m  n  o  p  s   t  u  x  z; do \
     #     cp -r /fuyun/sources/${_name} /fycache/sources ;\

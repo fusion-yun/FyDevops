@@ -1,26 +1,11 @@
 # syntax=docker/dockerfile:experimental
 ARG IMAGE_TAG=${IMAGE_TAG:-latest}
+
+# For release
+# FROM fydev:${IMAGE_TAG}
+
+# For debug
 FROM fybase:${IMAGE_TAG}
-
-ARG FY_OS=${FY_OS:-centos}
-ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
-
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-    sudo mkdir -p /tmp/cache/sources ; \ 
-    sudo mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION} ; \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /tmp/cache/${FY_OS}_${FY_OS_VERSION} ;\
-    sudo mkdir ${FUYUN_DIR} ;\
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} ;\
-    mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION}/software ;\
-    mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION}/modules ;\
-    mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo ;\
-    ln -sf /tmp/cache/${FY_OS}_${FY_OS_VERSION}/software  ${FUYUN_DIR}/software ; \ 
-    ln -sf /tmp/cache/${FY_OS}_${FY_OS_VERSION}/modules   ${FUYUN_DIR}/modules  ; \
-    ln -sf /tmp/cache/${FY_OS}_${FY_OS_VERSION}/ebfiles_repo   ${FUYUN_DIR}/ebfiles_repo 
-
-ENV EASYBUILD_PREFIX=${FUYUN_DIR}
-
 
 ################################################################################
 # Add user for DevOps
@@ -34,26 +19,26 @@ ARG FYLAB_VERSION=${FYLAB_VERSION:-0.0.0}
 ENV FYLAB_VERSION=${FYLAB_VERSION}
 
 USER   ${FYDEV_USER}
-
-
-ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
-ENV FUYUN_DIR=${FUYUN_DIR}
-
 ####################################################################
 # install packages
 
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
-##############################################################################
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
+################################################################################
+# For release
+# RUN sudo mkdir -p  ${FUYUN_DIR} ;\
+#     sudo chown ${FYDEV_USER}:${FYDEV_USER} ${FUYUN_DIR}
+# RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \  
+# -------------------------
+# For debug
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\
-    export EASYBUILD_SOURCEPATH=/tmp/cache/sources  ; \ 
+    source /etc/profile.d/modules.sh ;\    
     module load EasyBuild ; \   
-    module avail  ; \  
-    eb --info -r \
+    export EASYBUILD_PREFIX=${FUYUN_DIR} ;\
+    eb --show-config ;\    
+    eb --info -lr \
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -61,17 +46,12 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     --moduleclasses=fuyun \
     /tmp/ebfiles/FyLab-${FYLAB_VERSION}.eb ; \
     module avail  
-
-
-
-
+# eb  --info  --use-existing-modules  --minimal-toolchain --robot-paths=/workspaces/FyDevOps/ebfiles/:$EBROOTEASYBUILD/easybuild/easyconfigs  --moduleclasses=fuyun /workspaces/FyDevOps/ebfiles/FyLab-0.0.0.eb -Dr
 ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
-# # RUN sudo rm -rf /tmp/cache
 
-
-# LABEL Name          "fyDev"
-# LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-# LABEL Description   "FuYun : FUYUN_DIR=${FUYUN_DIR} FYDEV_USER=${FYDEV_USER}:${FYDEV_USER_ID} "
+LABEL Name          "fyLab"
+LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
+LABEL Description   "FuLab : UI/UX of FuYun "
 
 # USER ${FYDEV_USER}
 # WORKDIR /home/${FYDEV_USER}
