@@ -1,5 +1,5 @@
 # This easyconfig was created by Simon Branford of the BEAR Software team at the University of Birmingham.
-easyblock = "PythonBundle"
+easyblock = "PythonPackage"
 
 name = "JupyterLab"
 version = "2.1.1"
@@ -13,42 +13,33 @@ description = """JupyterLab is the next-generation user interface for Project Ju
 
 toolchain = {"name": "foss", "version": "2019b"}
 
-dependencies = [
-    ("Python", "3.7.4"),
-    ("PyZMQ", "19.0.0", versionsuffix),
-    ("matplotlib","3.1.1",versionsuffix),
-    # ("SciPy-bundle","2019.10"),
-    # ("h5py","2.10.0"),
-    # ("netcdf4-python","1.5.3"),
-    # ("bokeh","1.4.0"),
-    # ("dask","2.8.0")
-]
+dependencies = [("Python", "3.7.4"),]
 
+
+source_urls= [PYPI_SOURCE],
+patches= ["%(name)s-%(version)s_set-app-path-for-easybuild.patch"]
+sources=[ "%(namelower)s-%(version)s.tar.gz"]
+installopts="  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache "
+pip_ignore_installed=True
 use_pip = True
-sanity_pip_check = False
+# sanity_pip_check = True
+use_pip_for_deps=True
+unpack_sources=True
+
 
 exts_default_options = {
     "source_urls": [PYPI_SOURCE],
-    "installopts":"  -i https://pypi.tuna.tsinghua.edu.cn/simple ",
+    "installopts":"  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache ",
     "pip_ignore_installed":True,
     "use_pip_for_deps":True,
     "sanity_pip_check":False,
     "unpack_sources":False
 }
 
-
+exts_defaultclass="PythonPackage"
 # order is important!
-exts_list = [
-    (
-        name,
-        version,
-        {     
-            "unpack_sources":True,
-            "patches": ["%(name)s-%(version)s_set-app-path-for-easybuild.patch"],
-            "source_tmpl": "%(namelower)s-%(version)s.tar.gz",           
-        },
-    ),
-    # ("widgetsnbextension", "3.5.1"),
+exts_list = [ 
+    ("widgetsnbextension", "3.5.1"),
     # ("jupyter_contrib_core", "0.3.3"),
     # ("jupyter_nbextensions_configurator", "0.4.1"),
     # ("jupyter_contrib_nbextensions", "0.5.1"),
@@ -57,7 +48,7 @@ exts_list = [
     # ("pandas","1.0.3")
 ]
 
-sanity_check_commands = ["jupyter lab --help"]
+sanity_check_commands = []
 
 # postinstallcmds=[        
 #     "export PYTHONPATH=%(installdir)s/lib/python%(pyshortver)s/site-packages/:${PYTHONPATH}",

@@ -21,31 +21,31 @@ FYLAB_VERSION=0.0.0
 # docker tag fybase:${IMAGE_TAG} fybase:latest
 
 
-# echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
-# docker build --progress=plain  --rm \
-#      --build-arg FY_OS=${FY_OS}  \
-#      --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
-#      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
-#      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
-#      --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
-#      --build-arg IMAGE_TAG=${IMAGE_TAG} \
-#      -t fydev:${IMAGE_TAG} \
-#      -f ../dockerfiles/fydev.dockerfile \
-#      ../ebfiles     
-
-# docker tag fydev:${IMAGE_TAG} fydev:latest
-
-echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
+echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
 docker build --progress=plain  --rm \
-     --build-arg IMAGE_TAG=${IMAGE_TAG} \
+     --build-arg FY_OS=${FY_OS}  \
+     --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
-     --build-arg FYLAB_VERSION=${FYLAB_VERSION} \
-     -t fylab:${IMAGE_TAG} \
-     -f ../dockerfiles/fylab.dockerfile \
-     ../ebfiles
+     --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
+     --build-arg IMAGE_TAG=${IMAGE_TAG} \
+     -t fydev:${IMAGE_TAG} \
+     -f ../dockerfiles/fydev.dockerfile \
+     ../ebfiles     
 
-docker tag fylab:${IMAGE_TAG} fylab:latest
+docker tag fydev:${IMAGE_TAG} fydev:latest
+
+# echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
+# docker build --progress=plain  --rm \
+#      --build-arg IMAGE_TAG=${IMAGE_TAG} \
+#      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
+#      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
+#      --build-arg FYLAB_VERSION=${FYLAB_VERSION} \
+#      -t fylab:${IMAGE_TAG} \
+#      -f ../dockerfiles/fylab.dockerfile \
+#      ../ebfiles
+
+# docker tag fylab:${IMAGE_TAG} fylab:latest
 
 echo "======= Done [" $(date) "]============ "  
 

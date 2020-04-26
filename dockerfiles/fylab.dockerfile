@@ -51,6 +51,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    mkdir -p ${FUYUN_DIR}/sources/pip_cache ;\
     source /etc/profile.d/modules.sh ;\    
     module use ${FUYUN_DIR}/modules/all ; \
     module load EasyBuild ; \   
