@@ -43,7 +43,10 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     ;\
     yum clean all -y -q
 
-RUN  alternatives --set python /usr/bin/python3 
+RUN  alternatives --set python /usr/bin/python3 ; \
+     alternatives --set pip /usr/bin/pip3 ; \
+     # for easybuild --dep-graph 
+     pip3 install python-graph-core python-graph-dot  
 
 # xmlto for git
 

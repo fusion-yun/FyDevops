@@ -1,0 +1,37 @@
+diff -ru easybuild/tools/filetools.py easybuild_patched/tools/filetools.py
+--- easybuild/tools/filetools.py	2020-04-25 14:10:15.970121263 +0000
++++ easybuild_patched/tools/filetools.py	2020-04-26 00:45:45.236272160 +0000
+@@ -487,14 +487,22 @@
+     # see also:
+     # - https://www.python.org/dev/peps/pep-0503/
+     # - https://wiki.python.org/moin/PyPISimple
+-    simple_url = 'https://pypi.python.org/simple/%s' % re.sub(r'[-_.]+', '-', pkg_name.lower())
++    _base_url=os.environ.get('PYPI_MIRROR','https://pypi.python.org') # change by salmon (yuzhi@ipp.ac.cn 20200425): add pypi mirror
++    simple_url = (_base_url+'/simple/%s') % re.sub(r'[-_.]+', '_', pkg_name.lower())
+ 
+     tmpdir = tempfile.mkdtemp()
+     urls_html = os.path.join(tmpdir, '%s_urls.html' % pkg_name)
+     if download_file(os.path.basename(urls_html), simple_url, urls_html) is None:
+         _log.debug("Failed to download %s to determine available PyPI URLs for %s", simple_url, pkg_name)
+         res = []
+-    else:
++    else:      
++        # change by (yuzhi@ipp.ac.cn 20200425): fix not well-formated pip urls html
++        with open(urls_html,'rt') as fid:
++            data= fid.read()
++            data=data.replace(' data-yanked>',' >')
++        with open(urls_html,'wt') as fid:
++            fid.write(data)
++
+         parsed_html = ElementTree.parse(urls_html)
+         if hasattr(parsed_html, 'iter'):
+             res = [a.attrib['href'] for a in parsed_html.iter('a')]
+@@ -504,7 +512,7 @@
+     # links are relative, transform them into full URLs; for example:
+     # from: ../../packages/<dir1>/<dir2>/<hash>/easybuild-<version>.tar.gz#md5=<md5>
+     # to: https://pypi.python.org/packages/<dir1>/<dir2>/<hash>/easybuild-<version>.tar.gz#md5=<md5>
+-    res = [re.sub('.*/packages/', 'https://pypi.python.org/packages/', x) for x in res]
++    res = [re.sub('.*/packages/', _base_url+'/packages/', x) for x in res]
+ 
+     return res
+ 

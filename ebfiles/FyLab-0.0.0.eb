@@ -15,32 +15,25 @@ dependencies = [
     ('SciPy-bundle', '2019.10', versionsuffix),
     ('h5py', '2.10.0', versionsuffix,toolchain),
     ('netcdf4-python', '1.5.3', versionsuffix,toolchain),
-    # ('PyYAML','5.1.2',versionsuffix),
     ('networkx','2.4', versionsuffix),
-    ('Graphviz','2.42.2',versionsuffix),
+    # ('Graphviz','2.42.2',versionsuffix),
     ('matplotlib','3.1.1',versionsuffix),
     ('bokeh','1.4.0',versionsuffix),
     ('dask','2.8.0',versionsuffix),
-    ('JupyterLab', '1.2.5', versionsuffix),
     ('protobuf','3.7.1'),
+    ('JupyterLab', '2.1.1', versionsuffix),
 
 ]
 
 use_pip = True
 runtest = False
 
+exts_default_options = {'source_urls': [PYPI_SOURCE]}
+
 # order is important!
 exts_list = [
-    # ('f90nml', '1.2',
-    # {   'source_tmpl': '%(name)s-%(version)s.tar.gz',
-    #     "source_urls":['https://pypi.python.org/packages/source/f/f90nml/']}),
-    # ('jsonschema','3.2.0',
-    # {   'source_tmpl': '%(name)s-%(version)s.tar.gz',
-    #     "source_urls":['https://pypi.python.org/packages/source/j/jsonschema/']}),      
-     
-    # ("ipywidgets","7.5.1") ,
-    # ("ipympl","0.5.6"),
-    # ('widgetsnbextension','3.5.1')
+    ('f90nml', '1.2'),
+    ("graphviz-python","2.32.0")    
 ]
 
 postinstallcmds=[    

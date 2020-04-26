@@ -36,39 +36,18 @@ ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 # -------------------------
 # For debug
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\    
-    module use ${FUYUN_DIR}/modules/all ; \
-    module load EasyBuild ; \   
-    eb --show-config ;\   
-    eb --info -r \
-    --use-existing-modules \
-    --minimal-toolchain \
-    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    Qt5-5.13.1-GCCcore-8.3.0.eb 
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\    
     module use ${FUYUN_DIR}/modules/all ; \
     module load EasyBuild ; \   
-    eb --info -r \
-    --use-existing-modules \
-    --minimal-toolchain \
-    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    IPython-7.9.0-foss-2019b-Python-3.7.4.eb
-
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\    
-    module use ${FUYUN_DIR}/modules/all ; \
-    module load EasyBuild ; \   
-    eb --info -r \
+    rm -rf /fuyun/software/.locks/*.lock ; \
+    eb --info -lr \
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \    
-    JupyterLab-1.2.5-foss-2019b-Python-3.7.4.eb
+    /tmp/ebfiles/JupyterLab-2.1.1-foss-2019b-Python-3.7.4.eb
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \  
     --mount=type=bind,target=/tmp/ebfiles,source=./ \

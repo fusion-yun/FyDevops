@@ -27,6 +27,7 @@ ENV FYLAB_VERSION=${FYLAB_VERSION}
 ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ; \
     if ! [ -d ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION} ]; then \
     if ! [ -f ${FUYUN_DIR}/source/bootstrap/bootstrap_eb.py  ]; then  \    
@@ -44,28 +45,32 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \
     unset EASYBUILD_BOOTSTRAP_SOURCEPATH ; \
     unset EASYBUILD_BOOTSTRAP_FORCE_VERSION ; \    
     fi; \
-    sudo ln -s  ${FY_EB_ROOT}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/
+    if [ -f /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch ]; then \
+        PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))") ; \
+        cd ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages ; \
+        patch -s -p0 < /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch ;\
+    fi ; \
+    sudo ln -s  ${FY_EB_ROOT}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ 
 
-####################################################################
-# install packages
+ENV PYPI_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/pypi/web/
 ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
-# RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \        
-#     --mount=type=bind,target=/tmp/ebfiles,source=./ \
-#     source /etc/profile.d/modules.sh ;\    
-#     module use ${FUYUN_DIR}/modules/all ; \
-#     module avail ; \
-#     module load EasyBuild/${FY_EB_VERSION} ; \      
-#     rm -rf ${FUYUN_DIR}/software/.locks/*.lock ; \
-#     eb --info -r  \
-#     --use-existing-modules \
-#     --minimal-toolchain \
-#     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-#     --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
-#     --moduleclasses=fuyun  \
-#     /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb 
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh ;\    
+    module use ${FUYUN_DIR}/modules/all ; \
+    module avail ; \
+    module load EasyBuild/${FY_EB_VERSION} ; \      
+    rm -rf ${FUYUN_DIR}/software/.locks/*.lock ; \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    --try-toolchain=${TOOLCHAIN_NAME},${TOOLCHAIN_VERSION} \
+    --moduleclasses=fuyun  \
+    /tmp/ebfiles/FyDev-${FYDEV_VERSION}.eb 
 
 
 
