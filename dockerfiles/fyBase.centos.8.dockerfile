@@ -24,7 +24,8 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     sed -e 's|^metalink=|#metalink=|g' \
     -e 's|^#baseurl=https\?://download.fedoraproject.org/pub/epel/|baseurl=https://mirrors.aliyun.com/epel/|g' \
     -i.bak \
-    /etc/yum.repos.d/epel.repo ; \
+    /etc/yum.repos.d/epel.repo \
+    /etc/yum.repos.d/epel-modular.repo ; \
     yum update -y ; \
     yum install -y \      
     sudo which  Lmod \         
@@ -32,12 +33,13 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     autoconf automake make \
     m4 binutils bison flex diffutils\    
     gettext elfutils libtool \
-    patch pkgconfig bzip2\
+    patch pkgconfig bzip2 \
+    git openssh-clients \
     # ctags  indent patchutils \
     # Language
     gcc gcc-c++ python3 perl  \    
     # For git
-    asciidoc xmlto \  
+    # asciidoc xmlto \  
     # Python,Perl,PostgreSQL,CMake,cURL
     openssl openssl-devel \
     ;\
@@ -56,12 +58,52 @@ ENV FYDEV_USER=${FYDEV_USER}
 ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
 ENV FYDEV_USER_ID=${FYDEV_USER_ID}
 
+
+
 ENV PYTHONPATH=/usr/share/lmod/lmod/init/:${PYTHONPATH}
 
 RUN useradd -u ${FYDEV_USER_ID}  -d /home/${FYDEV_USER}  ${FYDEV_USER} ; \
     echo "%${FYDEV_USER} ALL=(ALL)    NOPASSWD: ALL" >>/etc/sudoers
 
 USER ${FYDEV_USER}
+
+
+################################################################################
+# Bootstrap
+# Install EasyBuild
+ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
+
+# --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \        
+#     --mount=type=bind,target=/tmp/ebfiles,source=./ \
+ARG FY_EB_PREFIX=${FY_EB_PREFIX:-/opt/EasyBuild}
+
+RUN sudo mkdir -p ${FY_EB_PREFIX}/sources/bootstrap ; \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FY_EB_PREFIX}
+
+COPY ./easybuild-${FY_EB_VERSION}.patch ${FY_EB_PREFIX}/sources/bootstrap/easybuild-${FY_EB_VERSION}.patch
+
+RUN source /etc/profile.d/modules.sh ; \    
+    cd  ${FY_EB_PREFIX}/sources/bootstrap  ;\
+    curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py ;\
+    curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  ; \
+    curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz  ; \
+    curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz  ; \    
+    export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  ; \
+    export EASYBUILD_BOOTSTRAP_SOURCEPATH=${FY_EB_PREFIX}/sources/bootstrap   ; \
+    export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  ; \
+    /usr/bin/python3 ${FY_EB_PREFIX}/sources/bootstrap/bootstrap_eb.py  ${FY_EB_PREFIX} ; \
+    unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0 ; \
+    unset EASYBUILD_BOOTSTRAP_SOURCEPATH ; \
+    unset EASYBUILD_BOOTSTRAP_FORCE_VERSION ; \  
+    if [ -f ${FY_EB_PREFIX}/sources/bootstrap/easybuild-${FY_EB_VERSION}.patch ]; then \
+    PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))") ; \
+    cd ${FY_EB_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages ; \
+    patch -s -p0 < ${FY_EB_PREFIX}/sources/bootstrap/easybuild-${FY_EB_VERSION}.patch ;\        
+    fi ; \
+    sudo ln -s  ${FY_EB_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ 
+
+ENV MODULEPATH=${FY_EB_PREFIX}/modules/all:${MODULEPATH}
+
 WORKDIR /home/${FYDEV_USER}
 
 

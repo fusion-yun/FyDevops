@@ -6,7 +6,7 @@ diff -ruN jupyterlab-2.1.1.orig/jupyterlab/commands.py jupyterlab-2.1.1/jupyterl
  
      # Use the default locations for data_files.
 -    app_dir = pjoin(sys.prefix, 'share', 'jupyter', 'lab')
-+    app_dir = pjoin(os.environ.get("EBROOTJUPYTERLAB',sys.prefix), 'share', 'jupyter', 'lab')
++    app_dir = pjoin(os.environ.get('EBROOTJUPYTERLAB',sys.prefix), 'share', 'jupyter', 'lab')
  
      # Check for a user level install.
      # Ensure that USER_BASE is defined

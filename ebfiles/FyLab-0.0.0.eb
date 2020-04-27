@@ -1,47 +1,74 @@
-easyblock = 'PythonBundle'
+easyblock = "PythonBundle"
 
-name = 'FyLab'
-version = '0.0.0'
-versionsuffix = '-Python-%(pyver)s'
+name = "FyLab"
+version = "0.0.0"
+versionsuffix = "-Python-%(pyver)s"
 
 homepage = "https://gitee.com/fusion_yun/"
 description = """FyLab """
 
-toolchain = {'name': 'foss', 'version': '2019b'}
-toolchainopts = {'pic': True, 'lowopt': True}
+toolchain = {"name": "foss", "version": "2019b"}
+toolchainopts = {"pic": True }
+
+builddependencies=[
+        ("nodejs","12.16.1"),
+]
 
 dependencies = [
-    ('Python', '3.7.4'),
-    ('SciPy-bundle', '2019.10', versionsuffix),
-    ('h5py', '2.10.0', versionsuffix,toolchain),
-    ('netcdf4-python', '1.5.3', versionsuffix,toolchain),
-    ('networkx','2.4', versionsuffix),
-    # ('Graphviz','2.42.2',versionsuffix),
-    ('matplotlib','3.1.1',versionsuffix),
-    ('bokeh','1.4.0',versionsuffix),
-    ('dask','2.8.0',versionsuffix),
-    ('protobuf','3.7.1'),
-    ('JupyterLab', '2.1.1', versionsuffix),
-
+    ("Python", "3.7.4"),
+    ("SciPy-bundle", "2019.10", versionsuffix),
+    ("h5py", "2.10.0", versionsuffix, toolchain),
+    ("netcdf4-python", "1.5.3", versionsuffix, toolchain),
+    ("networkx", "2.4", versionsuffix),
+    ("matplotlib", "3.1.1", versionsuffix),
+    ("bokeh", "1.4.0", versionsuffix),
+    ("dask", "2.8.0", versionsuffix),
+    ("matplotlib", "3.1.1", versionsuffix),
+    ("Graphviz","2.42.2",versionsuffix),
+    ("protobuf", "3.7.1"),
+    ("JupyterLab", "2.1.1", versionsuffix),
 ]
 
-use_pip = True
 runtest = False
 
-exts_default_options = {'source_urls': [PYPI_SOURCE]}
-
+exts_default_options = {
+    "source_urls": [PYPI_SOURCE],
+    "installopts": "  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache ",
+    "pip_ignore_installed": True,
+    "use_pip_for_deps": True,
+    "sanity_pip_check": False,
+    "unpack_sources": False,
+}
+use_pip=True
+exts_defaultclass = "PythonPackage"
 # order is important!
 exts_list = [
-    ('f90nml', '1.2'),
-    ("graphviz-python","2.32.0")    
+    ("f90nml", "1.2"),
+    ("jupyterlab_git","0.10.1"),
+
+    # ("ipympl","0.5.6"),
+    # ("pandas","1.0.3")
 ]
 
-postinstallcmds=[    
-    # "jupyter nbextension enable --py widgetsnbextension --sys-prefix ; ",
-    # "jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --no-build ; ",
-    # "jupyter labextension install @bokeh/jupyter_bokeh@^2.0.0 --no-build ;  ",
-    # "jupyter labextension install jupyter-matplotlib@^0.7.2 --no-build ;  ",
-    # "jupyter lab build  ; ",
-    # "jupyter lab clean",
+
+postinstallcmds = [
+    """ 
+    module spider FyLab 
+    module load nodejs/12.16.1-GCCcore-8.3.0
+    module load JupyterLab/2.1.1-%(versionsuffix)s 
+    export JUPYTERLAB_DIR=%(installdir)s/share/jupyter/lab
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --no-build  
+    jupyter labextension install @jupyterlab/git --no-build  
+    jupyter labextension install @bokeh/jupyter_bokeh@^2.0.0 --no-build   
+    jupyter labextension install jupyter-matplotlib@^0.7.2 --no-build  
+    jupyter lab build    
+    jupyter lab clean 
+    npm cache clean --force            
+    """,
 ]
-moduleclass = 'fuyun'
+
+modextravars={
+    "JUPYTERLAB_DIR":"%(installdir)s/share/jupyter/lab"
+}
+
+moduleclass = "fuyun"

@@ -13,52 +13,44 @@ description = """JupyterLab is the next-generation user interface for Project Ju
 
 toolchain = {"name": "foss", "version": "2019b"}
 
-dependencies = [("Python", "3.7.4"),]
+dependencies = [
+    ("Python", "3.7.4"),
+]
 
 
-source_urls= [PYPI_SOURCE],
-patches= ["%(name)s-%(version)s_set-app-path-for-easybuild.patch"]
-sources=[ "%(namelower)s-%(version)s.tar.gz"]
-installopts="  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache "
-pip_ignore_installed=True
+source_urls = ([PYPI_SOURCE],)
+patches = ["%(name)s-%(version)s_set-app-path-for-easybuild.patch"]
+sources = ["%(namelower)s-%(version)s.tar.gz"]
+installopts = "  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache "
+pip_ignore_installed = True
 use_pip = True
 # sanity_pip_check = True
-use_pip_for_deps=True
-unpack_sources=True
+use_pip_for_deps = True
+unpack_sources = True
+sanity_check_commands = ["jupyter lab --help"]
 
 
 exts_default_options = {
     "source_urls": [PYPI_SOURCE],
-    "installopts":"  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache ",
-    "pip_ignore_installed":True,
-    "use_pip_for_deps":True,
-    "sanity_pip_check":False,
-    "unpack_sources":False
+    "installopts": "  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache ",
+    "pip_ignore_installed": True,
+    "use_pip_for_deps": True,
+    "sanity_pip_check": False,
+    "unpack_sources": False,
 }
 
-exts_defaultclass="PythonPackage"
+exts_defaultclass = "PythonPackage"
 # order is important!
-exts_list = [ 
+exts_list = [
     ("widgetsnbextension", "3.5.1"),
-    # ("jupyter_contrib_core", "0.3.3"),
-    # ("jupyter_nbextensions_configurator", "0.4.1"),
-    # ("jupyter_contrib_nbextensions", "0.5.1"),
-    # ("jupyterlab_server", "1.1.1"),
-    # ("ipympl","0.5.6"),
-    # ("pandas","1.0.3")
 ]
-
-sanity_check_commands = []
-
-# postinstallcmds=[        
-#     "export PYTHONPATH=%(installdir)s/lib/python%(pyshortver)s/site-packages/:${PYTHONPATH}",
-#     "%(installdir)s/bin/jupyter nbextension enable --py widgetsnbextension --sys-prefix ; ",
-#     "%(installdir)s/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --no-build ; ",
-#     "%(installdir)s/bin/jupyter labextension install @bokeh/jupyter_bokeh@^2.0.0 --no-build ;  ",
-#     "%(installdir)s/bin/jupyter labextension install jupyter-matplotlib@^0.7.2 --no-build ;  ",
-#     "%(installdir)s/bin/jupyter lab build  ; ",
-#     "%(installdir)s/bin/jupyter lab clean",
-#     # "npm cache clean --force "    
-# ]
-
+postinstallcmds = [
+    """ 
+    export PYTHONPATH=%(installdir)s/lib/python%(pyshortver)s/site-packages:${PYTHONPATH} 
+    %(installdir)s/bin/jupyter nbextension install --py widgetsnbextension --sys-prefix  
+    %(installdir)s/bin/jupyter nbextension enable  --py widgetsnbextension --sys-prefix  
+    """,
+]
 moduleclass = "tools"
+
+modextravars={"JUPYTERLAB_DIR":"%(installdir)s/share/jupyter/lab"}
