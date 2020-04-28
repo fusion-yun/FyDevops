@@ -1,4 +1,4 @@
-FROM fydev:latest
+FROM fylab:latest
 
 
 ENV FYDEV_USER fydev
@@ -28,9 +28,5 @@ ENV FYDEV_USER_ID=${FYDEV_USER_ID}
 # && rm -rf /home/${FYDEV_USER}/tmp/conda-tmp \
 ##############################################################################
 #  cache extensions
-RUN mkdir -p /home/${FYDEV_USER}/.vscode-server/extensions ;\
-    chown ${FYDEV_USER}:${FYDEV_USER} -R /home/${FYDEV_USER}  
-    
-USER  ${FYDEV_USER}
-
-# ENTRYPOINT [ "/bin/bash","-c" ]
+USER ${FYDEV_USER}
+RUN mkdir -p /home/${FYDEV_USER}/.vscode-server/extensions 

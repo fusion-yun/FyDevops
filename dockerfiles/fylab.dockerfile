@@ -59,7 +59,7 @@ RUN --mount=type=bind,target=/tmp/ebfiles,source=./ \
 
 LABEL Name          "fyLab"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description   "FuLab : UI/UX of FuYun "
+LABEL Description   "FyLab : UI/UX of FuYun "
 
 # USER ${FYDEV_USER}
 # WORKDIR /home/${FYDEV_USER}

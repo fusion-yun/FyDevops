@@ -11,19 +11,11 @@
 	// Use 'settings' to set *default* container specific settings.json values on container create.
 	// You can edit these settings after create using File > Preferences > Settings > Remote.
 	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/opt/conda/bin/python",
-		"python.condaPath": "/opt/conda/bin/conda",
-		"python.linting.pylintEnabled": true,
-		"python.testing.unittestEnabled": true,
-		"python.testing.pytestPath": "/opt/conda/bin/pytest",
-		"python.linting.pylintPath": "/opt/conda/bin/pylint",
-		"python.formatting.provider": "autopep8",
-		"python.formatting.autopep8Path": "/opt/conda/bin/autopep8"
+		"terminal.integrated.shell.linux": "/bin/bash",		
 	},
 	// Use 'appPort' to create a container with published ports. If the port isn't working, be sure
 	// your server accepts connections from all interfaces (0.0.0.0 or '*'), not just localhost.
-	"appPort": [ 8888 ],
+	// "appPort": [ 8888 ],
 
 	// Install flask and any other dependencies
 	// "postCreateCommand": "conda env update -n base -f  environment.yml",
@@ -37,7 +29,7 @@
 		// "ms-ossdata.vscode-postgresql",
 		// "ms-azuretools.vscode-cosmosdb",
 		"shd101wyy.markdown-preview-enhanced",
-		"ms-vscode.vscode-typescript-next"
+		// "ms-vscode.vscode-typescript-next"
 	],
 	"mounts": [
 		"source=spdev_vscode_extensions,target=/home/fydev/.vscode-server/extensions,type=volume",

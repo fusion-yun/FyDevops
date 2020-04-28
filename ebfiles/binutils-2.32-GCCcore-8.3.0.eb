@@ -20,12 +20,13 @@ checksums = [
     '9e16ba3acd9af473a882e2d4c81ca024fdd62dc332eb527cc778fc9d31f01939',
 ]
 
-builddependencies = [
-    ('flex', '2.6.4'),
-    ('Bison', '3.3.2'),
-    # use same binutils version that was used when building GCC toolchain, to 'bootstrap' this binutils
-    ('binutils', version, '', True)
-]
+# builddependencies = [
+#     ('flex', '2.6.4'),
+#     ('Bison', '3.3.2'),
+#     # use same binutils version that was used when building GCC toolchain, to 'bootstrap' this binutils
+#     ('binutils', version, '', True)
+# ]
+osdependencies = ['m4','flex','bison','binutils','diffutils']
 
 dependencies = [
     # zlib is a runtime dep to avoid that it gets embedded in libbfd.so,
