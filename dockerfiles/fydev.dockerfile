@@ -28,7 +28,8 @@ ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
 RUN mkdir -p ${FUYUN_DIR} ;\
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} ;\   
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}   
+
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh ;\    

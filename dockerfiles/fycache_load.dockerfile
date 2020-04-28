@@ -3,7 +3,7 @@
 FROM fydev:latest
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \      
-    cp -r /fuyun/* /tmp/cache/
+    cp -r /fuyun/sources /tmp/cache/
     
 
     # cp -r /fuyun/sources /fycache/
