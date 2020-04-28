@@ -11,34 +11,41 @@ IMAGE_TAG=$(date +"%Y%m%d")
 FYDEV_VERSION=0.0.0
 FYLAB_VERSION=0.0.0
 
-# echo "======= Build FyBase [" $(date) "] ============ " 
-# docker build  --progress=plain --rm \
-#      --build-arg FY_OS=${FY_OS} \
-#      --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
-#      -t fybase:${IMAGE_TAG} \
-#      -f ../dockerfiles/fyBase.${FY_OS}.${FY_OS_VERSION}.dockerfile   \
-#      ../ebfiles
+echo "======= Build FyBase [" $(date) "] ============ "
+EB_BOOTSTRAP_DIR=../../eb_boostrap
+if [ -d ${EB_BOOTSTRAP_DIR} ]; then
+     cp ../ebfiles/easybuild* ${EB_BOOTSTRAP_DIR}/
+else
+     EB_BOOTSTRAP_DIR=../ebfiles
+fi
+docker build --progress=plain --rm \
+     --build-arg FY_OS=${FY_OS} \
+     --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
+     -t fybase:${IMAGE_TAG} \
+     -f ../dockerfiles/fyBase.${FY_OS}.${FY_OS_VERSION}.dockerfile \
+      ../ebfiles
+ 
 
-# docker tag fybase:${IMAGE_TAG} fybase:latest
+docker tag fybase:${IMAGE_TAG} fybase:latest
+
+echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
 
 
-# echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
-# docker build --progress=plain  --rm \
-#      --build-arg FY_OS=${FY_OS}  \
-#      --build-arg FY_OS_VERSION=${FY_OS_VERSION} \
-#      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
-#      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
-#      --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
-#      --build-arg IMAGE_TAG=${IMAGE_TAG} \
-#      -t fydev:${IMAGE_TAG} \
-#      -f ../dockerfiles/fydev.dockerfile \
-#      ../ebfiles     
+docker build --progress=plain --rm \
+     --build-arg BASE_TAG=fybase:latest \
+     --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
+     --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
+     --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
+     --build-arg IMAGE_TAG=${IMAGE_TAG} \
+     -t fydev:${IMAGE_TAG} \
+     -f ../dockerfiles/fydev.dockerfile \
+     ../ebfiles
 
-# docker tag fydev:${IMAGE_TAG} fydev:latest
+docker tag fydev:${IMAGE_TAG} fydev:latest
 
 echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
-docker build --progress=plain  --rm \
-     --build-arg IMAGE_TAG=${IMAGE_TAG} \
+docker build --progress=plain --rm \
+     --build-arg BASE_TAG=fydev:${IMAGE_TAG} \
      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
      --build-arg FYLAB_VERSION=${FYLAB_VERSION} \
@@ -48,6 +55,6 @@ docker build --progress=plain  --rm \
 
 docker tag fylab:${IMAGE_TAG} fylab:latest
 
-echo "======= Done [" $(date) "]============ "  
+echo "======= Done [" $(date) "]============ "
 
 #docker run --rm -it --mount source=/home/salmon/workspace,target=/workspaces,type=bind fydev:latest

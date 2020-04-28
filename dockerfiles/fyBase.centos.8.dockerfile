@@ -30,16 +30,16 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     yum install -y \      
     sudo which  Lmod \         
     # Development tools    
-    autoconf automake make \
+    autoconf automake make help2man \
     m4 binutils bison flex diffutils\    
     gettext elfutils libtool \
     patch pkgconfig bzip2 \
     git openssh-clients \
     # ctags  indent patchutils \
-    # Language
-    gcc gcc-c++ python3 perl  \    
     # For git
-    # asciidoc xmlto \  
+    asciidoc xmlto \  
+    # Language
+    gcc gcc-c++ python3 perl  \        
     # Python,Perl,PostgreSQL,CMake,cURL
     openssl openssl-devel \
     ;\
@@ -77,32 +77,36 @@ ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 #     --mount=type=bind,target=/tmp/ebfiles,source=./ \
 ARG FY_EB_PREFIX=${FY_EB_PREFIX:-/opt/EasyBuild}
 
-RUN sudo mkdir -p ${FY_EB_PREFIX}/sources/bootstrap ; \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FY_EB_PREFIX}
+RUN sudo mkdir -p /opt/EasyBuild ; \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /opt/EasyBuild
 
-COPY ./easybuild-${FY_EB_VERSION}.patch ${FY_EB_PREFIX}/sources/bootstrap/easybuild-${FY_EB_VERSION}.patch
 
-RUN source /etc/profile.d/modules.sh ; \    
-    cd  ${FY_EB_PREFIX}/sources/bootstrap  ;\
+RUN --mount=type=cache,uid=1000,id=fycache,target=/opt/EasyBuild/sources,sharing=shared \ 
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh && \    
+    if ! [ -f  /opt/EasyBuild/sources/bootstrap/bootstrap_eb.py  ]; then \
+    mkdir -p /opt/EasyBuild/sources/bootstrap &&\
+    cd  /opt/EasyBuild/sources/bootstrap  &&\
     curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py ;\
     curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  ; \
     curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz  ; \
     curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz  ; \    
-    export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  ; \
-    export EASYBUILD_BOOTSTRAP_SOURCEPATH=${FY_EB_PREFIX}/sources/bootstrap   ; \
-    export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  ; \
-    /usr/bin/python3 ${FY_EB_PREFIX}/sources/bootstrap/bootstrap_eb.py  ${FY_EB_PREFIX} ; \
-    unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0 ; \
-    unset EASYBUILD_BOOTSTRAP_SOURCEPATH ; \
-    unset EASYBUILD_BOOTSTRAP_FORCE_VERSION ; \  
-    if [ -f ${FY_EB_PREFIX}/sources/bootstrap/easybuild-${FY_EB_VERSION}.patch ]; then \
-    PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))") ; \
-    cd ${FY_EB_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages ; \
-    patch -s -p0 < ${FY_EB_PREFIX}/sources/bootstrap/easybuild-${FY_EB_VERSION}.patch ;\        
-    fi ; \
-    sudo ln -s  ${FY_EB_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ 
+    fi && \   
+    export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  && \
+    export EASYBUILD_BOOTSTRAP_SOURCEPATH=/opt/EasyBuild/sources/bootstrap   && \
+    export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  && \
+    /usr/bin/python3 /opt/EasyBuild/sources/bootstrap/bootstrap_eb.py  /opt/EasyBuild && \
+    unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0 && \
+    unset EASYBUILD_BOOTSTRAP_SOURCEPATH && \
+    unset EASYBUILD_BOOTSTRAP_FORCE_VERSION && \  
+    if [ -f /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch ]; then \
+    PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))")  \
+    cd /opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages && \
+    patch -s -p0 < /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch &&\        
+    fi && \
+    sudo ln -s  /opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ 
 
-ENV MODULEPATH=${FY_EB_PREFIX}/modules/all:${MODULEPATH}
+ENV MODULEPATH=/opt/EasyBuild/modules/all:${MODULEPATH}
 
 WORKDIR /home/${FYDEV_USER}
 

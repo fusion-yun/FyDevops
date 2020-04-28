@@ -2,9 +2,6 @@
 ARG BASE_TAG=${BASE_TAG:-fabse:latest}
 FROM ${BASE_TAG}
 
-ARG FY_OS=${FY_OS:-centos}
-ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
-
 ################################################################################
 # Add user for DevOps
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
@@ -14,6 +11,7 @@ ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 ENV FUYUN_DIR=${FUYUN_DIR}
 
 ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
+
 ARG FYDEV_VERSION=${FYDEV_VERSION:-0.0.0}
 ENV FYDEV_VERSION=${FYDEV_VERSION}
 ARG FYLAB_VERSION=${FYLAB_VERSION:-0.0.0}
@@ -23,18 +21,62 @@ ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 ENV FUYUN_DIR=${FUYUN_DIR}
 
 ENV PYPI_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/pypi/web/
-ENV EASYBUILD_PREFIX=${FUYUN_DIR}
+
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
-RUN mkdir -p ${FUYUN_DIR} ;\
+RUN sudo mkdir -p ${FUYUN_DIR} &&\
     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}   
+
+ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh ;\    
-    module avail ; \
-    module load EasyBuild/${FY_EB_VERSION} ; \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    GCCcore-8.3.0.eb 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    Python-3.7.4-GCCcore-8.3.0.eb 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    gompi-2019b.eb 
+
+
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    ${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module avail && \
+    module load EasyBuild/${FY_EB_VERSION} && \
     eb --info -r  \
     --use-existing-modules \
     --minimal-toolchain \
@@ -45,13 +87,13 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
 
 # RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
 #     if ! [ -d ${FUYUN_DIR} ] ; then \
-#     sudo mkdir -p ${FUYUN_DIR}   ; \
-#     fi ; \
-#     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} ;\   
+#     sudo mkdir -p ${FUYUN_DIR}   && \
+#     fi && \
+#     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} &&\   
 #     ########################################
-#     cp -r /tmp/cache/ebfiles_repo ${FUYUN_DIR}/ ; \
-#     cp -r /tmp/cache/modules ${FUYUN_DIR}/ ; \
-#     cp -r /tmp/cache/software ${FUYUN_DIR}/ ; \
+#     cp -r /tmp/cache/ebfiles_repo ${FUYUN_DIR}/ && \
+#     cp -r /tmp/cache/modules ${FUYUN_DIR}/ && \
+#     cp -r /tmp/cache/software ${FUYUN_DIR}/ && \
 #     cp -r /tmp/cache/sources ${FUYUN_DIR}/ 
 
 
