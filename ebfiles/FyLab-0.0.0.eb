@@ -8,25 +8,28 @@ homepage = "https://gitee.com/fusion_yun/"
 description = """FyLab """
 
 toolchain = {"name": "foss", "version": "2019b"}
-toolchainopts = {"pic": True }
+toolchainopts = {"pic": True}
 
-builddependencies=[
-        ("nodejs","12.16.1"),
+builddependencies = [
+    ("nodejs", "12.16.1"),
 ]
 
 dependencies = [
     ("Python", "3.7.4"),
-    ("SciPy-bundle", "2019.10", versionsuffix),
-    ("h5py", "2.10.0", versionsuffix, toolchain),
-    ("netcdf4-python", "1.5.3", versionsuffix, toolchain),
-    ("networkx", "2.4", versionsuffix),
-    ("matplotlib", "3.1.1", versionsuffix),
-    ("bokeh", "1.4.0", versionsuffix),
     ("dask", "2.8.0", versionsuffix),
+
+    ("SciPy-bundle", "2019.10", versionsuffix),
+    ("h5py", "2.10.0", versionsuffix),
+    ("netcdf4-python", "1.5.3", versionsuffix),
+    ("networkx", "2.4", versionsuffix),
+    ("Graphviz", "2.42.2", versionsuffix),
+
+    ("bokeh", "1.4.0", versionsuffix),
+    ("fontconfig", "2.13.1"),
     ("matplotlib", "3.1.1", versionsuffix),
-    ("Graphviz","2.42.2",versionsuffix),
-    ("protobuf", "3.7.1"),
     ("JupyterLab", "2.1.1", versionsuffix),
+    ("protobuf", "3.7.1"),
+
 ]
 
 runtest = False
@@ -39,12 +42,13 @@ exts_default_options = {
     "sanity_pip_check": False,
     "unpack_sources": False,
 }
-use_pip=True
+use_pip = True
 exts_defaultclass = "PythonPackage"
 # order is important!
 exts_list = [
     ("f90nml", "1.2"),
-    ("jupyterlab_git","0.10.1"),
+    ("graphviz", "0.14",{"source_tmpl":"%(name)s-%(version)s.zip"})
+    # ("jupyterlab_git","0.10.1"),
 
     # ("ipympl","0.5.6"),
     # ("pandas","1.0.3")
@@ -58,17 +62,18 @@ postinstallcmds = [
     module load JupyterLab/2.1.1-%(versionsuffix)s 
     export JUPYTERLAB_DIR=%(installdir)s/share/jupyter/lab
     jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --no-build  
-    jupyter labextension install @jupyterlab/git --no-build  
     jupyter labextension install @bokeh/jupyter_bokeh@^2.0.0 --no-build   
     jupyter labextension install jupyter-matplotlib@^0.7.2 --no-build  
     jupyter lab build    
     jupyter lab clean 
     npm cache clean --force            
     """,
+    # jupyter labextension install @jupyterlab/git --no-build
+
 ]
 
-modextravars={
-    "JUPYTERLAB_DIR":"%(installdir)s/share/jupyter/lab"
+modextravars = {
+    "JUPYTERLAB_DIR": "%(installdir)s/share/jupyter/lab"
 }
 
 moduleclass = "fuyun"
