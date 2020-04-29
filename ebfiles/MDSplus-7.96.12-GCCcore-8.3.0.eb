@@ -1,3 +1,4 @@
+# Built with EasyBuild version 4.2.0 on 2020-04-28_23-35-23
 easyblock = 'ConfigureMake'
 
 name = 'MDSplus'
