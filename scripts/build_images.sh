@@ -46,7 +46,7 @@ docker build --progress=plain --rm \
 
 docker tag fydev:${BUILD_TAG} fydev:latest
 
-echo "=======  Build FyLab " [" ${BUILD_TAG} "] ============ "
+echo "=======  Build FyLab  [" ${BUILD_TAG} "] ============ "
 docker build --progress=plain --rm \
     --build-arg BASE_TAG=fydev:latest \
     --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \

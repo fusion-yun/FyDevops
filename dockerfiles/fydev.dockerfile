@@ -151,6 +151,7 @@ ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
 LABEL Name          "FyDev"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
 LABEL Description   "FyDev : Develop enverioment of FuYun  "
+ARG BUILD_TAG=${BUILD_TAG:-dirty}
 LABEL BUILD_TAG      ${BUILD_TAG}
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}
