@@ -48,6 +48,16 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    Tcl-8.6.9-GCCcore-8.3.0.eb     
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     Python-3.7.4-GCCcore-8.3.0.eb 
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
@@ -58,7 +68,30 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    Perl-5.30.0-GCCcore-8.3.0.eb  \   
+    PCRE-8.43-GCCcore-8.3.0.eb  
+
+
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     gompi-2019b.eb 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb --info -r  \
+    --use-existing-modules \
+    --minimal-toolchain \
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    Boost-1.71.0-gompi-2019b.eb 
 
 
 
@@ -71,6 +104,8 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     ${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
+
+
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
@@ -110,7 +145,6 @@ ENV MODULEPATH=${FUYUN_DIR}/modules/system:${MODULEPATH}
 ENV MODULEPATH=${FUYUN_DIR}/modules/toolchain:${MODULEPATH}
 ENV MODULEPATH=${FUYUN_DIR}/modules/tools:${MODULEPATH}
 ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/fuyun:${MODULEPATH}
 
 
 

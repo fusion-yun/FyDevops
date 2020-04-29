@@ -87,11 +87,11 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/opt/EasyBuild/sources,sharing
     if ! [ -f  /opt/EasyBuild/sources/bootstrap/bootstrap_eb.py  ]; then \
     mkdir -p /opt/EasyBuild/sources/bootstrap &&\
     cd  /opt/EasyBuild/sources/bootstrap  &&\
-    curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py ;\
-    curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  ; \
-    curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz  ; \
-    curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz  ; \    
-    fi && \   
+    curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py  &&\
+    curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  && \
+    curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz   && \
+    curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz   ; \    
+    fi ; \   
     export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  && \
     export EASYBUILD_BOOTSTRAP_SOURCEPATH=/opt/EasyBuild/sources/bootstrap   && \
     export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  && \
@@ -100,10 +100,10 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/opt/EasyBuild/sources,sharing
     unset EASYBUILD_BOOTSTRAP_SOURCEPATH && \
     unset EASYBUILD_BOOTSTRAP_FORCE_VERSION && \  
     if [ -f /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch ]; then \
-    PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))")  \
-    cd /opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages && \
-    patch -s -p0 < /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch &&\        
-    fi && \
+    PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))") && \
+    cd /opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages &&\
+    patch -s -p0 < /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch ;\        
+    fi ; \
     sudo ln -s  /opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ 
 
 ENV MODULEPATH=/opt/EasyBuild/modules/all:${MODULEPATH}
