@@ -7,7 +7,7 @@ FY_OS_VERSION=8
 TOOLCHAIN_NAME=foss
 TOOLCHAIN_VERSION=2019b
 DOCKER_IMAGE_NAME=fydev
-BUILD_TAG=$(date +"%Y%m%d")_rev$(git rev-parse  HEAD)
+BUILD_TAG=$(date +"%Y%m%d")_rev$(git rev-parse --short HEAD)
 FYDEV_VERSION=0.0.0
 FYLAB_VERSION=0.0.0
 

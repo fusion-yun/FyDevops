@@ -108,6 +108,8 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/opt/EasyBuild/sources,sharing
 
 ENV MODULEPATH=/opt/EasyBuild/modules/all:${MODULEPATH}
 
+LABEL BUILD_TAG=${BUILD_TAG}
+
 WORKDIR /home/${FYDEV_USER}
 
 
