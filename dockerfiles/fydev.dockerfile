@@ -151,7 +151,7 @@ ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
 LABEL Name          "FyDev"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
 LABEL Description   "FyDev : Develop enverioment of FuYun  "
-
+LABEL BUILD_TAB      ${BUILD_TAB}
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}
 # RUN pip config set global.index-url https://mirrors.aliyun.com/simple ; \

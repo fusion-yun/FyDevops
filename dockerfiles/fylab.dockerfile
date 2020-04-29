@@ -85,6 +85,6 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
 LABEL Name          "fyLab"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
 LABEL Description   "FyLab : UI/UX for FuYun "
-
+LABEL BUILD_TAG     ${BUILD_TAG}
 # USER ${FYDEV_USER}
 # WORKDIR /home/${FYDEV_USER}
