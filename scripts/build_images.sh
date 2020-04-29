@@ -11,7 +11,7 @@ BUILD_TAG=$(date +"%Y%m%d")_$(git describe --dirty --always --tags)
 FYDEV_VERSION=0.0.0
 FYLAB_VERSION=0.0.0
 
-echo "======= Build FyBase [" $(date) "] ============ "
+echo "======= Build FyBase [" ${BUILD_TAG} "] ============ "
 EB_BOOTSTRAP_DIR=../../eb_boostrap
 if [ -d ${EB_BOOTSTRAP_DIR} ]; then
      cp ../ebfiles/easybuild* ${EB_BOOTSTRAP_DIR}/
@@ -29,8 +29,7 @@ docker build --progress=plain --rm \
 
 docker tag fybase:${BUILD_TAG} fybase:latest
 
-echo "=======  Build FyDev" $(date +"%Y%m%d") " [" $(date) "] ============ "
-
+echo "=======  Build FyDev [" ${BUILD_TAG} "] ============ "
 
 docker build --progress=plain --rm \
      --build-arg BASE_TAG=fybase:latest \
@@ -47,7 +46,7 @@ docker build --progress=plain --rm \
 
 docker tag fydev:${BUILD_TAG} fydev:latest
 
-echo "=======  Build FyLab" $(date +"%Y%m%d") " [" $(date) "] ============ "
+echo "=======  Build FyLab " [" ${BUILD_TAG} "] ============ "
 docker build --progress=plain --rm \
     --build-arg BASE_TAG=fydev:latest \
     --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
@@ -60,6 +59,6 @@ docker build --progress=plain --rm \
 
 docker tag fylab:${BUILD_TAG} fylab:latest
 
-echo "======= Done [" $(date) "]============ "
+echo "======= Done [" ${BUILD_TAG} "]============ "
 
 #docker run --rm -it --mount source=/home/salmon/workspace,target=/workspaces,type=bind fydev:latest
