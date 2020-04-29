@@ -28,7 +28,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
-    eb   -r  --use-existing-modules --minimal-toolchain \
+    eb   -r  --use-existing-modules --minimal-toolchain  --skip-test-cases\
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb
 
@@ -37,7 +37,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
-    eb   -r  --use-existing-modules --minimal-toolchain \
+    eb   -r  --use-existing-modules --minimal-toolchain  --skip-test-cases\
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     matplotlib-3.1.1-foss-2019b-Python-3.7.4.eb 
  
@@ -45,7 +45,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
-    eb   -r  --use-existing-modules --minimal-toolchain \
+    eb   -r  --use-existing-modules --minimal-toolchain  --skip-test-cases \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     bokeh-1.4.0-foss-2019b-Python-3.7.4.eb
 
@@ -53,7 +53,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
-    eb   -r  --use-existing-modules --minimal-toolchain \
+    eb   -r  --use-existing-modules --minimal-toolchain  --skip-test-cases\
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     JupyterLab-2.1.1-foss-2019b-Python-3.7.4.eb
 
@@ -65,7 +65,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     module load EasyBuild && \   
     eb   -r --rebuild  --use-existing-modules --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    --moduleclasses=fuyun \
+    --moduleclasses=fuyun  --skip-test-cases\
     FyLab-${FYLAB_VERSION}.eb  
 
 

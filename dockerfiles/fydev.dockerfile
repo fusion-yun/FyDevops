@@ -34,7 +34,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r  --skip-test-cases \
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -44,7 +44,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r  --skip-test-cases \
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -54,7 +54,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r  --skip-test-cases \
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -64,7 +64,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r   --skip-test-cases\
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -77,7 +77,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r   --skip-test-cases\
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -87,7 +87,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r   --skip-test-cases\
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -99,7 +99,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r   --skip-test-cases\
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
@@ -112,7 +112,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     source /etc/profile.d/modules.sh &&\    
     module avail && \
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb --info -r  \
+    eb --info -r   --skip-test-cases\
     --use-existing-modules \
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
