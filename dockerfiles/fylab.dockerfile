@@ -49,6 +49,15 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     bokeh-1.4.0-foss-2019b-Python-3.7.4.eb
 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild && \   
+    eb   -r  --use-existing-modules --minimal-toolchain  --skip-test-cases\
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    nodejs-12.16.1-GCCcore-8.3.0.eb
+
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
@@ -57,6 +66,13 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     JupyterLab-2.1.1-foss-2019b-Python-3.7.4.eb
 
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild && \   
+    eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    h5py-2.10.0-foss-2019b-Python-3.7.4.eb
 
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        

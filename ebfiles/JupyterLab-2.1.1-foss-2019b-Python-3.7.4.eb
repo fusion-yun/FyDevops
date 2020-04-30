@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 
-source_urls = ([PYPI_SOURCE],)
+source_urls = [PYPI_SOURCE]
 patches = ["%(name)s-%(version)s_set-app-path-for-easybuild.patch"]
 sources = ["%(namelower)s-%(version)s.tar.gz"]
 installopts = "  -i https://pypi.tuna.tsinghua.edu.cn/simple --cache-dir /fuyun/sources/pip_cache "

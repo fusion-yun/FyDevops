@@ -7,11 +7,11 @@ FY_OS_VERSION=8
 TOOLCHAIN_NAME=foss
 TOOLCHAIN_VERSION=2019b
 DOCKER_IMAGE_NAME=fydev
-BUILD_TAG=$(date +"%Y%m%d")_$(git describe --dirty --always --tags)
+BUILD_TAG=$(git describe --dirty --always --tags)
 FYDEV_VERSION=0.0.0
 FYLAB_VERSION=0.0.0
 
-echo "======= Build FyBase [" ${BUILD_TAG} "] ============ "
+echo "======= Build FyBase ["  $(date +"%Y%m%d") ${BUILD_TAG} "] ============ "
 EB_BOOTSTRAP_DIR=../../eb_boostrap
 if [ -d ${EB_BOOTSTRAP_DIR} ]; then
      cp ../ebfiles/easybuild* ${EB_BOOTSTRAP_DIR}/
@@ -29,7 +29,7 @@ docker build --progress=plain --rm \
 
 docker tag fybase:${BUILD_TAG} fybase:latest
 
-echo "=======  Build FyDev [" ${BUILD_TAG} "] ============ "
+echo "=======  Build FyDev [" $(date +"%Y%m%d") ${BUILD_TAG} "] ============ "
 
 docker build --progress=plain --rm \
      --build-arg BASE_TAG=fybase:${BUILD_TAG} \
@@ -44,11 +44,11 @@ docker build --progress=plain --rm \
 
 
 
-docker tag fydev:${BUILD_TAG} fydev:latest
+# docker tag fydev:${BUILD_TAG} fydev:latest
 
-echo "=======  Build FyLab  [" ${BUILD_TAG} "] ============ "
+echo "=======  Build FyLab  [" $(date +"%Y%m%d") ${BUILD_TAG} "] ============ "
 docker build --progress=plain --rm \
-    --build-arg BASE_TAG=fydev:${BUILD_TAG} \
+    --build-arg BASE_TAG=fydev:latest \
     --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
     --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
     --build-arg FYLAB_VERSION=${FYLAB_VERSION} \
@@ -57,7 +57,11 @@ docker build --progress=plain --rm \
     -f ../dockerfiles/fylab.dockerfile \
     ../ebfiles
 
-docker tag fylab:${BUILD_TAG} fylab:latest
+
+
+docker tag fylab:${BUILD_TAG}_fix fylab:latest
+
+# docker tag fylab:${BUILD_TAG} fylab:latest
 
 echo "======= Done [" ${BUILD_TAG} "]============ "
 
