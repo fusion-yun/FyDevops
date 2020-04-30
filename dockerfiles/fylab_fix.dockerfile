@@ -24,7 +24,13 @@ ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 ENV EASYBUILD_PREFIX=${FUYUN_DIR} 
 ENV PYPI_MIRROR=https://pypi.tuna.tsinghua.edu.cn/simple 
 
-
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild && \   
+    eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    HDF5-1.10.5-gompi-2019b.eb
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \

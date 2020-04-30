@@ -41,14 +41,11 @@ docker build --progress=plain --rm \
      -f ../dockerfiles/fydev.dockerfile \
      ../ebfiles
 
-
-
-
 # docker tag fydev:${BUILD_TAG} fydev:latest
 
 echo "=======  Build FyLab  [" $(date +"%Y%m%d") ${BUILD_TAG} "] ============ "
 docker build --progress=plain --rm \
-    --build-arg BASE_TAG=fydev:latest \
+    --build-arg BASE_TAG=fydev:${BUILD_TAG} \
     --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
     --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
     --build-arg FYLAB_VERSION=${FYLAB_VERSION} \
@@ -56,12 +53,24 @@ docker build --progress=plain --rm \
     -t fylab:${BUILD_TAG} \
     -f ../dockerfiles/fylab.dockerfile \
     ../ebfiles
+docker tag fylab:${BUILD_TAG} fylab:latest
 
 
+# echo "=======  Build FyLab  [" $(date +"%Y%m%d") ${BUILD_TAG} "] ============ "
 
-docker tag fylab:${BUILD_TAG}_fix fylab:latest
+# docker build --progress=plain --rm \
+#     --build-arg BASE_TAG=fylab:latest \
+#     --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
+#     --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
+#     --build-arg FYLAB_VERSION=${FYLAB_VERSION} \
+#     --build-arg BUILD_TAG=${BUILD_TAG} \
+#     -t fylab:${BUILD_TAG} \
+#     -f ../dockerfiles/fylab_fix.dockerfile \
+#     ../ebfiles
 
-# docker tag fylab:${BUILD_TAG} fylab:latest
+# docker tag fylab:${BUILD_TAG}_fix fylab:latest
+
+
 
 echo "======= Done [" ${BUILD_TAG} "]============ "
 
