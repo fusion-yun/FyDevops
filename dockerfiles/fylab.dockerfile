@@ -87,11 +87,13 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \
     if ! [ -z ${FUYUN_DIR}/share/fonts/NotoSansCJKsc-Regular.otf ] ; then \    
-    mkdir -p ${HOME_DIR}/.local/share/fonts/ ; \
-    cd ${HOME_DIR}/.local/share/fonts/ ; \
+    mkdir -p /fuyun/sources/fonts/ ; \
+    cd /fuyun/sources/fonts/ ; \
     curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Regular.otf ; \
     curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Bold.otf  ; \    
     fi && \
+    mkdir -p ${HOME_DIR}/.local/share/fonts/ && \
+    cp /fuyun/sources/fonts/* ${HOME_DIR}/.local/share/fonts/ && \
     source /etc/profile.d/modules.sh &&\    
     module load fontconfig &&\
     fc-cache -fv 
