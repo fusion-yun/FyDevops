@@ -36,3 +36,11 @@ Open /etc/ssh/sshd_config in an editor (like Vim, nano, or Pico) on the SSH host
 Add the setting ___AllowStreamLocalForwarding___ yes.
 Restart the SSH server (on Ubuntu, run sudo systemctl restart sshd).
 Retry.
+
+
+Docker Tips
+========================
+
+## Copy image through ssh
+
+        ssh salmon@office ' docker save fylab:latest | bzip2 ' | pv  |bunzip2 | docker load

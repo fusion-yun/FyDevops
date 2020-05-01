@@ -4,10 +4,9 @@ FROM alpine:latest
 
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-     mkdir -p /fuyun &&\
-     rm -rf /tmp/cache/sources/sources && \
-     ls /tmp/cache/sources && \
-     cp -r /tmp/cache/sources /fuyun/sources
+     mkdir -p /fuyun/sources &&\
+     cp -r /tmp/cache/* /fuyun/sources/ && \
+     ls -lh /fuyun/sources
 
     # RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
     #     mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION} ;\
