@@ -81,21 +81,22 @@ RUN sudo mkdir -p /opt/EasyBuild ; \
     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /opt/EasyBuild
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/opt/EasyBuild/sources,sharing=shared \ 
+RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \ 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh && \    
-    if ! [ -f  /opt/EasyBuild/sources/bootstrap/bootstrap_eb.py  ]; then \
-    mkdir -p /opt/EasyBuild/sources/bootstrap &&\
-    cd  /opt/EasyBuild/sources/bootstrap  &&\
+    if ! [ -f  /tmp/cache/sources/bootstrap/bootstrap_eb.py  ]; then \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} /tmp/cache && \
+    mkdir -p /tmp/cache/sources/bootstrap &&\
+    cd  /tmp/cache/sources/bootstrap  &&\
     curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py  &&\
     curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  && \
     curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz   && \
     curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz   ; \    
     fi ; \   
     export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  && \
-    export EASYBUILD_BOOTSTRAP_SOURCEPATH=/opt/EasyBuild/sources/bootstrap   && \
+    export EASYBUILD_BOOTSTRAP_SOURCEPATH=/tmp/cache/sources/bootstrap   && \
     export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  && \
-    /usr/bin/python3 /opt/EasyBuild/sources/bootstrap/bootstrap_eb.py  /opt/EasyBuild && \
+    /usr/bin/python3 /tmp/cache/sources/bootstrap/bootstrap_eb.py  /opt/EasyBuild && \
     unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0 && \
     unset EASYBUILD_BOOTSTRAP_SOURCEPATH && \
     unset EASYBUILD_BOOTSTRAP_FORCE_VERSION && \  
