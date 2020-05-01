@@ -12,4 +12,8 @@ source_urls = ['https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f0
 sources = ['openjdk-%(version)s_linux-x64_bin.tar.gz']
 checksums = ['c7006154dfb8b66328c6475447a396feb0042608ee07a96956547f574a911c09']
 
+modextravars = {    
+    'JAVA_HOME'      : '%(installdir)s',    
+}
+
 moduleclass = 'lang'

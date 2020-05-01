@@ -1,9 +1,12 @@
 # syntax=docker/dockerfile:experimental
 
-FROM fydev:latest
+FROM fysource:latest
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \      
-    cp -r /fuyun/sources /tmp/cache/
+RUN --mount=type=cache,uid=1000,id=fycache,target=/cache,sharing=shared \        
+    # cp -r /fuyun/sources /cache/sources && \    
+    ls  /cache/sources  -h -l
+    
+    
     
 
     # cp -r /fuyun/sources /fycache/

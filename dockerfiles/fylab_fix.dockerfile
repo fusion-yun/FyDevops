@@ -24,15 +24,16 @@ ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 ENV EASYBUILD_PREFIX=${FUYUN_DIR} 
 ENV PYPI_MIRROR=https://pypi.tuna.tsinghua.edu.cn/simple 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
+    rm -rf /fuyun/software/.locks/* &&\
     eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     HDF5-1.10.5-gompi-2019b.eb
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
@@ -41,15 +42,39 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     h5py-2.10.0-foss-2019b-Python-3.7.4.eb
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
-    eb   -r --rebuild  --use-existing-modules --minimal-toolchain \
+    eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    --moduleclasses=fuyun  --skip-test-cases\
+    Java-13.0.1.eb --module-only --rebuild
+    
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild && \   
+    eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    Graphviz-2.42.2-foss-2019b-Python-3.7.4.eb
+    
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild && \   
+    rm -rf /fuyun/software/.locks/* &&\
+    eb   -lr --use-existing-modules --minimal-toolchain --skip-test-cases\
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    --moduleclasses=fuyun  \
     FyLab-${FYLAB_VERSION}.eb  
 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache/,sharing=shared \         
+    sudo mkdir -p ${FUYUN_DIR} && \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} ${FUYUN_DIR} &&\
+    cp -r /tmp/cache/software ${FYDEV_USER}/ && \
+    cp -r /tmp/cache/ebfiles_repo ${FYDEV_USER}/ && \
+    cp -r /tmp/cache/modules ${FYDEV_USER}/
 
 LABEL Name          "fyLab"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
