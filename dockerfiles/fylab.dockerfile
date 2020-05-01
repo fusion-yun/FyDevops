@@ -86,7 +86,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
 
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \
-    if ! [ -f /fuyun/sources/fonts/NotoSansCJKsc-Regular.otf ] ; then \    
+    if ! [ -d /fuyun/sources/fonts/ ] ; then \    
     mkdir -p /fuyun/sources/fonts/ ;\
     cd /fuyun/sources/fonts/ ; \
     curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Regular.otf ; \
