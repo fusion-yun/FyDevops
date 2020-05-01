@@ -1,13 +1,6 @@
 # syntax=docker/dockerfile:experimental
 ARG BASE_TAG=${BASE_TAG:-fydev:latest}
 
-FROM fylab:3ce1a7d-dirty_fix AS stage0
-
-RUN mv /home/fydev/fydev /fuyun/software && \
-    mv /fuyun/software/modules /fuyun/modules && \
-    mv /fuyun/software/ebfiles_repo /fuyun/ebfiles_repo  
-
-
 FROM fybase:latest
 
 ################################################################################
@@ -23,6 +16,7 @@ ENV FYLAB_VERSION=${FYLAB_VERSION}
 
 USER   ${FYDEV_USER}
 ARG HOME_DIR=/home/${FYDEV_USER}
+
 # ####################################################################
 # # install packages
 
@@ -56,7 +50,7 @@ ARG HOME_DIR=/home/${FYDEV_USER}
 #     eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
 #     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
 #     Java-13.0.1.eb --module-only --rebuild
-    
+
 # RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/,sharing=shared \        
 #     --mount=type=bind,target=/tmp/ebfiles,source=./ \
 #     source /etc/profile.d/modules.sh &&\    
@@ -64,7 +58,7 @@ ARG HOME_DIR=/home/${FYDEV_USER}
 #     eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
 #     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
 #     Graphviz-2.42.2-foss-2019b-Python-3.7.4.eb
-    
+
 # RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/,sharing=shared \        
 #     --mount=type=bind,target=/tmp/ebfiles,source=./ \
 #     source /etc/profile.d/modules.sh &&\    
@@ -74,11 +68,6 @@ ARG HOME_DIR=/home/${FYDEV_USER}
 #     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
 #     --moduleclasses=fuyun  \
 #     FyLab-${FYLAB_VERSION}.eb  
-
-COPY --from=stage0 /fuyun /fuyun
-
-
-
 # RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache/,sharing=shared \         
 #     sudo mkdir -p ${FUYUN_DIR} && \
 #     sudo chown ${FYDEV_USER}:${FYDEV_USER} ${FUYUN_DIR} &&\
@@ -86,10 +75,34 @@ COPY --from=stage0 /fuyun /fuyun
 #     cp -r /tmp/cache/ebfiles_repo ${FUYUN_DIR}/ebfiles_repo && \
 #     cp -r /tmp/cache/modules ${FUYUN_DIR}/modules
 
-# LABEL Name          "fyLab"
-# LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-# LABEL Description   "FyLab : UI/UX for FuYun "
-# ARG BUILD_TAG=${BUILD_TAG:-dirty}
-# LABEL BUILD_TAG     ${BUILD_TAG}
-# USER ${FYDEV_USER}
-# WORKDIR /home/${FYDEV_USER}
+RUN --mount=type=cache,uid=1000,id=fycache,target=/cache,sharing=shared \        
+    sudo mkdir -p ${FUYUN_DIR} && \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} ${FUYUN_DIR} && \
+    cp -r /cache/software ${FUYUN_DIR}/software && \
+    cp -r /cache/modules ${FUYUN_DIR}/modules && \
+    cp -r /cache/ebfiles_repo ${FUYUN_DIR}/ebfiles_repo 
+
+
+
+
+ENV MODULEPATH=${FUYUN_DIR}/modules/base:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/compiler:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/data:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/devel:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/lang:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/lib:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/math:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/mpi:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/numlib:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/system:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/toolchain:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/tools:${MODULEPATH}
+ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
+
+LABEL Name          "fyLab"
+LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
+LABEL Description   "FyLab : UI/UX for FuYun "
+ARG BUILD_TAG=${BUILD_TAG:-dirty}
+LABEL BUILD_TAG     ${BUILD_TAG}
+USER ${FYDEV_USER}
+WORKDIR /home/${FYDEV_USER}

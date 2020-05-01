@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-ARG BASE_TAG=${BASE_TAG:-fabse:latest}
+ARG BASE_TAG=${BASE_TAG:-fybase:latest}
 FROM ${BASE_TAG}
 
 ################################################################################

@@ -1,10 +1,6 @@
 # syntax=docker/dockerfile:experimental
-ARG FY_OS=centos
-ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
-FROM ${FY_OS}:${FY_OS_VERSION} 
-
-ARG FY_OS=${FY_OS:-centos}
-ARG FY_OS_VERSION=${FY_OS_VERSION:-8}
+ARG BASE_TAG=${BASE_TAG:-centos:8}
+FROM ${BASE_TAG} 
 
 
 RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
@@ -46,9 +42,9 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  ;\
     yum clean all -y -q
 
 RUN  alternatives --set python /usr/bin/python3 ; \
-     alternatives --set pip /usr/bin/pip3 ; \
-     # for easybuild --dep-graph 
-     pip3 install python-graph-core python-graph-dot  
+    alternatives --set pip /usr/bin/pip3 ; \
+    # for easybuild --dep-graph 
+    pip3 install python-graph-core python-graph-dot  
 
 # xmlto for git
 
@@ -84,19 +80,19 @@ RUN sudo mkdir -p /opt/EasyBuild ; \
 RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \ 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh && \    
-    if ! [ -f  /tmp/cache/sources/bootstrap/bootstrap_eb.py  ]; then \
+    if ! [ -f  /tmp/cache/bootstrap/bootstrap_eb.py  ]; then \
     sudo chown ${FYDEV_USER}:${FYDEV_USER} /tmp/cache && \
-    mkdir -p /tmp/cache/sources/bootstrap &&\
-    cd  /tmp/cache/sources/bootstrap  &&\
+    mkdir -p /tmp/cache/bootstrap &&\
+    cd  /tmp/cache/bootstrap  &&\
     curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py  &&\
     curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  && \
     curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz   && \
     curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz   ; \    
     fi ; \   
     export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  && \
-    export EASYBUILD_BOOTSTRAP_SOURCEPATH=/tmp/cache/sources/bootstrap   && \
+    export EASYBUILD_BOOTSTRAP_SOURCEPATH=/tmp/cache/bootstrap   && \
     export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  && \
-    /usr/bin/python3 /tmp/cache/sources/bootstrap/bootstrap_eb.py  /opt/EasyBuild && \
+    /usr/bin/python3 /tmp/cache/bootstrap/bootstrap_eb.py  /opt/EasyBuild && \
     unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0 && \
     unset EASYBUILD_BOOTSTRAP_SOURCEPATH && \
     unset EASYBUILD_BOOTSTRAP_FORCE_VERSION && \  
