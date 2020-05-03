@@ -10,10 +10,6 @@ description = """FyLab """
 toolchain = {"name": "foss", "version": "2019b"}
 toolchainopts = {"pic": True}
 
-builddependencies = [
-    ("nodejs", "12.16.1"),
-]
-
 dependencies = [
     ("Python", "3.7.4"),
     ("dask", "2.8.0", versionsuffix),
@@ -21,15 +17,16 @@ dependencies = [
     ("SciPy-bundle", "2019.10", versionsuffix),
     ("h5py", "2.10.0", versionsuffix),
     ("netcdf4-python", "1.5.3", versionsuffix),
+    ("protobuf", "3.7.1"),
     ("networkx", "2.4", versionsuffix),
     ("Graphviz", "2.42.2", versionsuffix),
 
     ("bokeh", "1.4.0", versionsuffix),
     ("fontconfig", "2.13.1"),
     ("matplotlib", "3.1.1", versionsuffix),
-    ("JupyterLab", "2.1.1", versionsuffix),
-    ("protobuf", "3.7.1"),
 
+    ("nodejs", "12.16.1"),
+    ("JupyterLab", "2.1.1", versionsuffix),
 ]
 
 runtest = False
