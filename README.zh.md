@@ -27,6 +27,18 @@ ___FuYun___ 采用 Docker + EasyBuild 搭建容器作为开发和运行的基础
     $cd scripts
     $./main.sh
 
+## 使用 Usage
+    
+- 拉回镜像 pull image
+
+        $docker pull registry.cn-hangzhou.aliyuncs.com/fusionyun/fydev:latest
+
+- 启动 JupyterLab
+
+       $docker run --rm -p 8888:8888/tcp fylab:0.0.1 'jupyter lab --ip=\$(hostname -i) --no-browser'
+
+
+
 ## ___FyBox___ 架构
 
 ### EasyBuild module 环境

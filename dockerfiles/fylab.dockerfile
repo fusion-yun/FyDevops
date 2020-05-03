@@ -107,3 +107,16 @@ ARG BUILD_TAG=${BUILD_TAG:-dirty}
 LABEL BUILD_TAG     ${BUILD_TAG}
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}
+
+USER root
+RUN echo $'#!/bin/sh \n\
+    source /etc/profile.d/modules.sh \n\
+    module use /fuyun/modules/fuyun \n\
+    module load FyLab \n\
+    echo "EXEC: " $@ \n\
+    $@' > /docker_entrypoint.sh && \
+    chmod +x /docker_entrypoint.sh 
+
+USER ${FYDEV_USER}
+
+ENTRYPOINT [ "/docker_entrypoint.sh" ]
