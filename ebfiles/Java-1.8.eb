@@ -1,0 +1,16 @@
+# Contribution from the ShenMa HPC team
+
+easyblock = 'ModuleRC'
+
+name = 'Java'
+version = '1.8'
+
+homepage = 'https://jdk.java.net/%(version)s/'
+description = """Java Platform, Standard Edition (Java SE) lets you develop and deploy
+ Java applications on desktops and servers."""
+
+toolchain = SYSTEM
+
+dependencies = [('Java', '%(version)s.0_251')]
+
+moduleclass = 'lang'

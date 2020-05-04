@@ -12,7 +12,6 @@ toolchainopts = {"pic": True}
 
 dependencies = [
     ("Python", "3.7.4"),
-    ("dask", "2.8.0", versionsuffix),
 
     ("SciPy-bundle", "2019.10", versionsuffix),
     ("h5py", "2.10.0", versionsuffix),
@@ -20,6 +19,7 @@ dependencies = [
     ("protobuf", "3.7.1"),
     ("networkx", "2.4", versionsuffix),
     ("Graphviz", "2.42.2", versionsuffix),
+    ("dask", "2.8.0", versionsuffix),
 
     ("bokeh", "1.4.0", versionsuffix),
     ("fontconfig", "2.13.1"),

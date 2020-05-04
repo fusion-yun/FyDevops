@@ -25,7 +25,7 @@ builddependencies = [
 ]
 
 dependencies = [
-  #  ('Java','13','',True),
+    ('Java','1.8.0','',True),
     ('HDF5', '1.10.5'),
     ('libxml2', '2.9.9'),
     ('zlib', '1.2.11'),
@@ -33,7 +33,7 @@ dependencies = [
     ('libreadline', '8.0')
 ]
 
-#configopts = ' --enable-java '
+configopts = ' --enable-java '
 
 configure_cmd_prefix = 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
 
@@ -47,7 +47,7 @@ modextravars = {
 modextrapaths = {
     'IDL_PATH': 'idl',
     'PYTHONPATH': 'python',
-    # 'CLASSPATH':'java'
+    'CLASSPATH':'java'
 }
 
 moduleclass = 'data'

@@ -1,8 +1,12 @@
 # syntax=docker/dockerfile:experimental
 
-FROM fysource:latest
-RUN --mount=type=cache,uid=1000,id=fycache,target=/cache,sharing=shared \        
-    cp -rf /fuyun/sources/* /cache/ && ls -lh /cache/
+FROM fysources:0.0.1
+
+USER fydev
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/cache,sharing=shared \        
+    # cp -rf /fuyun/sources/* /cache/ && \
+    chown fydev:fydev /cache -R &&\
+    ls -lh /cache
     
 
 # FROM fylab:b106610-dirty_fix
