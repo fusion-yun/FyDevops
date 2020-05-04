@@ -105,10 +105,6 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/tmp/cache,sharing=sh
 
 ENV MODULEPATH=/opt/EasyBuild/modules/all:${MODULEPATH}
 
-ARG BUILD_TAG=${BUILD_TAG:-dirty}
-
-LABEL BUILD_TAG=${BUILD_TAG}
-
 WORKDIR /home/${FYDEV_USER}
 
 
