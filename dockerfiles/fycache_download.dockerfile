@@ -1,12 +1,13 @@
 # syntax=docker/dockerfile:experimental
 
-FROM fysources:0.0.1
+FROM alpine:latest
 
-USER fydev
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/cache,sharing=shared \        
-    # cp -rf /fuyun/sources/* /cache/ && \
-    chown fydev:fydev /cache -R &&\
-    ls -lh /cache
+# USER fydev:fydev
+
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/tmp/cache,sharing=shared \        
+    mkdir -p /fuyun/sources && \
+    cp -r /tmp/cache/* /fuyun/sources/ &&\
+    ls -lh /fuyun/sources
     
 
 # FROM fylab:b106610-dirty_fix

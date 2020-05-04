@@ -3,10 +3,11 @@
 FROM alpine:latest
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
-     mkdir -p /fuyun/sources &&\
-     cp -r /tmp/cache/* /fuyun/sources/ && \
-     ls -lh /fuyun/sources
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
+    --mount=type=bind,target=/tmp/sources,source=./ \    
+    #  cp -ruf /tmp/sources/* /tmp/cache/ && \    
+    rm -rf /tmp/cache/imas &&\
+     ls -lh /tmp/cache/
 
     # RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
     #     mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION} ;\

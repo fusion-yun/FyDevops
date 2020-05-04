@@ -24,16 +24,9 @@ ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 ENV EASYBUILD_PREFIX=${FUYUN_DIR} 
 ENV PYPI_MIRROR=https://pypi.tuna.tsinghua.edu.cn/simple 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh &&\    
-    module load EasyBuild && \   
-    eb   -r  --use-existing-modules --minimal-toolchain  --skip-test-cases\
-    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
@@ -41,7 +34,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     matplotlib-3.1.1-foss-2019b-Python-3.7.4.eb 
  
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
@@ -50,7 +43,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     bokeh-1.4.0-foss-2019b-Python-3.7.4.eb
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
@@ -58,7 +51,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     nodejs-12.16.1-GCCcore-8.3.0.eb
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
@@ -66,7 +59,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     JupyterLab-2.1.1-foss-2019b-Python-3.7.4.eb
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
@@ -75,7 +68,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     h5py-2.10.0-foss-2019b-Python-3.7.4.eb
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
@@ -85,7 +78,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     FyLab-${FYLAB_VERSION}.eb  
 
 
-RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \
     if ! [ -d /fuyun/sources/fonts/ ] ; then \    
     mkdir -p /fuyun/sources/fonts/ ;\
     cd /fuyun/sources/fonts/ ; \

@@ -59,6 +59,7 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     Python-3.7.4-GCCcore-8.3.0.eb 
+    
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
@@ -83,6 +84,15 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     gompi-2019b.eb 
 
+
+RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
+    --mount=type=bind,target=/tmp/ebfiles,source=./ \
+    source /etc/profile.d/modules.sh &&\    
+    module load EasyBuild && \   
+    eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
+    --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
+    HDF5-1.10.5-gompi-2019b.eb
+
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
@@ -92,8 +102,6 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --minimal-toolchain \
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     Boost-1.71.0-gompi-2019b.eb 
-
-
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
@@ -105,13 +113,15 @@ RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared 
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
     ${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
 
+
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
-    eb   -lr  --use-existing-modules --minimal-toolchain  --skip-test-cases\
+    eb   -r  --use-existing-modules --minimal-toolchain  --skip-test-cases\
     --robot-paths=/tmp/ebfiles:$EBROOTEASYBUILD/easybuild/easyconfigs  \
-    HDF5-1.10.5-gompi-2019b.eb
+    SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb
+
 
 RUN --mount=type=cache,uid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
