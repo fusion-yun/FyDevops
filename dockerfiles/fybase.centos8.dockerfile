@@ -77,7 +77,7 @@ RUN sudo mkdir -p /opt/EasyBuild ; \
     sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /opt/EasyBuild
 
 
-RUN --mount=type=cache,uid=1000,guid=1000,id=fycache,target=/tmp/cache,sharing=shared \ 
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/tmp/cache,sharing=shared \ 
     --mount=type=bind,target=/tmp/ebfiles,source=./ \
     source /etc/profile.d/modules.sh && \    
     if ! [ -f  /tmp/cache/bootstrap/bootstrap_eb.py  ]; then \
