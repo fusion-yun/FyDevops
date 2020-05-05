@@ -1,18 +1,35 @@
 # syntax=docker/dockerfile:experimental
 
-FROM fydev:latest
-RUN --mount=type=cache,uid=1000,gid=1000,id=fydev_pre,target=/tmp/prebuild,sharing=shared \      
-    cp -rf /fuyun/modules      /tmp/prebuild/ && \    
-    cp -rf /fuyun/software     /tmp/prebuild/ && \    
-    cp -rf /fuyun/ebfiles_repo /tmp/prebuild/        
+# FROM fydev:latest
+# RUN --mount=type=cache,uid=1000,gid=1000,id=fydev_pre,target=/tmp/prebuild,sharing=shared \      
+#     cp -rf /fuyun/modules      /tmp/prebuild/ && \    
+#     cp -rf /fuyun/software     /tmp/prebuild/ && \    
+#     cp -rf /fuyun/ebfiles_repo /tmp/prebuild/  && \
+#     rm -rf /tmp/prebuild/modules/fuyun && \
+#     rm -rf  /tmp/prebuild/modules/all/FyDev && \
+#     rm -rf  /tmp/prebuild/software/FyDev 
+          
 
 
-FROM fylab:latest
-RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \      
-    cp -rf /fuyun/modules      /tmp/prebuild/ && \    
-    cp -rf /fuyun/software     /tmp/prebuild/ && \    
-    cp -rf /fuyun/ebfiles_repo /tmp/prebuild/        
-    
+# FROM fylab:latest
+# RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \      
+#     cp -rf /fuyun/modules      /tmp/prebuild/ && \    
+#     cp -rf /fuyun/software     /tmp/prebuild/ && \    
+#     cp -rf /fuyun/ebfiles_repo /tmp/prebuild/ && \
+#     rm -rf  /tmp/prebuild/modules/all/FyLab && \
+#     rm -rf  /tmp/prebuild/software/FyLab 
+           
+
+
+# FROM fysources:0.0.1
+# RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/tmp/sources,sharing=shared \      
+#     cp -rf /fuyun/sources/*      /tmp/sources/ && \  
+
+FROM alpine:latest
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/tmp/sources,sharing=shared \      
+    --mount=type=bind,target=/tmp/pre_src,source=./ \
+    cp -rf /tmp/pre_src/*      /tmp/sources/  
+
 
     # RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
     #     mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION} ;\

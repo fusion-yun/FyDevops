@@ -4,7 +4,7 @@ FROM alpine:latest
 
 # USER fydev:fydev
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/tmp/cache,sharing=shared \        
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/tmp/cache,sharing=shared \        
     mkdir -p /fuyun/sources && \
     cp -r /tmp/cache/* /fuyun/sources/ &&\
     ls -lh /fuyun/sources

@@ -36,40 +36,40 @@ ARG FY_EB_ARGS="  --info -r  --skip-test-cases --use-existing-modules --minimal-
     --robot-paths=${FUYUN_DIR}/ebfiles:${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}/easybuild/easyconfigs"
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
     eb ${FY_EB_ARGS} matplotlib-3.1.1-foss-2019b-Python-3.7.4.eb 
  
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
     eb ${FY_EB_ARGS} bokeh-1.4.0-foss-2019b-Python-3.7.4.eb
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
     eb ${FY_EB_ARGS}   nodejs-12.16.1-GCCcore-8.3.0.eb
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
     eb  ${FY_EB_ARGS}  JupyterLab-2.1.1-foss-2019b-Python-3.7.4.eb
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
     eb  ${FY_EB_ARGS}  h5py-2.10.0-foss-2019b-Python-3.7.4.eb
 
 COPY --chown=${FYDEV_USER}:${FYDEV_USER} packages/FyLab-${FYDEV_VERSION}.eb ${FUYUN_DIR}/ebfiles/
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh &&\    
     module load EasyBuild && \   
     eb   ${FY_EB_ARGS}   --moduleclasses=fuyun FyLab-${FYLAB_VERSION}.eb  
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \
     if ! [ -d /fuyun/sources/fonts/ ] ; then \    
     mkdir -p /fuyun/sources/fonts/ ;\
     cd /fuyun/sources/fonts/ ; \

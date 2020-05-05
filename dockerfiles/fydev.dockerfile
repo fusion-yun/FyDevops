@@ -38,51 +38,51 @@ USER ${FYDEV_USER}
 ARG FY_EB_ARGS="  --info -r  --skip-test-cases --use-existing-modules --minimal-toolchain \
     --robot-paths=${FUYUN_DIR}/ebfiles:${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}/easybuild/easyconfigs"
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \                    
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \                    
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS} GCCcore-8.3.0.eb 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS} Tcl-8.6.9-GCCcore-8.3.0.eb     
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}   Python-3.7.4-GCCcore-8.3.0.eb 
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}  Perl-5.30.0-GCCcore-8.3.0.eb  PCRE-8.43-GCCcore-8.3.0.eb  
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}  gompi-2019b.eb 
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}   HDF5-1.10.5-gompi-2019b.eb
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}  Boost-1.71.0-gompi-2019b.eb 
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}  foss-2019b.eb 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}  SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb
@@ -90,7 +90,7 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharin
 
 COPY --chown=${FYDEV_USER}:${FYDEV_USER} packages/FyDev-${FYDEV_VERSION}.eb ${FUYUN_DIR}/ebfiles/
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS}   --moduleclasses=fuyun --rebuild FyDev-${FYDEV_VERSION}.eb 
