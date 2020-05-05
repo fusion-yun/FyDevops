@@ -36,8 +36,7 @@ __pycache__
 cmake-build-*
 *-checkpoint.ipynb
 .pytest*
-sources
-*_sources
+
 *.gz
 *.bz2
 *.zip
