@@ -38,3 +38,12 @@ cmake-build-*
 .pytest*
 sources
 *_sources
+*.gz
+*.bz2
+*.zip
+*.iso
+*.rar
+*.tar
+*.exe
+*.jpg
+*.png

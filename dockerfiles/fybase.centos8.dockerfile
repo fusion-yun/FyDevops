@@ -54,6 +54,8 @@ ENV FYDEV_USER=${FYDEV_USER}
 ARG FYDEV_USER_ID=${FYDEV_USER_ID:-1000}
 ENV FYDEV_USER_ID=${FYDEV_USER_ID}
 
+ARG FUYUN_DIR=${FUYUN_DIR:-/fuyun}
+ENV FUYUN_DIR=${FUYUN_DIR}
 
 
 ENV PYTHONPATH=/usr/share/lmod/lmod/init/:${PYTHONPATH}
@@ -69,41 +71,38 @@ USER ${FYDEV_USER}
 # Install EasyBuild
 ARG FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 
-# --mount=type=cache,uid=1000,id=fycache,target=/fuyun,sharing=shared \        
-#     --mount=type=bind,target=/tmp/ebfiles,source=./ \
-ARG FY_EB_PREFIX=${FY_EB_PREFIX:-/opt/EasyBuild}
+ARG FY_EB_PREFIX=${FY_EB_PREFIX:-${FUYUN_DIR}}
 
-RUN sudo mkdir -p /opt/EasyBuild ; \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R /opt/EasyBuild
+RUN sudo mkdir -p ${FUYUN_DIR} ; \
+    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR} 
 
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} ./bootstrap ${FUYUN_DIR}/bootstrap
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/tmp/cache,sharing=shared \ 
-    --mount=type=bind,target=/tmp/ebfiles,source=./ \
-    source /etc/profile.d/modules.sh && \    
-    if ! [ -f  /tmp/cache/bootstrap/bootstrap_eb.py  ]; then \
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} /tmp/cache && \
-    mkdir -p /tmp/cache/bootstrap &&\
-    cd  /tmp/cache/bootstrap  &&\
+USER ${FYDEV_USER}
+   
+RUN source /etc/profile.d/modules.sh && \    
+    if ! [ -f ${FUYUN_DIR}/bootstrap/bootstrap_eb.py  ]; then \
+    cd ${FUYUN_DIR}/bootstrap &&\    
     curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py  &&\
     curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz  && \
     curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz   && \
     curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz   ; \    
-    fi ; \   
+    fi && \   
     export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES  && \
-    export EASYBUILD_BOOTSTRAP_SOURCEPATH=/tmp/cache/bootstrap   && \
+    export EASYBUILD_BOOTSTRAP_SOURCEPATH=${FUYUN_DIR}/bootstrap   && \
     export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}  && \
-    /usr/bin/python3 /tmp/cache/bootstrap/bootstrap_eb.py  /opt/EasyBuild && \
+    /usr/bin/python3 ${FUYUN_DIR}/bootstrap/bootstrap_eb.py  ${FY_EB_PREFIX} && \
     unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0 && \
     unset EASYBUILD_BOOTSTRAP_SOURCEPATH && \
     unset EASYBUILD_BOOTSTRAP_FORCE_VERSION && \  
-    if [ -f /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch ]; then \
+    if [ -f ${FUYUN_DIR}/bootstrap/easybuild-${FY_EB_VERSION}.patch ]; then \
     PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))") && \
-    cd /opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages &&\
-    patch -s -p0 < /tmp/ebfiles/easybuild-${FY_EB_VERSION}.patch ;\        
+    cd ${FY_EB_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages &&\
+    patch -s -p0 < ${FUYUN_DIR}/bootstrap/easybuild-${FY_EB_VERSION}.patch ;\        
     fi ; \
-    sudo ln -s  /opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ 
+    sudo ln -s  ${FY_EB_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ 
 
-ENV MODULEPATH=/opt/EasyBuild/modules/all:${MODULEPATH}
+ENV MODULEPATH=${FY_EB_PREFIX}/modules/all:${MODULEPATH}
 
 WORKDIR /home/${FYDEV_USER}
 

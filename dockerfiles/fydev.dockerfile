@@ -26,77 +26,77 @@ ENV PYPI_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/pypi/web/
 ARG TOOLCHAIN_NAME=${TOOLCHAIN_NAME:-foss}
 ARG TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION:-2019b}
 
-RUN sudo mkdir -p ${FUYUN_DIR}/ebfiles &&\
-    sudo chown ${FYDEV_USER}:${FYDEV_USER} -R ${FUYUN_DIR}   
-
 ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 
+COPY --chown=fydev:fydev ./ebfiles ${FUYUN_DIR}/ebfiles
 
-COPY --chown=fydev:fydev ./* ${FUYUN_DIR}/ebfiles/
+RUN --mount=type=cache,uid=1000,gid=1000,id=fy_prebuild,target=/tmp/prebuild,sharing=shared \
+    if [ -d /tmp/prebuild/software ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi &&\
+    ls -lh  ${FUYUN_DIR}/software 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \        
-    ls -lhR ${FUYUN_DIR}/ebfiles
 
-ARG FY_EB_ARGS="--info -r  --skip-test-cases --use-existing-modules --minimal-toolchain \
---robot-paths=${FUYUN_DIR}/ebfiles:/opt/EasyBuild/software/EasyBuild/${FY_EB_VERSION}/easybuild/easyconfigs"
+USER ${FYDEV_USER}
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
+ARG FY_EB_ARGS="  --info -r  --skip-test-cases --use-existing-modules --minimal-toolchain \
+    --robot-paths=${FUYUN_DIR}/ebfiles:${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}/easybuild/easyconfigs"
+
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \                    
+    source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS} GCCcore-8.3.0.eb 
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
+    source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
     eb ${FY_EB_ARGS} Tcl-8.6.9-GCCcore-8.3.0.eb     
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
+    source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb ${FY_EB_ARGS} Python-3.7.4-GCCcore-8.3.0.eb 
-    
-
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
-    module load EasyBuild/${FY_EB_VERSION} && \
-    eb ${FY_EB_ARGS} \
-    Perl-5.30.0-GCCcore-8.3.0.eb  \   
-    PCRE-8.43-GCCcore-8.3.0.eb  
+    eb ${FY_EB_ARGS}   Python-3.7.4-GCCcore-8.3.0.eb 
 
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
+    source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb ${FY_EB_ARGS} gompi-2019b.eb 
+    eb ${FY_EB_ARGS}  Perl-5.30.0-GCCcore-8.3.0.eb  PCRE-8.43-GCCcore-8.3.0.eb  
 
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
-    module load EasyBuild && \   
-    eb ${FY_EB_ARGS} HDF5-1.10.5-gompi-2019b.eb
-
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
+    source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb ${FY_EB_ARGS} Boost-1.71.0-gompi-2019b.eb 
-
-
-RUN --mount=type=cache,uid=1000,gid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
-    module load EasyBuild/${FY_EB_VERSION} && \
-    eb ${FY_EB_ARGS}   ${TOOLCHAIN_NAME}-${TOOLCHAIN_VERSION}.eb 
-
-RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\    
-    module load EasyBuild && \   
-    eb ${FY_EB_ARGS}   SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb
+    eb ${FY_EB_ARGS}  gompi-2019b.eb 
 
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
-    source /etc/profile.d/modules.sh &&\        
+    source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb ${FY_EB_ARGS} --moduleclasses=fuyun  FyDev-${FYDEV_VERSION}.eb 
- 
+    eb ${FY_EB_ARGS}   HDF5-1.10.5-gompi-2019b.eb
+
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+    source /etc/profile.d/modules.sh && \
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb ${FY_EB_ARGS}  Boost-1.71.0-gompi-2019b.eb 
+
+
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+    source /etc/profile.d/modules.sh && \
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb ${FY_EB_ARGS}  foss-2019b.eb 
+
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+    source /etc/profile.d/modules.sh && \
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb ${FY_EB_ARGS}  SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb
+
+
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} FyDev-${FYDEV_VERSION}.eb ${FUYUN_DIR}/ebfiles/
+
+RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
+    source /etc/profile.d/modules.sh && \
+    module load EasyBuild/${FY_EB_VERSION} && \
+    eb ${FY_EB_ARGS}   --moduleclasses=fuyun  FyDev-${FYDEV_VERSION}.eb 
+
 
 ENV MODULEPATH=${FUYUN_DIR}/modules/base:${MODULEPATH}
 ENV MODULEPATH=${FUYUN_DIR}/modules/compiler:${MODULEPATH}
@@ -115,12 +115,10 @@ ENV MODULEPATH=${FUYUN_DIR}/modules/phys:${MODULEPATH}
 
 
 
+ARG BUILD_TAG=${BUILD_TAG:-dirty}
 LABEL Name          "FyDev"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description   "FyDev : Develop enverioment of FuYun  "
-ARG BUILD_TAG=${BUILD_TAG:-dirty}
-LABEL BUILD_TAG      ${BUILD_TAG}
+LABEL Description   "FyDev(${BUILD_TAG}) : Develop enverioment of FuYun  "
+
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}
-# RUN pip config set global.index-url https://mirrors.aliyun.com/simple ; \
-#     pip config set install.trusted-host mirrors.aliyun.com 

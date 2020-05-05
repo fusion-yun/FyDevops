@@ -85,11 +85,12 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharin
 
 # eb  --info  --use-existing-modules  --minimal-toolchain --robot-paths=/workspaces/FyDevOps/ebfiles/:$EBROOTEASYBUILD/easybuild/easyconfigs  --moduleclasses=fuyun /workspaces/FyDevOps/ebfiles/FyLab-0.0.0.eb -Dr
 
+ARG BUILD_TAG=${BUILD_TAG:-dirty}
+
 LABEL Name          "fyLab"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description   "FyLab : UI/UX for FuYun "
-ARG BUILD_TAG=${BUILD_TAG:-dirty}
-LABEL BUILD_TAG     ${BUILD_TAG}
+LABEL Description   "FyLab(${BUILD_TAG}) : UI/UX for FuYun "
+
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}
 
