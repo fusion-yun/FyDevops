@@ -1,7 +1,7 @@
 easyblock = "PythonBundle"
 
 name = "FyLab"
-version = "0.0.0"
+version = "0.0.1"
 versionsuffix = "-Python-%(pyver)s"
 
 homepage = "https://gitee.com/fusion_yun/"

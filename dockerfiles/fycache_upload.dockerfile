@@ -1,13 +1,19 @@
 # syntax=docker/dockerfile:experimental
 
-FROM fydev:latest
+# FROM fydev:latest
+# RUN --mount=type=cache,uid=1000,gid=1000,id=fydev_pre,target=/tmp/prebuild,sharing=shared \      
+#     cp -rf /fuyun/modules      /tmp/prebuild/ && \    
+#     cp -rf /fuyun/software     /tmp/prebuild/ && \    
+#     cp -rf /fuyun/ebfiles_repo /tmp/prebuild/        
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fy_prebuild,target=/tmp/prebuild,sharing=shared \      
+FROM fylab:latest
+RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \      
     cp -rf /fuyun/modules      /tmp/prebuild/ && \    
     cp -rf /fuyun/software     /tmp/prebuild/ && \    
     cp -rf /fuyun/ebfiles_repo /tmp/prebuild/        
     
+
     # RUN --mount=type=cache,uid=1000,id=fycache,target=/tmp/cache,sharing=shared \  
     #     mkdir -p /tmp/cache/${FY_OS}_${FY_OS_VERSION} ;\
     #     cp -rf ${FUYUN_DIR}/software /tmp/cache/${FY_OS}_${FY_OS_VERSION}/software ;\

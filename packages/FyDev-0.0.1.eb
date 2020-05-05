@@ -1,7 +1,7 @@
 easyblock = 'Bundle'
 
 name = 'FyDev'
-version = '0.0.0' 
+version = '0.0.1' 
 
 
 homepage = 'https://gitee.com/fusion_yun/'
