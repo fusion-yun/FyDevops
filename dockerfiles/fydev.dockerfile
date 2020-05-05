@@ -90,12 +90,12 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharin
     eb ${FY_EB_ARGS}  SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb
 
 
-COPY --chown=${FYDEV_USER}:${FYDEV_USER} FyDev-${FYDEV_VERSION}.eb ${FUYUN_DIR}/ebfiles/
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} packages/FyDev-${FYDEV_VERSION}.eb ${FUYUN_DIR}/ebfiles/
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fycache,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh && \
     module load EasyBuild/${FY_EB_VERSION} && \
-    eb ${FY_EB_ARGS}   --moduleclasses=fuyun  FyDev-${FYDEV_VERSION}.eb 
+    eb ${FY_EB_ARGS}   --moduleclasses=fuyun --rebuild FyDev-${FYDEV_VERSION}.eb 
 
 
 ENV MODULEPATH=${FUYUN_DIR}/modules/base:${MODULEPATH}
@@ -118,7 +118,7 @@ ENV MODULEPATH=${FUYUN_DIR}/modules/phys:${MODULEPATH}
 ARG BUILD_TAG=${BUILD_TAG:-dirty}
 LABEL Name          "FyDev"
 LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
-LABEL Description   "FyDev(${BUILD_TAG}) : Develop enverioment of FuYun  "
+LABEL Description   "FyDev(${BUILD_TAG}) : Development environment for FuYun  "
 
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}

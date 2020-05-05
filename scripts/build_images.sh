@@ -19,7 +19,7 @@ FYLAB_VERSION=0.0.0
 # docker tag fybase:${BUILD_TAG} fybase:latest  && \
 echo "=======  Build FyDev [" $(date +"%Y%m%d") ${BUILD_TAG} "] ============ " && \
 docker build --progress=plain --rm \
-     --build-arg BASE_TAG=fybase:${BUILD_TAG} \
+     --build-arg BASE_TAG=fybase:latest \
      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
      --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
@@ -27,6 +27,7 @@ docker build --progress=plain --rm \
      -t fydev:${BUILD_TAG} \
      -f ../dockerfiles/fydev.dockerfile \
      ../ #&& \
+
 # docker tag fydev:${BUILD_TAG} fydev:latest # && \
 # echo "=======  Build FyLab  [" $(date +"%Y%m%d") ${BUILD_TAG} "] ============ " && \
 # docker build --progress=plain --rm \
