@@ -41,4 +41,3 @@ docker build --progress=plain --rm \
 docker tag fylab:${BUILD_TAG} fylab:latest && \
 echo "======= Done [" ${BUILD_TAG} "]============ "
 
-#docker run --rm -it --mount source=/home/salmon/workspace,target=/workspaces,type=bind fydev:latest
