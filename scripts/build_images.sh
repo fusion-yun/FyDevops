@@ -10,16 +10,16 @@ BUILD_TAG=$(git describe --dirty --always --tags)
 FYDEV_VERSION=0.0.0
 FYLAB_VERSION=0.0.0
 
-# echo "======= Build FyBase ["  $(date +"%Y%m%d") ${BUILD_TAG} "] ============ "&& \
-# docker build --progress=plain --rm \
-#      --build-arg BASE_TAG=centos:8 \
-#      -t fybase:${BUILD_TAG} \
-#      -f ../dockerfiles/fybase.centos8.dockerfile \
-#      ../ && \
-# docker tag fybase:${BUILD_TAG} fybase:latest  && \
+echo "======= Build FyBase ["  $(date +"%Y%m%d") ${BUILD_TAG} "] ============ "&& \
+docker build --progress=plain --rm \
+     --build-arg BASE_TAG=centos:8 \
+     -t fybase:${BUILD_TAG} \
+     -f ../dockerfiles/fybase.centos8.dockerfile \
+     ../ && \
+docker tag fybase:${BUILD_TAG} fybase:latest  && \
 echo "=======  Build FyDev [" $(date +"%Y%m%d") ${BUILD_TAG} "] ============ " && \
 docker build --progress=plain --rm \
-     --build-arg BASE_TAG=fybase:latest \
+     --build-arg BASE_TAG=fybase:${BUILD_TAG} \
      --build-arg TOOLCHAIN_NAME=${TOOLCHAIN_NAME} \
      --build-arg TOOLCHAIN_VERSION=${TOOLCHAIN_VERSION} \
      --build-arg FYDEV_VERSION=${FYDEV_VERSION} \
