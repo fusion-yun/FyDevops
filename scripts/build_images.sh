@@ -5,7 +5,7 @@
 
 TOOLCHAIN_NAME=foss
 TOOLCHAIN_VERSION=2019b
-DOCKER_IMAGE_NAME=fydev
+
 BUILD_TAG=$(git describe --dirty --always --tags)
 FYDEV_VERSION=0.0.1
 FYLAB_VERSION=0.0.1
