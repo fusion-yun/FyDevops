@@ -28,7 +28,7 @@ ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 COPY --chown=fydev:fydev ./ebfiles ${FUYUN_DIR}/ebfiles
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \
-    if [ -d /tmp/prebuild/software ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi   
+    if [ -d /tmp/prebuild/modules ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi   
 
 USER   ${FYDEV_USER}
 
