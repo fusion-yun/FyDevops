@@ -48,3 +48,11 @@ Docker Tips
 ## Upload image through ssh
 
         docker save <image id> |bzip2 | pv | ssh salmon@office ' bunzip2 | docker load '
+
+
+Windows 10 Tips
+=========================
+
+## PowerShell/OpenSSH 7.x do not support '''-J / ProxyJump'''
+
+   replace by 8.x (https://github.com/PowerShell/Win32-OpenSSH/releases)
