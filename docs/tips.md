@@ -41,6 +41,10 @@ Retry.
 Docker Tips
 ========================
 
-## Copy image through ssh
+## Download image through ssh
 
         ssh salmon@office ' docker save fylab:latest | bzip2 ' | pv  |bunzip2 | docker load
+
+## Upload image through ssh
+
+        docker save <image id> |bzip2 | pv | ssh salmon@office ' bunzip2 | docker load '
