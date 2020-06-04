@@ -38,7 +38,6 @@ dependencies = [
     ('Python','3.7.4'),
     ('Ruby', "2.7.1"), 
 
-    ('Tkinter','%(pyver)s'),
     ('PyYAML','5.1.2',"-Python-%(pyver)s"),
     ("SciPy-bundle", "2019.10", '-Python-%(pyver)s'),
     ("h5py", "2.10.0", "-Python-%(pyver)s"),
