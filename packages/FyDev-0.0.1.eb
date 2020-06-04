@@ -36,7 +36,13 @@ dependencies = [
     ('Saxon-HE','9.9.1.5','-Java-%(javashortver)s',True),
     ################################
     ('Python','3.7.4'),
+    ('Ruby', "2.7.1"), 
+
+    ('Tkinter','%(pyver)s'),
+    ('PyYAML','5.1.2',"-Python-%(pyver)s"),
     ("SciPy-bundle", "2019.10", '-Python-%(pyver)s'),
+    ("h5py", "2.10.0", "-Python-%(pyver)s"),
+    ("netcdf4-python", "1.5.3", "-Python-%(pyver)s"),
     ('SWIG','4.0.1'),
 ]
 
