@@ -12,11 +12,17 @@ toolchainopts = {"pic": True}
 
 dependencies = [
     ("Python", "3.7.4"),
-
+    ('Ruby', "2.7.1"), 
+    
     ("SciPy-bundle", "2019.10", versionsuffix),
     ("h5py", "2.10.0", versionsuffix),
     ("netcdf4-python", "1.5.3", versionsuffix),
     ("protobuf", "3.7.1"),
+
+    ('PyYAML','5.1.2'),
+    ('Tkinter','%(pyver)s'),
+
+
     ("networkx", "2.4", versionsuffix),
     ("Graphviz", "2.42.2", versionsuffix),
     ("dask", "2.8.0", versionsuffix),

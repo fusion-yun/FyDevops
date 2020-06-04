@@ -56,3 +56,9 @@ Windows 10 Tips
 ## PowerShell/OpenSSH 7.x do not support '''-J / ProxyJump'''
 
    replace by 8.x (https://github.com/PowerShell/Win32-OpenSSH/releases)
+
+Patch & diff
+==========================
+
+        diff -ruN OriginalDir UpdatedDir > PatchFile
+        patch patch -p0 < PatchFile

@@ -27,12 +27,12 @@ ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 
 COPY --chown=fydev:fydev ./ebfiles ${FUYUN_DIR}/ebfiles
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \
-    if [ -d /tmp/prebuild/modules ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi   
+# RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \
+#     if [ -d /tmp/prebuild/modules ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi   
 
 USER   ${FYDEV_USER}
 
-ARG FY_EB_ARGS="  --info -r  --skip-test-cases --use-existing-modules --minimal-toolchain \
+ARG FY_EB_ARGS="  --info -lr  --skip-test-cases --use-existing-modules --minimal-toolchain \
     --robot-paths=${FUYUN_DIR}/ebfiles:${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}/easybuild/easyconfigs"
 
 
