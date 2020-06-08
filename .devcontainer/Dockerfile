@@ -1,4 +1,4 @@
-FROM fylab:latest
+FROM fydev:latest
 
 
 ENV FYDEV_USER fydev

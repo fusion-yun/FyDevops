@@ -61,7 +61,6 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,shar
     module load EasyBuild && \   
     eb  ${FY_EB_ARGS}  h5py-2.10.0-foss-2019b-Python-3.7.4.eb
 
-COPY --chown=${FYDEV_USER}:${FYDEV_USER} packages/FyLab-${FYDEV_VERSION}.eb ${FUYUN_DIR}/ebfiles/
 
 RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \            
     source /etc/profile.d/modules.sh &&\    
@@ -69,18 +68,18 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,shar
     eb   ${FY_EB_ARGS}   --moduleclasses=fuyun FyLab-${FYLAB_VERSION}.eb  
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \
-    if ! [ -d /fuyun/sources/fonts/ ] ; then \    
-    mkdir -p /fuyun/sources/fonts/ ;\
-    cd /fuyun/sources/fonts/ ; \
-    curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Regular.otf ; \
-    curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Bold.otf ; \    
-    fi && \
-    mkdir -p /home/${FYDEV_USER}/.local/share/fonts/ && \
-    cp /fuyun/sources/fonts/* /home/${FYDEV_USER}/.local/share/fonts/ && \
-    source /etc/profile.d/modules.sh &&\    
-    module load fontconfig &&\
-    fc-cache -fv 
+# RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,sharing=shared \
+#     if ! [ -d /fuyun/sources/fonts/ ] ; then \    
+#     mkdir -p /fuyun/sources/fonts/ ;\
+#     cd /fuyun/sources/fonts/ ; \
+#     curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Regular.otf ; \
+#     curl -LO https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKsc-Bold.otf ; \    
+#     fi && \
+#     mkdir -p /home/${FYDEV_USER}/.local/share/fonts/ && \
+#     cp /fuyun/sources/fonts/* /home/${FYDEV_USER}/.local/share/fonts/ && \
+#     source /etc/profile.d/modules.sh &&\    
+#     module load fontconfig &&\
+#     fc-cache -fv 
 
 
 ARG BUILD_TAG=${BUILD_TAG:-dirty}

@@ -1,0 +1,59 @@
+easyblock = 'CmdCp'
+
+name = 'NotoNerdFont'
+version = '2.1.0'
+
+homepage = 'https://www.google.com/get/noto/'
+description = "[EXPERIMENT] Google Noto Fonts+ Nerd fonts (https://www.nerdfonts.com/)"
+
+toolchain = {'name': 'system','version':"system"}
+
+sources=[{
+    'source_urls': ['https://noto-website-2.storage.googleapis.com/pkgs/'],
+    'filename': 'NotoSansCJKsc-hinted.zip',  
+    'extract_cmd': "unzip -qq -o %s",
+
+},
+{
+    'source_urls': ['https://noto-website-2.storage.googleapis.com/pkgs/'],
+    'filename': 'NotoSerifCJKsc-hinted.zip',  
+    'extract_cmd': "unzip -qq -o %s",
+},
+{
+    'source_urls': ['https://github.com/ryanoasis/nerd-fonts/releases/download/v%(version)s/'],
+    'filename': 'Noto.zip',  
+    'extract_cmd': "unzip -qq -o %s  'Noto Mono Nerd Font Complete Mono.ttf' 'Noto Mono Nerd Font Complete.ttf'",
+
+}
+]
+   
+
+builddependencies = [
+    # ('fontconfig', '2.13.1','GCC'),
+]
+osdependencies = [('fontconfig')]
+
+cmds_map=[(".*"," ")]
+files_to_copy=[(["*.*tf"],"share/fonts/noto")]
+
+# configure_cmd=" echo "
+# build_cmd= " echo "
+# install_cmd="mkdir -p %(installdir)s/share/fonts && cp -r *.*tf %(installdir)s/share/fonts/"
+
+sanity_check_paths = {
+    'files': ['share/fonts/noto/NotoSansCJKsc-Regular.otf','share/fonts/noto/NotoSansMonoCJKsc-Regular.otf','share/fonts/noto/NotoSerifCJKsc-Regular.otf','share/fonts/noto/Noto Mono Nerd Font Complete Mono.ttf'],
+    'dirs': ['share/fonts'],
+}
+
+modloadmsg="""
+################################################################# 
+!!!! EXPERIMENT !!!!
+ It set XDG_DATA_HOME=%(installdir)s/share 
+################################################################# 
+\n
+"""
+
+modextravars = {
+    "XDG_DATA_HOME":"%(installdir)s/share"
+}
+moduleclass = 'system'
