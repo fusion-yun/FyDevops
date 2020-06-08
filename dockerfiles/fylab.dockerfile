@@ -104,16 +104,15 @@ LABEL Author        "salmon <yuzhi@ipp.ac.cn>"
 LABEL Description   "FyLab-${BUILD_TAG} : UI/UX for FuYun "
 
 
-USER root
-RUN echo $'#!/bin/sh \n\
-    source /etc/profile.d/modules.sh \n\
-    module use /fuyun/modules/fuyun \n\
-    module load FyLab \n\
-    echo "EXEC: " $@ \n\
-    $@' > /docker_entrypoint.sh && \
-    chmod +x /docker_entrypoint.sh 
-
 USER ${FYDEV_USER}
 WORKDIR /home/${FYDEV_USER}
 
-ENTRYPOINT [ "/docker_entrypoint.sh" ]
+# USER root
+# RUN echo $'#!/bin/sh \n\
+#     source /etc/profile.d/modules.sh \n\
+#     module use /fuyun/modules/fuyun \n\
+#     module load FyLab \n\
+#     echo "EXEC: " $@ \n\
+#     $@' > /docker_entrypoint.sh && \
+#     chmod +x /docker_entrypoint.sh 
+# ENTRYPOINT [ "/docker_entrypoint.sh" ]

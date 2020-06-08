@@ -103,20 +103,6 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,shar
     eb ${FY_EB_ARGS}   --moduleclasses=fuyun --rebuild FyDev-${FYDEV_VERSION}.eb 
 
 
-ENV MODULEPATH=${FUYUN_DIR}/modules/base:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/compiler:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/data:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/devel:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/lang:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/lib:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/math:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/mpi:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/numlib:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/system:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/toolchain:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/tools:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/vis:${MODULEPATH}
-ENV MODULEPATH=${FUYUN_DIR}/modules/phys:${MODULEPATH}
 
 
 
