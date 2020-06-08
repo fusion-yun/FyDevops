@@ -46,7 +46,6 @@ use_pip = True
 exts_defaultclass = "PythonPackage"
 # order is important!
 exts_list = [
-    ("ipywidgets","7.5.1"),
     ("f90nml", "1.2"),
     ("graphviz", "0.14",{"source_tmpl":"%(name)s-%(version)s.zip"})
     # ("jupyterlab_git","0.10.1"),
@@ -54,26 +53,5 @@ exts_list = [
     # ("pandas","1.0.3")
 ]
 
-
-postinstallcmds = [
-    """ 
-    module load nodejs
-    module load JupyterLab
-    export JUPYTERLAB_DIR=%(installdir)s/share/jupyter/lab
-    jupyter nbextension enable --py widgetsnbextension
-    jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --no-build  
-    jupyter labextension install @bokeh/jupyter_bokeh@^2.0.0 --no-build   
-    jupyter labextension install jupyter-matplotlib@^0.7.2 --no-build  
-    jupyter lab build    
-    jupyter lab clean 
-    npm cache clean --force            
-    """,
-    # jupyter labextension install @jupyterlab/git --no-build
-
-]
-
-modextravars = {
-    "JUPYTERLAB_DIR": "%(installdir)s/share/jupyter/lab"
-}
 
 moduleclass = "fuyun"

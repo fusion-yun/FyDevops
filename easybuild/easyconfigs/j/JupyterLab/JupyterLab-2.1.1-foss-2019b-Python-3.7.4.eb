@@ -15,8 +15,9 @@ toolchain = {"name": "foss", "version": "2019b"}
 
 dependencies = [
     ("Python", "3.7.4"),
-    ("PyYAML","5.1.2",versionsuffix),
-    ("PyZMQ","19.0.0",versionsuffix),
+    ("nodejs", "12.16.1"),
+    ("PyYAML","5.1.2","-Python-%(pyver)s"),
+    ("PyZMQ","19.0.0","-Python-%(pyver)s"),
 ]
 
 
@@ -45,14 +46,30 @@ exts_defaultclass = "PythonPackage"
 # order is important!
 exts_list = [
     ("widgetsnbextension", "3.5.1"),
+    ("ipywidgets","7.5.1"),
+
 ]
 postinstallcmds = [
     """ 
+    export JUPYTERLAB_DIR=%(installdir)s/share/jupyter/lab
     export PYTHONPATH=%(installdir)s/lib/python%(pyshortver)s/site-packages:${PYTHONPATH} 
     %(installdir)s/bin/jupyter nbextension install --py widgetsnbextension --sys-prefix  
     %(installdir)s/bin/jupyter nbextension enable  --py widgetsnbextension --sys-prefix  
+    %(installdir)s/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --no-build  
+    %(installdir)s/bin/jupyter labextension install @bokeh/jupyter_bokeh@^2.0.0 --no-build   
+    %(installdir)s/bin/jupyter labextension install jupyter-matplotlib@^0.7.2 --no-build  
+    %(installdir)s/bin/jupyter lab build    
+    %(installdir)s/bin/jupyter lab clean 
+    npm cache clean --force            
     """,
+    # jupyter labextension install @jupyterlab/git --no-build
+
 ]
+
+modextravars = {
+    "JUPYTERLAB_DIR": "%(installdir)s/share/jupyter/lab"
+}
+
 moduleclass = "tools"
 
 modextravars={"JUPYTERLAB_DIR":"%(installdir)s/share/jupyter/lab"}
