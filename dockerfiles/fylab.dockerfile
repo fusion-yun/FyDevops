@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:experimental
 ARG BASE_TAG=${BASE_TAG:-fydev:latest}
 
-FROM ${BASE_TAG}
+FROM ${BASE_TAG} AS build_stage
 
 ################################################################################
 # Add user for DevOps
@@ -31,8 +31,8 @@ COPY --chown=${FYDEV_USER}:${FYDEV_USER} easybuild /tmp/easybuild
 COPY --chown=${FYDEV_USER}:${FYDEV_USER} sources/ /tmp/ebsources
 
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \
-    if [ -d /tmp/prebuild/modules ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi  
+# RUN --mount=type=cache,uid=1000,gid=1000,id=fylab_pre,target=/tmp/prebuild,sharing=shared \
+#     if [ -d /tmp/prebuild/modules ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi  
 
 ARG FY_EB_ARGS="  --info -lr  --skip-test-cases --use-existing-modules --minimal-toolchain \
     --robot-paths=/tmp/easybuild/easyconfigs:${EASYBUILD_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/easybuild/easyconfigs \
@@ -85,6 +85,12 @@ RUN --mount=type=cache,uid=1000,gid=1000,id=fysources,target=/fuyun/sources,shar
 #     source /etc/profile.d/modules.sh &&\    
 #     module load fontconfig &&\
 #     fc-cache -fv 
+
+FROM fybase:latest AS release_stage
+
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} build_stage:/fuyun/software        /fuyun/software
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} build_stage:/fuyun/ebfiles_repo    /fuyun/ebfiles_repo
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} build_stage:/fuyun/modules         /fuyun/modules
 
 
 ARG BUILD_TAG=${BUILD_TAG:-dirty}
