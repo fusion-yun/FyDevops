@@ -1,0 +1,32 @@
+easyblock = 'Bundle'
+
+name = 'FyDevGUI'
+version = '0.0.1' 
+
+local_qtver='5.15.0'
+
+homepage = 'https://gitee.com/fusion_yun/'
+description = """FyDev: development environment for FuYun """
+
+toolchain = {'name': 'foss', 'version': '2019b'}
+toolchainopts = {'usempi': True}
+
+dependencies = [   
+    ('FyDev','%(version)s'),
+
+    ################################
+    # python
+    ('Python','3.7.4'),
+  
+    ################################
+    # GUI 
+    ('X11', '20190717'),    # or osdependencies = [('libX11-devel', 'libx11-dev')]
+    ('Tkinter','%(pyver)s'),
+
+    ('Qt5',local_qtver),
+    ('PyQt5',local_qtver,'-Python-%(pyver)s')
+]
+
+# osdependencies = [('libX11-devel', 'libx11-dev')]
+
+moduleclass = 'fuyun'

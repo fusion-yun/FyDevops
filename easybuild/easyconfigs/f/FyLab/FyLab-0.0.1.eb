@@ -12,7 +12,6 @@ toolchainopts = {"pic": True}
 
 dependencies = [
     ("Python", "3.7.4"),
-    ('Tkinter','%(pyver)s'),
 
     ('PyYAML','5.1.2',"-Python-%(pyver)s"),
     ("SciPy-bundle", "2019.10", "-Python-%(pyver)s"),
@@ -45,6 +44,7 @@ use_pip = True
 exts_defaultclass = "PythonPackage"
 # order is important!
 exts_list = [
+    ("ipywidgets","7.5.1"),
     ("f90nml", "1.2"),
     ("graphviz", "0.14",{"source_tmpl":"%(name)s-%(version)s.zip"})
     # ("jupyterlab_git","0.10.1"),
@@ -57,9 +57,10 @@ exts_list = [
 postinstallcmds = [
     """ 
     module spider FyLab 
-    module load nodejs/12.16.1-GCCcore-8.3.0
-    module load JupyterLab/2.1.1-%(versionsuffix)s 
+    module load nodejs
+    module load JupyterLab
     export JUPYTERLAB_DIR=%(installdir)s/share/jupyter/lab
+    jupyter nbextension enable --py widgetsnbextension
     jupyter labextension install @jupyter-widgets/jupyterlab-manager@^2.0.0 --no-build  
     jupyter labextension install @bokeh/jupyter_bokeh@^2.0.0 --no-build   
     jupyter labextension install jupyter-matplotlib@^0.7.2 --no-build  

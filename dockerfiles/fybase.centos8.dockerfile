@@ -46,7 +46,6 @@ RUN  alternatives --set python /usr/bin/python3 ; \
     # for easybuild --dep-graph 
     pip3 install python-graph-core python-graph-dot  
 
-# xmlto for git
 
 ARG FYDEV_USER=${FYDEV_USER:-fydev}
 ENV FYDEV_USER=${FYDEV_USER}
