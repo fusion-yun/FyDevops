@@ -1,5 +1,10 @@
 # syntax=docker/dockerfile:experimental
 ARG BASE_TAG=${BASE_TAG:-fybase:latest}
+
+ARG PREV_STAGE=${PREV_STAGE:-fybase:latest}
+
+FROM ${PREV_STAGE} as prev_stage
+
 FROM ${BASE_TAG}
 
 ################################################################################
@@ -30,8 +35,10 @@ ENV EASYBUILD_PREFIX=${FUYUN_DIR}
 
 COPY --chown=fydev:fydev ./ebfiles ${FUYUN_DIR}/ebfiles
 
-RUN --mount=type=cache,uid=1000,gid=1000,id=fydev_pre,target=/tmp/prebuild,sharing=shared \
-    if [ -d /tmp/prebuild/modules ]; then cp -rf /tmp/prebuild/* ${FUYUN_DIR}/; fi   
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} --from=prev_stage /fuyun/modules         /fuyun/modules
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} --from=prev_stage /fuyun/software        /fuyun/software
+COPY --chown=${FYDEV_USER}:${FYDEV_USER} --from=prev_stage /fuyun/ebfiles_repo    /fuyun/ebfiles_repo
+
 
 USER ${FYDEV_USER}
 
