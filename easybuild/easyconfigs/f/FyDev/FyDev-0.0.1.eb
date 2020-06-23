@@ -8,7 +8,7 @@ homepage = 'https://gitee.com/fusion_yun/'
 description = """FyDev: development environment for FuYun """
 
 toolchain = {'name': 'foss', 'version': '2019b'}
-toolchainopts = {'usempi': True}
+#toolchainopts = {'usempi': True}
 
 dependencies = [   
     ################################
@@ -46,14 +46,14 @@ dependencies = [
     ('SWIG','4.0.1'),
     ("SciPy-bundle", "2019.10", '-Python-%(pyver)s'),
     ('PyYAML','5.1.2',"-Python-%(pyver)s"),
-    ('lxml','4.4.2','-Python-%(pyver)s'),
+    #('lxml','4.4.2','-Python-%(pyver)s'),
     ("h5py", "2.10.0", "-Python-%(pyver)s"),
     ("netcdf4-python", "1.5.3", "-Python-%(pyver)s"),
     ################################
     # GUI 
     ('X11', '20190717'),    # or osdependencies = [('libX11-devel', 'libx11-dev')]
     ('Tkinter','%(pyver)s'),
-    ('PyQt5','5.12.1','-Python-%(pyver)s')
+    #('PyQt5','5.12.1','-Python-%(pyver)s')
 ]
 
 # osdependencies = [('libX11-devel', 'libx11-dev')]
