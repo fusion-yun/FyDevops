@@ -7,7 +7,7 @@
 FUYUN_HOME=/gpfs/fuyun
 
 SOURCE_DIR=${FUYUN_HOME}/sources
-BUILD_DIR=/tmp/fybuild_$(date +"%Y%m%d")
+BUILD_DIR=/tmp/fybuild
 mkdir -p ${BUILD_DIR}
 
 SCRIPT_DIR=$(cd "$(dirname "$0")/../"; pwd)
@@ -37,14 +37,14 @@ FY_EB_ARGS="--buildpath=${BUILD_DIR}/   \
 eb ${FY_EB_ARGS} --show-config  >> ${BUILD_DIR}/local_install.log 2>&1 
 
 eb ${FY_EB_ARGS} GCCcore-8.3.0.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} Tcl-8.6.9-GCCcore-8.3.0.eb >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} Python-3.7.4-GCCcore-8.3.0.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} Perl-5.30.0-GCCcore-8.3.0.eb  PCRE-8.43-GCCcore-8.3.0.eb   >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} gompi-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} HDF5-1.10.5-gompi-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} Boost-1.71.0-gompi-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} foss-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
-eb ${FY_EB_ARGS} --moduleclasses=fuyun  FyDev-0.01.eb   >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} Tcl-8.6.9-GCCcore-8.3.0.eb >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} Python-3.7.4-GCCcore-8.3.0.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} Perl-5.30.0-GCCcore-8.3.0.eb  PCRE-8.43-GCCcore-8.3.0.eb   >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} gompi-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} HDF5-1.10.5-gompi-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} Boost-1.71.0-gompi-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} foss-2019b.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} SciPy-bundle-2019.10-foss-2019b-Python-3.7.4.eb  >> ${BUILD_DIR}/local_install.log 2>&1 
+# eb ${FY_EB_ARGS} --moduleclasses=fuyun  FyDev-0.01.eb   >> ${BUILD_DIR}/local_install.log 2>&1 
 
 echo "======= Done [" ${SCRIPT_TAG} "]============ "

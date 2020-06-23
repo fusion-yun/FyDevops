@@ -33,7 +33,8 @@ FY_EB_VERSION=${FY_EB_VERSION:-4.2.0}
 
 echo "=======  Install EasyBuild-${FY_EB_VERSION} to ${FY_EB_VERSION}  [" $(date +"%Y%m%d") ${SCRIPT_TAG} "] ============ "  
 
-source /etc/profile.d/modules.sh 
+# source /etc/profile.d/modules.sh 
+
 if ! [ -f ${EASYBUILD_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/bin/eb ]; then
     if ! [ -f ${SOURCE_DIR}/bootstrap/bootstrap_eb.py  ]; then
         mkdir -p ${SOURCE_DIR}/bootstrap &&\
@@ -55,18 +56,18 @@ if ! [ -f ${EASYBUILD_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/bin/eb ]; then
         cd ${EASYBUILD_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/lib/${PY_VER}/site-packages 
         patch -s -p0 < ${SOURCE_DIR}/bootstrap/easybuild-${FY_EB_VERSION}.patch  ;\
     fi 
-    sudo ln -s  ${EASYBUILD_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ ;
+    # sudo ln -fs  ${EASYBUILD_PREFIX}/software/EasyBuild/${FY_EB_VERSION}/bin/eb_bash_completion.bash /etc/bash_completion.d/ ;
 fi
 
 
-module use ${EASYBUILD_PREFIX}/modules/all
-module load EasyBuild/${FY_EB_VERSION} 
+module use ${FUYUN_HOME}/modules/all
+module load EasyBuild/${FY_EB_VERSION}
 
 
 EB_ARGS="--buildpath=${TEMP_BUILD_DIR}/   \
   --robot-paths=${EBFILES_PATH}:${EBROOTEASYBUILD}/easybuild/easyconfigs  \
   --sourcepath=${SCRIPT_DIR}/sources:${EASYBUILD_PREFIX}/sources \
-  --skip-test-cases --minimal-toolchain --use-existing-modules  "
+  --minimal-toolchain --use-existing-modules  "
 
 eb  ${EB_ARGS} --show-config
 
