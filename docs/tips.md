@@ -60,5 +60,19 @@ Windows 10 Tips
 Patch & diff
 ==========================
 
-        diff -ruN OriginalDir UpdatedDir > PatchFile
+        diff -ruN --no-dereference OriginalDir UpdatedDir > PatchFile
         patch patch -p0 < PatchFile
+
+
+binutils 
+==========================
+The version of binutils must be the same as that used when compiling the toolchain. Otherwise it will cause link errors.If you need to use gfortran in the eb process, you should explicitly load 'binutils'. The error messages when the versions do not match is similar to:
+
+        gfortran -Wall -Wextra -pedantic -fbounds-check -Wuninitialized -O -g -Wno-unused-parameter -cpp   -c -o  fruit.o fruit.f90 "-I/tmp/fybuild/FRUIT/3.4.3/GCCcore-8.3.0-Ruby-2.7.1/fruit_3.4.3/build" 
+        /tmp/eb-2ll931jw/cczDNgQC.s: Assembler messages:
+        /tmp/eb-2ll931jw/cczDNgQC.s:10: Error: unknown .loc sub-directive `view'
+        /tmp/eb-2ll931jw/cczDNgQC.s:10: Error: junk at end of line, first unrecognized character is `-'
+        /tmp/eb-2ll931jw/cczDNgQC.s:12: Error: unknown .loc sub-directive `view'
+        /tmp/eb-2ll931jw/cczDNgQC.s:12: Error: unknown pseudo-op: `.lvu1'
+        /tmp/eb-2ll931jw/cczDNgQC.s:14: Error: unknown .loc sub-directive `view'
+
