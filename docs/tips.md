@@ -76,3 +76,10 @@ The version of binutils must be the same as that used when compiling the toolcha
         /tmp/eb-2ll931jw/cczDNgQC.s:12: Error: unknown pseudo-op: `.lvu1'
         /tmp/eb-2ll931jw/cczDNgQC.s:14: Error: unknown .loc sub-directive `view'
 
+
+EasyBuild
+=========================
+自动更新 toolchain 和 deps
+	eb -r genray-10.13_200117-gompi-2019b.eb --try-toolchain-version=2020b --try-update-deps --experimental --skip-test-step
+
+
