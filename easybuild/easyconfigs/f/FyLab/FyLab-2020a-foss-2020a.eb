@@ -1,0 +1,63 @@
+easyblock = 'PythonBundle'
+
+name = 'FyLab'
+version = '2020a'
+
+homepage = 'https://python.org/'
+description = "Bundle of Python packages for FuYun"
+
+toolchain = {'name': 'foss', 'version': '2020a'}
+toolchainopts = {'pic': True, 'lowopt': True}
+
+# builddependencies = [('hypothesis', '5.41.2')]
+
+dependencies = [
+    ('Python', '3.8.2'),
+    ('SciPy-bundle', '2020.03', "-Python-%(pyver)s"),
+
+    ('nodejs','12.16.1'),    
+    
+    ('JupyterLab','2.2.8'),
+
+    ('sympy','1.6.2','-Python-%(pyver)s'),
+
+    ('PyYAML', '5.3'),
+    ("h5py", "2.10.0", "-Python-%(pyver)s"),
+    ("netcdf4-python", "1.5.3", "-Python-%(pyver)s"),
+    ("MDSplus-Python", "7.96.12", "-Python-%(pyver)s"),
+
+    ("networkx", "2.4", "-Python-%(pyver)s"),
+    # ("Graphviz", "2.42.2"),
+    ("dask", "2.18.1", "-Python-%(pyver)s"),
+
+    ("bokeh", "2.0.2", "-Python-%(pyver)s"),
+    ("matplotlib", "3.2.1", "-Python-%(pyver)s"),
+    ("lxml","4.5.2" ),
+
+]
+
+
+use_pip = True
+
+exts_defaultclass = "PythonPackage"
+
+exts_default_options = {
+    "source_urls": [PYPI_SOURCE],
+#    "installopts": "  -i https://pypi.tuna.tsinghua.edu.cn/simple ",
+    "pip_ignore_installed": True,
+    "use_pip_for_deps": True,
+    "sanity_pip_check": False,
+    "unpack_sources": False,
+}
+# order is important!
+exts_list = [
+    ("f90nml", "1.2"),
+    ("jsonschema","3.2.0"),
+    ("autopep8","1.5.4"),
+    ('graphviz','0.16',{'source_tmpl': 'graphviz-0.16.zip'}),
+    ('jupyterlmod','2.0.2')
+]
+
+sanity_pip_check = False
+
+moduleclass = 'lang'

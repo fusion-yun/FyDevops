@@ -1,0 +1,45 @@
+easyblock = 'PythonBundle'
+
+name = 'JupyterLab'
+version = "3.0.1"
+
+homepage = "https://jupyter.org/"
+description = """JupyterLab is the next-generation user interface for Project Jupyter offering all the familiar
+ building blocks of the classic Jupyter Notebook (notebook, terminal, text editor, file browser, rich outputs,
+ etc.) in a flexible and powerful user interface. JupyterLab will eventually replace the classic Jupyter
+ Notebook."""
+
+toolchain = {'name': 'GCCcore', 'version': '10.2.0'}
+
+builddependencies = [('binutils', '2.35')]
+
+dependencies = [
+    ('Python', '3.8.6'),
+    ('IPython', '7.18.1'),
+    ('nodejs','12.19.0')
+]
+
+use_pip = True
+
+use_pip_for_deps= True
+
+sanity_pip_check = False
+
+exts_default_options = {'source_urls': [PYPI_SOURCE]}
+
+exts_list = [
+    ('json5', '0.9.5', {
+        'checksums': ['703cfee540790576b56a92e1c6aaa6c4b0d98971dc358ead83812aa4d06bdb96'],
+    }),
+    ('jupyter-packaging', '0.7.9'),
+    ('jupyter-server', '1.1.4',{'source_tmpl': 'jupyter_server-1.1.4.tar.gz'}),
+    ('jupyterlab_server', '2.0.0'),
+    # ('tornado', '6.1'),
+    (name, version,{'source_tmpl': '%(namelower)s-%(version)s.tar.gz'}),
+]
+
+sanity_check_commands = ["jupyter lab --help"]
+
+modextravars = {'JUPYTERLAB_DIR': '%(installdir)s/share/jupyter/lab'}
+
+moduleclass = 'tools'
