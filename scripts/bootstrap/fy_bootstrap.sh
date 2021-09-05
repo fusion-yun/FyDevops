@@ -1,16 +1,19 @@
 #!/bin/bash
 FUYUN_DIR=${FUYUN_DIR:-/fuyun}
 
+# pre-require
+# sudo apt-get install build-essential tcl-dev
+
 export EASYBUILD_PREFIX=${FUYUN_DIR}
 export PYTHONPATH=${FUYUN_DIR}/software/lmod/lmod/init/:${PYTHONPATH}
-export MODULEPATH=${FUYUN_DIR}/modules/all${MODULEPATH}
+export MODULEPATH=${FUYUN_DIR}/modules/all:${MODULEPATH}
 ###############################################################################
 
 echo "===================== Install Lua ========================="
 FY_LUA_SHORTVERSION=${FY_LUA_SHORTVERSION:-5.4}
 FY_LUA_VERSION=${FY_LUA_VERSION:-5.4.2}
 FY_LUAROCKS_VERSION=${FY_LUAROCKS_VERSION:-3.5.0}
-FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.4.19}
+FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.5.12}
 
 mkdir -p ${FUYUN_DIR}/sources/bootstrap
  
@@ -71,23 +74,29 @@ export PYTHONPATH=${LMOD_PATH}/init/:${PYTHONPATH}
 
 echo "================ EasyBuild ======================="
 source ${LMOD_PATH}/init/bash
-FY_EB_VERSION=4.3.2
+FY_EB_VERSION=${FY_EB_VERSION:4.4.1}
 FY_EB_PREFIX=${FUYUN_DIR}
 
-if ! [ -f ${FUYUN_DIR}/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz   ]; then 
-    cd ${FUYUN_DIR}/sources/bootstrap     
-    curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py  
-    curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz   
-    curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz    
-    curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz       
-fi     
-export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES   
-export EASYBUILD_BOOTSTRAP_SOURCEPATH=${FUYUN_DIR}/sources/bootstrap    
-export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}   
-/usr/bin/python3 ${FUYUN_DIR}/sources/bootstrap/bootstrap_eb.py  ${FY_EB_PREFIX}  
-unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0  
-unset EASYBUILD_BOOTSTRAP_SOURCEPATH  
-unset EASYBUILD_BOOTSTRAP_FORCE_VERSION    
+pip install --prefix ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip easybuild
+export PATH=${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip/bin:${PATH}
+export PYTHONPATH=${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip/lib/python3.8/site-packages/:${PYTHONPATH}
+export EASYBUILD_PREFIX=${FUYUN_DIR}
+eb  --install-latest-eb-release
+
+# if ! [ -f ${FUYUN_DIR}/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz   ]; then 
+#     cd ${FUYUN_DIR}/sources/bootstrap     
+#     curl -LO https://raw.githubusercontent.com/easybuilders/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py  
+#     curl -LO https://github.com/easybuilders/easybuild-easyconfigs/archive/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz   
+#     curl -LO https://github.com/easybuilders/easybuild-framework/archive/easybuild-framework-v${FY_EB_VERSION}.tar.gz    
+#     curl -LO https://github.com/easybuilders/easybuild-easyblocks/archive/easybuild-easyblocks-v${FY_EB_VERSION}.tar.gz       
+# fi     
+# export EASYBUILD_BOOTSTRAP_SKIP_STAGE0=YES   
+# export EASYBUILD_BOOTSTRAP_SOURCEPATH=${FUYUN_DIR}/sources/bootstrap    
+# export EASYBUILD_BOOTSTRAP_FORCE_VERSION=${FY_EB_VERSION}   
+# /usr/bin/python3 ${FUYUN_DIR}/sources/bootstrap/bootstrap_eb.py  ${FY_EB_PREFIX}  
+# unset EASYBUILD_BOOTSTRAP_SKIP_STAGE0  
+# unset EASYBUILD_BOOTSTRAP_SOURCEPATH  
+# unset EASYBUILD_BOOTSTRAP_FORCE_VERSION    
 
 # if [ -f ${FUYUN_DIR}/bootstrap/easybuild-${FY_EB_VERSION}.patch ]; then 
 #     PY_VER=$(python -c "import sys ;print('python%d.%d'%(sys.version_info.major,sys.version_info.minor))")  
