@@ -74,13 +74,14 @@ export PYTHONPATH=${LMOD_PATH}/init/:${PYTHONPATH}
 
 echo "================ EasyBuild ======================="
 source ${LMOD_PATH}/init/bash
-FY_EB_VERSION=${FY_EB_VERSION:4.4.1}
+FY_EB_VERSION=4.4.1
 FY_EB_PREFIX=${FUYUN_DIR}
 
-pip install --prefix ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip easybuild
+pip3 install --prefix ${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip easybuild
 export PATH=${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip/bin:${PATH}
-export PYTHONPATH=${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip/lib/python3.8/site-packages/:${PYTHONPATH}
+export PYTHONPATH=${FUYUN_DIR}/software/EasyBuild/${FY_EB_VERSION}_pip/lib/python3.6/site-packages/:${PYTHONPATH}
 export EASYBUILD_PREFIX=${FUYUN_DIR}
+export EB_PYTHON=/usr/bin/python3
 eb  --install-latest-eb-release
 
 # if ! [ -f ${FUYUN_DIR}/sources/bootstrap/easybuild-easyconfigs-v${FY_EB_VERSION}.tar.gz   ]; then 

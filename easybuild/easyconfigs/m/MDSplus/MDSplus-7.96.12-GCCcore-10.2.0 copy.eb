@@ -1,8 +1,7 @@
-# Built with EasyBuild version 4.3.2 on 2021-01-01_15-46-01
 easyblock = 'ConfigureMake'
 
 name = 'MDSplus'
-version = '7.96.15'
+version = '7.96.12'
 
 homepage = 'https://mdsplus.org'
 description = """MDSplus is a set of software tools for data acquisition and storage and a methodology
@@ -13,7 +12,7 @@ toolchainopts = {'pic': True}
 
 source_urls = ['https://github.com/%(name)s/%(namelower)s/archive']
 sources = ['stable_release-%s.zip' % version.replace('.', '-')]
-
+checksums = []
 builddependencies = [
     ('binutils', '2.35')
 ]
@@ -22,11 +21,10 @@ dependencies = [
     ('libxml2', '2.9.10'),
     ('zlib', '1.2.11'),
     ('ncurses', '6.2'),
-    ('libreadline', '8.0'),
-   
+    ('libreadline', '8.0')
 ]
 
-configopts = '--disable-doxygen-doc'
+configopts = '--disable-doxygen-doc --disable-java --disable-hdf5'
 # hardcode version via configure script (git is unavailable)
 configopts += ' RELEASE_VERSION=%(version)s BRANCH=stable'
 
@@ -50,4 +48,5 @@ sanity_check_paths = {
 }
 
 moduleclass = 'data'
- 
+
+local_update_deps = True
