@@ -45,6 +45,7 @@ exts_defaultclass = "PythonPackage"
 # order is important!
 exts_list = [
     ("f90nml", "1.2"),
+    ('pylint','2.10'),
 ]
 
 sanity_pip_check = True
