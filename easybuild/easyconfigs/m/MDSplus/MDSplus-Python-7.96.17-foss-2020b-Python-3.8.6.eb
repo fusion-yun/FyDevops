@@ -1,7 +1,7 @@
 easyblock = 'ConfigureMake'
 
 name = 'MDSplus-Python'
-version = '7.96.12'
+version = '7.96.17'
 local_pyver = '3.8.6'
 
 versionsuffix = '-Python-%(pyver)s'
@@ -18,7 +18,7 @@ sources = ['stable_release-%s.zip' % version.replace('.', '-')]
 checksums = []
 dependencies = [
     ('Python', local_pyver),
-    ('SciPy-bundle', '2020.11', versionsuffix),
+    ('SciPy-bundle', '2020.11'),
     ('MDSplus', version),
 ]
 
@@ -26,6 +26,8 @@ modextrapaths = {'PYTHONPATH': 'lib/python%(pyshortver)s/site-packages'}
 local_moddir = modextrapaths['PYTHONPATH'] + '/MDSplus'
 
 skipsteps = ['build', 'test']
+
+preconfigopts  = './bootstrap && '
 
 configopts = '--disable-doxygen-doc --disable-java'
 # hardcode version via configure script (git is unavailable)

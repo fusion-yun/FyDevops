@@ -1,10 +1,10 @@
 easyblock = 'ConfigureMake'
 
 name = 'MDSplus-Java'
-version = '7.131.5'
+version = '7.96.17'
 versionsuffix = '-Java-%(javaver)s'
 
-homepage = 'https://mdsplus.org'
+homepage = 'http://mdsplus.org/'
 description = """MDSplus is a set of software tools for data acquisition and storage and a methodology
  for management of complex scientific data."""
 
@@ -12,25 +12,26 @@ toolchain = {'name': 'GCCcore', 'version': '10.2.0'}
 toolchainopts = {'pic': True}
 
 source_urls = ['https://github.com/MDSplus/mdsplus/archive']
-sources = ['stable_release-%s.tar.gz' % version.replace('.', '-')]
-# patches = ['MDSplus-Java-%(version)s_classpath.patch']
-checksums = []
+sources = ['stable_release-%s.zip' % version.replace('.', '-')]
+patches = ['MDSplus-Java-%(version)s_classpath.patch']
+checksums = [
+    '0d9ebb80f33118e981b692710ab06c8e3ba007f1ed77af6356bbecc96418d9ab',  # stable_release-7-96-17.zip
+    '851cb59aa0f2a7475ab9aca2a9388a24afdc00759eb8d42046f9d3b488f2339a',  # MDSplus-Java-7.96.17_classpath.patch
+]
+
 builddependencies = [
-    ('binutils', '2.35','',True),
-    ('Bison','3.7.1'),
-    ('flex','2.6.4'),
-    ('gperf','3.1')
+    ('binutils', '2.35', '', True),
 ]
 
 dependencies = [
     ('Java', '13', '', True),
-    ('libxml2', '2.9.10'),
     ('MDSplus', version),
 ]
-preconfigopts =  'export LC_ALL=C &&'
-preconfigopts += 'find . -type f -regex .*Makefile.* -maxdepth 12 '
-preconfigopts += '-exec sed -i "s/JAVASOURCE = 6/JAVASOURCE = 8/g" {} \\; && '
-preconfigopts += ' ./bootstrap && '
+
+preconfigopts = 'find . -type f -regex .*Makefile.* -maxdepth 12 -exec sed -i "s/JAVASOURCE = 6/JAVASOURCE = 8/g" {} \; && '
+preconfigopts += 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
+preconfigopts += 'export FCFLAGS="$FCFLAGS -std=legacy -fallow-invalid-boz" && '
+preconfigopts += './bootstrap && ' 
 
 configopts = '--with-jdk=$JAVA_HOME --enable-java_only --disable-doxygen-doc --disable-valgrind'
 

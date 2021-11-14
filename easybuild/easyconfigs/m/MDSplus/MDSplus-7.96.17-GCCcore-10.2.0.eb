@@ -1,9 +1,9 @@
 easyblock = 'ConfigureMake'
 
 name = 'MDSplus'
-version = '7.96.12'
+version = '7.96.17'
 
-homepage = 'https://mdsplus.org'
+homepage = 'http://mdsplus.org/'
 description = """MDSplus is a set of software tools for data acquisition and storage and a methodology
  for management of complex scientific data."""
 
@@ -12,9 +12,10 @@ toolchainopts = {'pic': True}
 
 source_urls = ['https://github.com/%(name)s/%(namelower)s/archive']
 sources = ['stable_release-%s.zip' % version.replace('.', '-')]
-checksums = []
+checksums = ['0d9ebb80f33118e981b692710ab06c8e3ba007f1ed77af6356bbecc96418d9ab']
+
 builddependencies = [
-    ('binutils', '2.35')
+    ('binutils', '2.35','',True),
 ]
 
 dependencies = [
@@ -24,11 +25,13 @@ dependencies = [
     ('libreadline', '8.0')
 ]
 
+preconfigopts = 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2" && '
+preconfigopts += 'export FCFLAGS="$FCFLAGS -std=legacy -fallow-invalid-boz" && '
+preconfigopts += './bootstrap && '
+
 configopts = '--disable-doxygen-doc --disable-java --disable-hdf5'
 # hardcode version via configure script (git is unavailable)
 configopts += ' RELEASE_VERSION=%(version)s BRANCH=stable'
-
-preconfigopts = 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
 
 parallel = 1
 
@@ -41,12 +44,4 @@ modextrapaths = {
     'IDL_PATH': 'idl',
 }
 
-sanity_check_paths = {
-    'files': ['lib/libMdsLib.%s' % SHLIB_EXT, 'lib/libTreeShr.%s' % SHLIB_EXT,
-              'include/mdslib.h', 'include/mdsobjects.h'],
-    'dirs': ['bin', 'tdi'],
-}
-
 moduleclass = 'data'
-
-local_update_deps = True
