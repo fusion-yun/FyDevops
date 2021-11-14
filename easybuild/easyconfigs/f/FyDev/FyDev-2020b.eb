@@ -1,0 +1,38 @@
+easyblock = 'Bundle'
+
+name = 'FyDev'
+version = '0.0.1' 
+
+
+homepage = 'https://gitee.com/fusion_yun/'
+description = """FyDev: development environment for FuYun """
+
+toolchain = {'name': 'foss', 'version': '2020b'}
+#toolchainopts = {'usempi': True}
+
+dependencies = [   
+]
+
+# osdependencies = [('libX11-devel', 'libx11-dev')]
+
+exts_default_options = {
+    "source_urls": [PYPI_SOURCE],
+    # "installopts": "  -i https://pypi.tuna.tsinghua.edu.cn/simple ",
+    "pip_ignore_installed": True,
+    "use_pip_for_deps": True,
+    "sanity_pip_check": False,
+    "unpack_sources": False,
+}
+use_pip = True
+
+exts_defaultclass = "PythonPackage"
+# order is important!
+exts_list = [
+    ("f90nml", "1.2"),
+    ('pylint','2.10'),
+    ('black','21.8b0'),
+    ('autopep8','1.5.7')
+]
+
+sanity_pip_check = True
+moduleclass = 'fuyun'
