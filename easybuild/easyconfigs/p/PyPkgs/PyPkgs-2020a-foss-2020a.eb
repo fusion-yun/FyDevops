@@ -1,0 +1,50 @@
+easyblock = 'PythonBundle'
+
+name = 'PyPkgs'
+version = '2020a'
+
+homepage = 'https://python.org/'
+description = "Bundle of Python packages for FuYun"
+
+toolchain = {'name': 'foss', 'version': '2020a'}
+toolchainopts = {'pic': True, 'lowopt': True}
+versionsuffix = '-Python-%(pyver)s'
+
+builddependencies = [
+    ('Python', '3.8.2'),
+    ('SciPy-bundle', '2020.03', "-Python-%(pyver)s"),
+    ('Qt5', '5.15.2'),
+    ('PyQt5', '5.15.2', versionsuffix), ]
+
+dependencies = [
+    ('Python', '3.8.2'),
+    ('SciPy-bundle', '2020.03', versionsuffix),
+    ('Qt5', '5.15.2'),
+    ('PyQt5', '5.15.2', versionsuffix),
+
+]
+
+
+use_pip = True
+
+exts_defaultclass = "PythonPackage"
+
+exts_default_options = {
+    "source_urls": [PYPI_SOURCE],
+    #    "installopts": "  -i https://pypi.tuna.tsinghua.edu.cn/simple ",
+    "pip_ignore_installed": True,
+    "use_pip_for_deps": True,
+    "sanity_pip_check": False,
+    "unpack_sources": False,
+}
+# order is important!
+exts_list = [
+    ("pyqtgraph", "0.11.1"),
+    ("Sphinx", "3.4.3"),
+    # ("sphinx-rtd-theme", "0.5.1", {'source_tmpl': 'sphinx_rtd_theme-0.5.1.tar.gz'})
+
+]
+
+sanity_pip_check = False
+
+moduleclass = 'lang'
