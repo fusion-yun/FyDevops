@@ -16,6 +16,8 @@ checksums = ['0d9ebb80f33118e981b692710ab06c8e3ba007f1ed77af6356bbecc96418d9ab']
 
 builddependencies = [
     ('binutils', '2.35','',True),
+    ('Autoconf','2.69'),
+    ('Automake','1.16.2'),
 ]
 
 dependencies = [

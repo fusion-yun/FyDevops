@@ -16,6 +16,13 @@ toolchainopts = {'pic': True}
 source_urls = ['https://github.com/MDSplus/mdsplus/archive']
 sources = ['stable_release-%s.zip' % version.replace('.', '-')]
 checksums = []
+
+builddependencies = [
+    ('binutils', '2.35', '', True),
+    ('Autoconf','2.69'),
+    ('Automake','1.16.2'),
+]
+
 dependencies = [
     ('Python', local_pyver),
     ('SciPy-bundle', '2020.11'),
