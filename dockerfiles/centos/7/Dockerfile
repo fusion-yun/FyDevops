@@ -2,7 +2,7 @@ FROM centos:7
 
 ARG FY_USER="fuyun"
 ARG FY_UID="1000"
-ARG FY_GID="100"
+ARG FY_GID="1000"
 
 RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  \
     && yum install -y dnf-plugins-core  \    
@@ -11,7 +11,7 @@ RUN echo "exclude=*.i386 *.i686" >> /etc/yum.conf  \
     -i.bak \
     /etc/yum.repos.d/CentOS-Base.repo \
     && yum update -y  \
-    && yum install -y sudo wget  git gcc  python3 python3-pip perl tcl-devel  openssl-devel vim  \
+    && yum install -y sudo wget  git gcc  python3 python3-pip perl tcl-devel  openssl-devel vim unzip \
     && yum clean all -y -q
 
 

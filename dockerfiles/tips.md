@@ -19,10 +19,12 @@ fybase:ubuntu.focal
 sudo groupadd -g 504 develop
 sudo usermod -g develop fuyun
 
+source ${EASYBUILD_PREFIX}/software/lmod/lmod/init/bash
+module use ${EASYBUILD_PREFIX}/modules/all/
+
 export EASYBUILD_PREFIX=/fuyun
 export EASYBUILD_ROBOT_PATHS=/fuyun/sources/ebfiles/FyDevOps/easybuild/easyconfigs/:/fuyun/sources/ebfiles/imas_ebs/easybuild/easyconfigs/:/fuyun/sources/ebfiles/easybuild-easyconfigs/:$EBROOTEASYBUILD/easybuild/easyconfigs
-export EASYBUILD_BUILDPATH=/tmp/eb_build
-source /fuyun/software/lmod/lmod/init/bash
-module use /fuyun/modules/all/
+export EASYBUILD_BUILDPATH=/tmp/eb_build_${USERID}
+
 
 ```
