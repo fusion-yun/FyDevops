@@ -1,0 +1,82 @@
+easyblock = 'ConfigureMake'
+
+name = 'MDSplus'
+version = "7.131.5"
+
+homepage = 'https://mdsplus.org'
+description = """MDSplus is a set of software tools for data acquisition and storage and a methodology
+ for management of complex scientific data."""
+
+toolchain = {'name': 'foss', 'version': '2020b'}
+toolchainopts = {'pic': True}
+
+source_urls = ['https://github.com/%(name)s/%(namelower)s/archive']
+sources = ['stable_release-%s.zip' % version.replace('.', '-')]
+checksums = []
+builddependencies = [
+    ('GCCcore', '10.2.0','',True),
+    ('binutils', '2.35','',True ),
+    ('Autoconf','2.69'),
+    ('Automake','1.16.2'),
+    ('Bison','3.7.1'),
+    ('flex','2.6.4'),
+    ('gperf','3.1')
+]
+
+dependencies = [
+    ('binutils', '2.35','',True),
+    ('Java', '13', '', True),
+    ('Python', '3.8.6'),
+    ('SciPy-bundle','2020.11'),
+    ('HDF5','1.10.7'),
+    ('libxml2', '2.9.10'),
+    ('zlib', '1.2.11'),
+    ('ncurses', '6.2'),
+    ('libreadline', '8.0'),
+]
+
+modextrapaths = {
+    'CLASSPATH': 'java/classes/*',
+    'PYTHONPATH': 'lib/python%(pyshortver)s/site-packages',
+    'IDL_PATH': 'idl',
+}
+local_moddir = modextrapaths['PYTHONPATH'] + '/MDSplus'
+
+# configopts = '--disable-doxygen-doc'
+# hardcode version via configure script (git is unavailable)
+# configopts += ' RELEASE_VERSION=%(version)s BRANCH=stable'
+
+preconfigopts = 'export LC_ALL=C && '
+preconfigopts += 'find . -type f -regex .*Makefile.* -maxdepth 12 '
+preconfigopts += '-exec sed -i "s/JAVASOURCE = 6/JAVASOURCE = 8/g" {} \\; && '
+preconfigopts += 'export CFLAGS="$CFLAGS -I$EBROOTLIBXML2/include/libxml2 " && '
+preconfigopts += 'export RELEASE_VERSION=%(version)s && '
+preconfigopts += 'export BRANCH=stable && '
+preconfigopts += './bootstrap &&  '
+
+
+
+configopts = ' --with-jdk=$JAVA_HOME --disable-doxygen-doc --disable-valgrind'
+
+
+parallel = 1
+
+install_cmd = 'make install'
+install_cmd += ' && mkdir -p %(installdir)s/' + local_moddir
+install_cmd += ' && pwd && cp -a python/MDSplus/* %(installdir)s/' + local_moddir + '/'
+
+modextravars = {
+    'MDSPLUS_DIR': '%(installdir)s',
+    'MDS_PATH': '%(installdir)s/tdi',
+}
+
+sanity_check_paths = {
+    'files': ['bin/jTraverser', 'bin/jScope', 'bin/jServer',
+                'lib/libMdsLib.%s' % SHLIB_EXT, 'lib/libTreeShr.%s' % SHLIB_EXT,
+              'include/mdslib.h', 'include/mdsobjects.h'],
+    'dirs': ['bin', 'tdi', 'java/classes'],
+}
+
+moduleclass = 'data'
+
+local_update_deps = True

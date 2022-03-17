@@ -1,5 +1,5 @@
 #!/bin/bash
-export FY_ROOT=/public/share/physical_suport
+export FY_ROOT=${FY_ROOT:-/public/share/physical_suport}
 
 source ${FY_ROOT}/software/lmod/lmod/init/profile
 
