@@ -21,24 +21,29 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
 
 
 #######################################################
+ARG FY_LOCAL_GID=${FY_LOCAL_GID:-504}
+ARG FY_LOCAL_GROUP=${FY_LOCAL_GROUP:-develop}
+RUN groupadd --gid ${FY_LOCAL_GID} ${FY_LOCAL_GROUP}
 
-ARG FY_REPO_GID=${FY_REPO_GID:-504}
-ARG FY_REPO_GROUP=${FY_REPO_GROUP:-develop}
-RUN groupadd --gid ${FY_REPO_GID} ${FY_REPO_GROUP}
+#######################################################
+ARG FY_USER=${FY_USER:-salmon}
+ARG FY_UID=${FY_UID:-1000}
+ARG FY_GID=${FY_GID:-1000}
+ARG FY_HOME=${FY_HOME:-/fuyun}
+
+# ARG FY_REPO_GID=${FY_REPO_GID:-504}
+# ARG FY_REPO_GROUP=${FY_REPO_GROUP:-develop}
+# RUN groupadd --gid ${FY_REPO_GID} ${FY_REPO_GROUP}
 
 #######################################################
 
 ENV HOME="/home/${FY_USER}"
-
-ARG FY_UID=${FY_UID:-"1000"}
-ARG FY_GID=${FY_GID:-"1000"}
-
 
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
     && sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers  \
     && sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers  \
     && echo "${FY_USER} ALL=(ALL)    NOPASSWD: ALL" >>/etc/sudoers  \
     && groupadd -g "${FY_GID}" "${FY_USER}"  \
-    && useradd -l -m -s /bin/bash -N -u "${FY_UID}" -g "${FY_GID}" --groups "${FY_REPO_GROUP}" -d /home/${FY_USER}  "${FY_USER}"    
+    && useradd -l -m -s /bin/bash -N -u "${FY_UID}" -g "${FY_GID}" --groups "${FY_LOCAL_GROUP}" -d /home/${FY_USER}  "${FY_USER}"    
 
 USER ${FY_USER}

@@ -1,0 +1,12 @@
+diff -ruN --no-dereference dolfin-2019.1.0.post0.orig/cmake/modules/FindSLEPc.cmake dolfin-2019.1.0.post0/cmake/modules/FindSLEPc.cmake
+--- dolfin-2019.1.0.post0.orig/cmake/modules/FindSLEPc.cmake	2022-03-18 08:41:36.776117240 +0800
++++ dolfin-2019.1.0.post0/cmake/modules/FindSLEPc.cmake	2022-03-18 08:41:49.348227942 +0800
+@@ -48,7 +48,7 @@
+ set(ENV{PKG_CONFIG_PATH} "$ENV{SLEPC_DIR}/$ENV{PETSC_ARCH}/lib/pkgconfig:$ENV{SLEPC_DIR}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+ set(ENV{PKG_CONFIG_PATH} "$ENV{PETSC_DIR}/$ENV{PETSC_ARCH}/lib/pkgconfig:$ENV{PETSC_DIR}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+ set(ENV{PKG_CONFIG_PATH} "$ENV{PETSC_DIR}/$ENV{PETSC_ARCH}:$ENV{PETSC_DIR}:$ENV{PKG_CONFIG_PATH}")
+-pkg_search_module(SLEPC crayslepc_real SLEPc)
++pkg_search_module(SLEPC crayslepc_real slepc)
+ 
+ # Extract major, minor, etc from version string
+ if (SLEPC_VERSION)

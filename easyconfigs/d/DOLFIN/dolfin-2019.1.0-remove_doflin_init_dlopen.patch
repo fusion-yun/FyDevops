@@ -1,0 +1,51 @@
+diff -ruN --no-dereference dolfin-2019.1.0.post0.orig/python/dolfin/__init__.py dolfin-2019.1.0.post0/python/dolfin/__init__.py
+--- dolfin-2019.1.0.post0.orig/python/dolfin/__init__.py	2022-03-18 11:55:27.724180849 +0800
++++ dolfin-2019.1.0.post0/python/dolfin/__init__.py	2022-03-18 11:56:10.335495925 +0800
+@@ -8,28 +8,28 @@
+ # Distributed under the terms of the GNU Lesser Public License (LGPL),
+ # either version 3 of the License, or (at your option) any later
+ # version.
++######### DISABLE by salmon
++# import sys
+ 
+-import sys
++# # Store dl open flags to restore them after import
++# stored_dlopen_flags = sys.getdlopenflags()
+ 
+-# Store dl open flags to restore them after import
+-stored_dlopen_flags = sys.getdlopenflags()
+-
+-# Developer note: below is related to OpenMPI
+-# Fix dlopen flags (may need reorganising)
+-if "linux" in sys.platform:
+-    # FIXME: What with other platforms?
+-    try:
+-        from ctypes import RTLD_NOW, RTLD_GLOBAL
+-    except ImportError:
+-        RTLD_NOW = 2
+-        RTLD_GLOBAL = 256
+-    sys.setdlopenflags(RTLD_NOW | RTLD_GLOBAL)
+-del sys
+-
+-# Reset dl open flags
+-# sys.setdlopenflags(stored_dlopen_flags)
++# # Developer note: below is related to OpenMPI
++# # Fix dlopen flags (may need reorganising)
++# if "linux" in sys.platform:
++#     # FIXME: What with other platforms?
++#     try:
++#         from ctypes import RTLD_NOW, RTLD_GLOBAL
++#     except ImportError:
++#         RTLD_NOW = 2
++#         RTLD_GLOBAL = 256
++#     sys.setdlopenflags(RTLD_NOW | RTLD_GLOBAL)
+ # del sys
+-
++#
++## Reset dl open flags
++## sys.setdlopenflags(stored_dlopen_flags)
++## del sys
++######### DISABLE by salmon
+ # Import cpp modules
+ from .cpp import __version__
+ 
