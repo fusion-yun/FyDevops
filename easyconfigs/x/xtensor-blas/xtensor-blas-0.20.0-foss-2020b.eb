@@ -1,0 +1,31 @@
+easyblock = 'CMakeMake'
+
+name = 'xtensor-blas'
+version = '0.20.0'
+
+homepage = 'https://github.com/xtensor-stack/xtensor-blas'
+description = "xtensor-blas is an extension to the xtensor library, offering bindings to BLAS and LAPACK libraries through cxxblas and cxxlapack from the FLENS project."
+
+toolchain = {'name': 'foss', 'version': '2020b'}
+
+source_urls = ['https://github.com/xtensor-stack/xtensor-blas/archive/refs/tags/']
+sources = ['%(version)s.tar.gz']
+
+builddependencies = [
+    ('CMake', '3.20.1'),
+    ('pybind11', '2.6.0'),
+]
+dependencies = [
+    ('Python', '3.8.6'),
+    ('SciPy-bundle', '2020.11'),
+    ('xtensor','0.24.0'),
+    ('OpenBLAS','0.3.12'),
+]
+
+
+sanity_check_paths = {
+    'files': ['include/xtensor-blas/xblas.hpp', 'lib/cmake/xtensor-blas/xtensor-blasConfig.cmake'],
+    'dirs': ['include/xtensor-blas', 'lib/cmake/xtensor-blas'],
+}
+
+moduleclass = 'lib'

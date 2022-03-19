@@ -1,0 +1,77 @@
+# Built with EasyBuild version 4.5.3 on 2022-03-18_12-01-12
+easyblock = 'CMakePythonPackage'
+
+name = 'DOLFINx'
+version = '0.3.0'
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = 'https://bitbucket.org/fenics-project/dolfin'
+description = """DOLFIN is the C++/Python interface of FEniCS, providing a consistent PSE
+  (Problem Solving Environment) for ordinary and partial differential equations."""
+
+toolchain = {'name': 'foss', 'version': '2020b'}
+toolchainopts = {'usempi': True, 'pic': True, 'packed-linker-options': True, 'openmp': True}
+
+source_urls = ['https://github.com/FEniCS/dolfinx/archive/refs/tags/']
+sources = ["v%(version)s.tar.gz"]
+checksums = []
+
+# bitbucket_account = 'fenics-project'
+# source_urls = [BITBUCKET_DOWNLOADS]
+# sources = [SOURCELOWER_TAR_GZ]
+# patches=[
+#   'dolfin-2019.1.0-Add-missing-algorithm-include-for-std-min_element.patch',
+#   'dolfin-2019.1.0-Use-__BYTE_ORDER__-instead-of-removed-Boost-endian.h.patch',
+#   'dolfin-2019.1.0-SLEPC_CMAKE.patch',
+#   'dolfin-2019.1.0-remove_doflin_init_dlopen.patch'
+# ]
+#checksums = ['61abdcdb13684ba2a3ba4afb7ea6c7907aa0896a46439d3af7e8848483d4392f']
+
+builddependencies = [
+    ('CMake', '3.20.1'),
+    ('pkg-config', '0.29.2'),
+    ('patchelf', '0.12'),
+    ('pybind11', '2.6.0'),
+]
+dependencies = [
+    ('Python', '3.8.6'),
+    ('Boost', '1.74.0'),
+    ('pkgconfig', '1.5.1', '-python'),
+
+    ('SCOTCH', '6.1.0'),
+    # ('SuiteSparse', '5.8.1', '-METIS-5.1.0'),
+    ('CGAL', '4.14.3'),
+    ('PETSc', '3.14.4'),
+    ('SLEPc', '3.14.2'),
+    ('HDF5', '1.10.7'),
+    ('zlib', '1.2.11'),
+    ('libxml2', '2.9.10'),
+    # ('Eigen', '3.4.0'),
+    # ('PLY', '3.11', '-Python-%(pyver)s'),
+    # ('VTK', '9.0.1'),
+    ('petsc4py', '3.14.1'),
+    ('slepc4py', '3.14.0'),
+    ('ParMETIS','4.0.3'),
+    # ('Trilinos', '13.0.1'),
+    # ('SUNDIALS', '5.7.0'),
+    ('FFCx', '0.3.0', versionsuffix),
+    # order matter
+    ('SciPy-bundle','2020.11'),
+
+]
+srcdir="cpp"
+# configure_cmd="cd %(builddir)s/cpp; cmake "
+install_cmd="make install; \
+            ln -s %(installdir)s/lib64 %(installdir)s/lib; \
+            cd %(builddir)s/dolfinx-%(version)s/python;  \
+            export DOLFINX_DIR=%(installdir)s/lib/cmake/dolfinx; \
+            pip install .  --prefix=%(installdir)s"
+# demos run as tests fail with 'bad X server connection', skipping for now
+runtest = False
+
+# strip out too strict version requirement for pybind11
+# preinstallopts = "sed -i 's/pybind11==[0-9.]*/pybind11/g' %(builddir)s/dolfin-%(version)s/python/setup.py && "
+
+
+moduleclass = 'math'
+ 

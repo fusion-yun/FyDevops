@@ -1,0 +1,48 @@
+easyblock = 'Bundle'
+
+name = 'xtensor'
+version = '0.23.10'
+
+homepage = 'https://github.com/xtensor-stack/xtensor'
+description = "xtensor is a C++ library meant for numerical analysis with multi-dimensional array expressions."
+
+toolchain = {'name': 'foss', 'version': '2020b'}
+
+builddependencies = [
+    ('CMake', '3.20.1'),
+    ('pybind11', '2.6.0'),
+]
+dependencies = [
+    ('Python', '3.8.6'),
+    ('SciPy-bundle', '2020.11'),
+]
+
+default_easyblock = 'CMakeMake'
+
+default_component_specs = {
+    'source_urls': ['https://github.com/xtensor-stack/%(name)s/archive/'],
+    'sources': ['%(version)s.tar.gz'],
+    'start_dir': '%(name)s-%(version)s',
+}
+
+components = [
+    ('xtl', '0.7.2', {
+        'checksums': [],
+    }),
+    ('xsimd', '7.6.0', {
+        'checksums': [],
+    }),
+    ('xtensor', version, {
+        'checksums': [],
+    }),
+    ('xtensor-python', '0.25.3', {
+        'checksums': [],
+    }),
+]
+
+sanity_check_paths = {
+    'files': ['include/xtensor.hpp', 'lib/pkgconfig/xsimd.pc', 'lib/pkgconfig/xtensor.pc'],
+    'dirs': ['include/xsimd', 'include/xtensor', 'include/xtensor-python', 'include/xtl', 'lib/cmake'],
+}
+
+moduleclass = 'lib'

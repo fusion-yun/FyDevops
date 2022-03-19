@@ -13,9 +13,9 @@ description = """The Unified Form Language (UFL) is a domain specific language
 
 toolchain = {'name': 'foss', 'version': '2020b'}
 
-source_urls = ['https://bitbucket.org/fenics-project/ufl/downloads/']
-sources = [SOURCELOWER_TAR_GZ]
-checksums = ['213a56bfa2edb0365909fa6f110f970e582b10a3f5f1fd9a0e85254f1eefaa11']
+source_urls = ['https://github.com/FEniCS/ufl/archive/refs/tags/']
+sources = ["%(version)s.tar.gz"]
+checksums = []
 
 dependencies = [
     ('Python', '3.8.6'),
