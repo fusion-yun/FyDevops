@@ -19,12 +19,12 @@ checksums = []
 # bitbucket_account = 'fenics-project'
 # source_urls = [BITBUCKET_DOWNLOADS]
 # sources = [SOURCELOWER_TAR_GZ]
-# patches=[
+patches=[
 #   'dolfin-2019.1.0-Add-missing-algorithm-include-for-std-min_element.patch',
 #   'dolfin-2019.1.0-Use-__BYTE_ORDER__-instead-of-removed-Boost-endian.h.patch',
 #   'dolfin-2019.1.0-SLEPC_CMAKE.patch',
-#   'dolfin-2019.1.0-remove_doflin_init_dlopen.patch'
-# ]
+  'dolfin-0.3.0-remove_doflin_init_dlopen.patch'
+]
 #checksums = ['61abdcdb13684ba2a3ba4afb7ea6c7907aa0896a46439d3af7e8848483d4392f']
 
 builddependencies = [
