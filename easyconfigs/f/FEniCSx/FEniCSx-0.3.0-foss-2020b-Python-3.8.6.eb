@@ -1,0 +1,20 @@
+easyblock = 'Bundle'
+
+name = 'FEniCSx'
+version = '0.3.0'
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = 'https://fenicsproject.org/'
+description = "FEniCS is a computing platform for solving partial differential equations (PDEs)."
+
+toolchain = {'name': 'foss', 'version': '2020b'}
+toolchainopts = {'usempi': True}
+
+dependencies = [
+    ('Python', '3.8.6'),
+    ('SciPy-bundle', '2020.11'),
+    ('matplotlib', '3.3.3'),
+    ('DOLFINx', '0.3.0',versionsuffix),
+]
+
+moduleclass = 'math'
