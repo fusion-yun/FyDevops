@@ -2,7 +2,7 @@
 
 export FY_ROOT=${FY_ROOT:-$@}
 
-export FY_SCRIPTS=${FY_ROOT}/sorftware/scripts
+export FY_SCRIPTS=${FY_ROOT}/software/scripts
 
 source ${FY_SCRIPTS}/fy_profile.sh 
 

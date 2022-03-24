@@ -11,10 +11,10 @@ echo "TARGET_FY_PREFIX=${TARGET_FY_PREFIX}"
 
 FYDEV_PREFIX=/gpfs/fuyun_
 
-docker run  --rm --user ${TARGET_USER} -it \
---mount type=bind,source=${FYDEV_PREFIX}repos/${TARGET_TAG}/fuyun,target=${TARGET_FY_PREFIX} \
---mount type=bind,source=${FYDEV_PREFIX}sources/,target=${TARGET_FY_PREFIX}/sources \
+docker run  --rm   -it \
+--mount type=bind,source=${FYDEV_PREFIX}/repository/${TARGET_TAG}/fuyun,target=${TARGET_FY_PREFIX} \
+--mount type=bind,source=${FYDEV_PREFIX}/sources/,target=${TARGET_FY_PREFIX}/sources \
+--mount type=bind,source=${FYDEV_PREFIX}/devops/easyconfigs,target=${TARGET_FY_PREFIX}/sources/easyconfigs \
  ${TARGET_IMAGE} 
-
 
 #"bash source ${TARGET_FY_PREFIX}/sources/scripts/fydev_init.sh" 
