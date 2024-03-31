@@ -7,7 +7,7 @@ echo "===================== Install Lua ========================="
 FY_LUA_SHORTVERSION=${FY_LUA_SHORTVERSION:-5.4}
 FY_LUA_VERSION=${FY_LUA_VERSION:-5.4.2}
 FY_LUAROCKS_VERSION=${FY_LUAROCKS_VERSION:-3.5.0}
-FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.4.19}
+FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.7.37}
 
 mkdir -p ${FY_ROOT}/sources/bootstrap
  

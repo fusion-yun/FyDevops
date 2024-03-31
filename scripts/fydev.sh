@@ -61,3 +61,10 @@ function  load_image:
         --mount type=bind,source=${FYDEV_PREFIX}repos/${TARGET_TAG}/fuyun,target=${TARGET_FY_PREFIX} \
         --mount type=bind,source=${FYDEV_PREFIX}sources/,target=${TARGET_FY_PREFIX}/sources \
     ${TARGET_IMAGE} 
+
+
+docker run --user fuyun -it \
+ --mount type=bind,source=/ssd01/fydev/repos/ubuntu-2204/,target=/fuyun \
+ --mount type=bind,source=/tmp/fuyun_build/,target=/fuyun/build \
+ --mount type=bind,source=/gpfs/fuyun/sources/,target=/fuyun/sources \
+ fydev/ubuntu-2204
