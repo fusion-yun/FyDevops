@@ -1,4 +1,4 @@
-FROM image.sourcefind.cn:5000/dcu/admin/base/vscode-pytorch:1.13.1-ubuntu20.04-dtk23.04.1-latest
+FROM image.sourcefind.cn:5000/dcu/admin/base/vscode-dtk:23.04.1-ubuntu20.04-latest
 
 LABEL maintainer="Salmon <yuzhi@ipp.ac.cn>"
 
@@ -22,6 +22,21 @@ RUN apt-get update --yes  \
     && pip install easybuild \
     && rm -rf /root/.cache/pip
 
+#######################################################
+# Install LMOD
+ARG FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.7.37}
+ 
+RUN TMP_BUILD=$(mktemp -d -t tmp_build_lmod_XXXXXXX) \
+    && cd $TMP_BUILD  \
+    && wget https://github.com/TACC/Lmod/archive/${FY_LMOD_VERSION}.tar.gz \
+    && tar xzf ${FY_LMOD_VERSION}.tar.gz  --strip-components=1  \
+    && ./configure --prefix=/opt/  --with-lua_include=/usr/include/lua5.2/ \
+    && make install  \
+    && ln -s /opt/lmod/lmod/init/profile        /etc/profile.d/z00_lmod.sh    \
+    && ln -s /opt/lmod/lmod/init/cshrc          /etc/profile.d/z00_lmod.csh   \
+    && echo 'source /opt/lmod/lmod/init/profile' >> /etc/bash.bashrc    \
+    && cd ..  \
+    && rm -rf $TMP_BUILD 
 
 ######################################################
 # Add user fuyun
@@ -34,25 +49,8 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su \
     && mkdir -p /fuyun -m 775 \
     && chown fuyun:fuyun /fuyun
 
-
 USER fuyun
 WORKDIR /home/fuyun
 ENV FY_ROOT /fuyun
 ENV EASYBUILD_PREFIX /fuyun
 
-#######################################################
-# Install LMOD
-ARG FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.7.37}
-
-RUN mkdir -p /fuyun/sources/l/lmod/ \
-    && cd /fuyun/sources/l/lmod/  \
-    && wget https://github.com/TACC/Lmod/archive/${FY_LMOD_VERSION}.tar.gz  
-
-RUN TMP_BUILD=$(mktemp -d -t tmp_build_lmod_XXXXXXX) \
-    && tar xzf /fuyun/sources/l/lmod/${FY_LMOD_VERSION}.tar.gz -C ${TMP_BUILD} --strip-components=1  \
-    && cd $TMP_BUILD  \
-    && ./configure --prefix=/fuyun/software  --with-lua_include=/usr/include/lua5.2/; make install  \
-    && cd ..  \
-    && rm -rf $TMP_BUILD  
-
-RUN /bin/bash
