@@ -37,11 +37,13 @@ VOLUME ${FY_ROOT}
 
 ENV FY_ROOT=${FY_ROOT} \
     EASYBUILD_PREFIX=${FY_ROOT} \
-    MODULEPATH=${FY_ROOT}/modulefiles/all
+    MODULEPATH=${FY_ROOT}/modules/all
 
 RUN groupadd -g "1000" "fuyun"  \
     && useradd -l -m -s /bin/bash -N -u "1000" -g "1000" --groups "fuyun" -d "/home/fuyun"  "fuyun"   \
-    && echo "fuyun ALL=(ALL)   NOPASSWD: ALL" >>/etc/sudoers 
+    && echo "fuyun ALL=(ALL)   NOPASSWD: ALL" >>/etc/sudoers \
+    && chown -R fuyun:fuyun ${FY_ROOT}  \
+    && chmod -R 775 ${FY_ROOT}  
 
 # USER fuyun 
 # WORKDIR /home/fuyun
