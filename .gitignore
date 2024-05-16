@@ -48,3 +48,4 @@ cmake-build-*
 *.png
 
 *.tar.gz
+*.rpm
