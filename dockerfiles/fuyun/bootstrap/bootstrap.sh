@@ -91,7 +91,7 @@ export PATH=${INSTALL_PREFIX}/bin:$PATH
 export MODULEPATH=${FY_ROOT}/modules/all
 export EASYBUILD_PREFIX=${FY_ROOT}
 export EASYBUILD_BUILDPATH=/tmp/eb_build
-export EASYBUILD_ROBOT_PATHS=${FY_ROOT}/easyconfigs:${INSTALL_PREFIX}/easybuild/easyconfigs
+export EASYBUILD_ROBOT_PATHS=${FY_ROOT}/sources/easyconfigs:${INSTALL_PREFIX}/easybuild/easyconfigs
 " >> ${INSTALL_PREFIX}/etc/fy_profile
 
 
@@ -99,5 +99,5 @@ echo "#!/bin/bash
     . ${INSTALL_PREFIX}/etc/fy_profile 
     exec \$@ 
     " >> ${INSTALL_PREFIX}/bin/fy_run  
-    
+
 chmod +x  ${INSTALL_PREFIX}/bin/fy_run
