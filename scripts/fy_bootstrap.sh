@@ -6,28 +6,28 @@ FY_ROOT=${FY_ROOT:-/gpfs/fuyun}
 echo "===================== Install Lua ========================="
 FY_LUA_SHORTVERSION=${FY_LUA_SHORTVERSION:-5.4}
 FY_LUA_VERSION=${FY_LUA_VERSION:-5.4.2}
-FY_LUAROCKS_VERSION=${FY_LUAROCKS_VERSION:-3.5.0}
+FY_LUAROCKS_VERSION=${FY_LUAROCKS_VERSION:-3.11.0}
 FY_LMOD_VERSION=${FY_LMOD_VERSION:-8.7.37}
 
 mkdir -p ${FY_ROOT}/sources/bootstrap
  
 if ! [ -d ${FY_ROOT}/software/lua/${FY_LUA_VERSION} ] ; then         
-    if ! [ -f ${FY_ROOT}/sources/bootstrap/lua-${FY_LUA_VERSION}.tar.gz ]; then  
-        curl -L https://www.lua.org/ftp/lua-${FY_LUA_VERSION}.tar.gz  -o ${FY_ROOT}/sources/bootstrap/lua-${FY_LUA_VERSION}.tar.gz   
+    if ! [ -f ${FY_ROOT}/sources/l/Lua/lua-${FY_LUA_VERSION}.tar.gz ]; then  
+        curl -L https://www.lua.org/ftp/lua-${FY_LUA_VERSION}.tar.gz  -o ${FY_ROOT}/sources/l/Lua/lua-${FY_LUA_VERSION}.tar.gz   
     fi 
-    if ! [ -f ${FY_ROOT}/sources/bootstrap/luarocks-${FY_LUAROCKS_VERSION}.tar.gz ]; then  
-        curl -L https://github.com/luarocks/luarocks/archive/v${FY_LUAROCKS_VERSION}.tar.gz -o ${FY_ROOT}/sources/bootstrap/luarocks-${FY_LUAROCKS_VERSION}.tar.gz 
+    if ! [ -f ${FY_ROOT}/sources/l/Lua/luarocks-${FY_LUAROCKS_VERSION}.tar.gz ]; then  
+        curl -L https://luarocks.github.io/luarocks/releases/luarocks-${FY_LUAROCKS_VERSION}.tar.gz
     fi        
     export TMP_BUILD=$(mktemp -d -t tmp_build_lua_XXXXXXX)
     mkdir -p ${TMP_BUILD}/lua
-    tar xzf ${FY_ROOT}/sources/bootstrap/lua-${FY_LUA_VERSION}.tar.gz -C ${TMP_BUILD}/lua --strip-components=1 
+    tar xzf ${FY_ROOT}/sources/l/Lua/lua-${FY_LUA_VERSION}.tar.gz -C ${TMP_BUILD}/lua --strip-components=1 
     cd ${TMP_BUILD}/lua
     make INSTALL_TOP=${FY_ROOT}/software/lua/${FY_LUA_VERSION} PLAT=linux all
     make INSTALL_TOP=${FY_ROOT}/software/lua/${FY_LUA_VERSION} PLAT=linux test
     make INSTALL_TOP=${FY_ROOT}/software/lua/${FY_LUA_VERSION} PLAT=linux install
     cd ..
     mkdir -p ${TMP_BUILD}/luarocks
-    tar xzf ${FY_ROOT}/sources/bootstrap/luarocks-${FY_LUAROCKS_VERSION}.tar.gz -C ${TMP_BUILD}/luarocks --strip-components=1 
+    tar xzf ${FY_ROOT}/sources/l/Lua/luarocks-${FY_LUAROCKS_VERSION}.tar.gz -C ${TMP_BUILD}/luarocks --strip-components=1 
     cd ${TMP_BUILD}/luarocks
     ./configure --prefix=${FY_ROOT}/software/lua/${FY_LUA_VERSION} --with-lua=${FY_ROOT}/software/lua/${FY_LUA_VERSION} 
     make 
@@ -48,11 +48,11 @@ export PATH=${LUA_DIR}/bin:${PATH}
 
 echo "============ Install lmod ==================="
 if ! [ -d ${FY_ROOT}/software/lmod/${FY_LMOD_VERSION} ]; then     
-    if ! [ -f ${FY_ROOT}/sources/bootstrap/lmod-${FY_LMOD_VERSION}.tar.gz ]; then  
-        curl -L https://github.com/TACC/Lmod/archive/${FY_LMOD_VERSION}.tar.gz -o ${FY_ROOT}/sources/bootstrap/lmod-${FY_LMOD_VERSION}.tar.gz  
-    fi 
+    # if ! [ -f ${FY_ROOT}/sources/l/Lmod/Lmod-${FY_LMOD_VERSION}.tar.gz ]; then  
+    #     curl -L https://github.com/TACC/Lmod/archive/refs/tags/${FY_LMOD_VERSION}.tar.gz -o ${FY_ROOT}/sources/l/Lmod/Lmod-${FY_LMOD_VERSION}.tar.gz  
+    # fi 
     TMP_BUILD=$(mktemp -d -t tmp_build_lmod_XXXXXXX)
-    tar xzf ${FY_ROOT}/sources/bootstrap/lmod-${FY_LMOD_VERSION}.tar.gz -C ${TMP_BUILD} --strip-components=1 
+    tar xzf ${FY_ROOT}/sources/l/Lmod/Lmod-${FY_LMOD_VERSION}.tar.gz -C ${TMP_BUILD} --strip-components=1 
     cd ${TMP_BUILD}
     ./configure --prefix=${FY_ROOT}/software  --with-lua_include=${LUA_DIR}/include; make install 
     cd .. 

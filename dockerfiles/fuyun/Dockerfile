@@ -1,68 +1,62 @@
-ARG BASE_OS=${BASE_OS:-fuyun:bare-centos7}
+ARG BASE_OS=${BASE_OS:-centos:7.6-fuyun-bare}
+
 FROM ${BASE_OS}
 
 LABEL Author="Salmon <yuzhi@ipp.ac.cn>"
 
-USER root
+#######################################################
+# Setup  FuYun
 
-COPY archive /tmp/archive
+ARG FY_ROOT=${FY_ROOT:-/opt/fuyun}
 
 #######################################################
-# Install  easybuild
-RUN pip3 install -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com --default-timeout=100 --no-cache-dir /tmp/archive/easybuild-*.tar.gz   
+# Bootstrap
+
+ARG INSTALL_PREFIX=${INSTALL_PREFIX:-/usr/local}
+
+COPY bootstrap /tmp/bootstrap
+
+RUN cd /tmp/bootstrap/ \
+    && ./bootstrap.sh ${INSTALL_PREFIX} \
+    && sudo rm -rf /tmp/bootstrap 
 
 #######################################################
-# Install LMOD  
-RUN TMP_BUILD=$(mktemp -d -t tmp_build_lmod_XXXXXXX)  \
-    && cd $TMP_BUILD  \
-    && tar xzf /tmp/archive/lmod-*.tar.gz  --strip-components=1  \
-    && ./configure --prefix=/usr/local/  --with-lua_include=/usr/include/lua/ \
-    && make install  \
-    && ln -s /usr/local/lmod/lmod/init/profile        /etc/profile.d/z00_lmod.sh    \
-    && ln -s /usr/local/lmod/lmod/init/cshrc          /etc/profile.d/z00_lmod.csh   \
-    && echo 'source /usr/local/lmod/lmod/init/profile' >> /etc/bash.bashrc \
-    && cd ..  \
-    && rm -rf $TMP_BUILD 
+# Setup user account
+ARG FY_USER=${FY_USER:-fuyun}
+ARG FY_GROUP=${FY_GROUP:-fuyun}
+ARG FY_UID=${FY_UID:-1000}
+ARG FY_GID=${FY_UID:-1000}
+ARG FY_HOME_PREFIX=${FY_HOME_PREFIX:-/home}
+ARG FY_HOME=${FY_HOME:-${FY_HOME_PREFIX}/${FY_USER}}
+    
 
+RUN groupadd -g ${FY_GID} "${FY_GROUP}"  \
+    && useradd -l -m -s /bin/bash -N -u "${FY_UID}" -g "${FY_GID}" --groups "${FY_GROUP}" -d "${FY_HOME}"  "${FY_USER}"   \
+    && echo "${FY_USER} ALL=(ALL)   NOPASSWD: ALL" >>/etc/sudoers \
+    && echo ". ${INSTALL_PREFIX}/etc/fy_profile " >> ${FY_HOME}/.bashrc   
 
 #######################################################
-# Clean up
-RUN yum clean all -y -q  
+# Setup directory
 
-########################################################
-# Setup  fuyun
-ARG FY_ROOT=${FY_ROOT:-/fuyun}
+RUN mkdir -p ${FY_ROOT} -m 755 \
+    && chown -R ${FY_USER}:${FY_GROUP} ${FY_ROOT}   
 
 VOLUME ${FY_ROOT}
 
+
 ENV FY_ROOT=${FY_ROOT} \
-    EASYBUILD_PREFIX=${FY_ROOT} \
-    MODULEPATH=${FY_ROOT}/modules/all
+    FY_USER=${FY_USER}
 
-RUN groupadd -g "1000" "fuyun"  \
-    && useradd -l -m -s /bin/bash -N -u "1000" -g "1000" --groups "fuyun" -d "/home/fuyun"  "fuyun"   \
-    && echo "fuyun ALL=(ALL)   NOPASSWD: ALL" >>/etc/sudoers \
-    && chown -R fuyun:fuyun ${FY_ROOT}  \
-    && chmod -R 775 ${FY_ROOT}  
+USER ${FY_USER}    
+WORKDIR ${FY_HOME}
 
-# USER fuyun 
-# WORKDIR /home/fuyun
-# SHELL [ "/bin/bash" ]
-
+ 
 
 #######################################################
-# set Label
-# LABEL pytorch=2.1.0
-# LABEL centos=7.6
-# LABEL dtk=23.10.1
-# LABEL python=3.8
-# 
-# && mkdir -p ${FY_ROOT} \
-# && chmod -m 775 ${FY_ROOT}\
-
-# ENV FY_ROOT=${FY_ROOT} EASYBUILD_PREFIX=${FY_ROOT}
-# USER fuyun
-# WORKDIR /home/fuyun
-##################################################
-# USAGE:
-# docker build --build-arg="BASE_OS=image.sourcefind.cn:5000/dcu/admin/base/pytorch:2.1.0-centos7.6-dtk23.10.1-py38" -t fuyun:devel-pytorch-2.1.0-centos7.6-dtk23.10.1-py38 .
+#Usage:
+# Build:
+#    docker build  --build-arg BASE_OS=ubuntu:focal-fuyun-bare --build-arg FY_UID=1100 --build-arg FY_GID=504  -t fuyun:ubuntu-focal .
+# Run:
+#   docker run  --mount type=bind,source=/gpfs/fydev/repository/ubuntu/focal/opt/fuyun,target=/opt/fuyun \
+#    --mount type=bind,source=/gpfs/fydev/sources,target=/opt/fuyun/sources \
+#    --rm -it fuyun:ubuntu-focal fy_run eb --show-config
